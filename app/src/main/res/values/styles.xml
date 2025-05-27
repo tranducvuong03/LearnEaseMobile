@@ -12,6 +12,8 @@
         <item name="colorOnSurface">@color/colorOnSurface</item>
         <item name="android:statusBarColor">@color/colorPrimaryVariant</item>
         <item name="android:windowLightStatusBar">true</item>
+
+        <item name="fontFamily">@font/lexend_regular</item>
     </style>
     <style name="TextAppearance.AppBar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">18sp</item>

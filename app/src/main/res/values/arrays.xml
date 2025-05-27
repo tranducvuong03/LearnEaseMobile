@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="language_options">
+        <item>American English</item>
+        <item>British English</item>
+        <item>Texas English</item>
+        <item>Australian English</item>
+    </string-array>
+</resources>

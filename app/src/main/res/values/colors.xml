@@ -2,11 +2,18 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="colorPrimary">#1976D2</color>
+    <color name="colorBackground">#FCFAF7</color>
+    <color name="colorPrimary">#EB7812</color>
+    <color name="colorButton">#EB7812</color>
+    <color name="colorBorder">#E8D9CF</color>
+    <color name="colorListOptions">#F2EDE8</color>
+    <color name="colorIconPrimary">#99704D</color>
+    <color name="colorTextPrimary">#1C140D</color>
+    <color name="colorTextSecond">#99704D</color>
+    <color name="colorTextOnButton">#FCFAF7</color>
     <color name="colorPrimaryVariant">#1565C0</color>
     <color name="colorSecondary">#FF9800</color>
     <color name="colorSecondaryVariant">#F57C00</color>
-    <color name="colorBackground">#F5F5F5</color>
     <color name="colorSurface">#FFFFFF</color>
     <color name="colorOnPrimary">#FFFFFF</color>
     <color name="colorOnSecondary">#FFFFFF</color>
