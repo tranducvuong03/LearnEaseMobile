@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="100dp"
+    android:height="100dp"
+    android:viewportWidth="100"
+    android:viewportHeight="100">
+    <circle android:cx="50" android:cy="50" android:r="50" android:fillColor="#4DD0E1"/>
+    <path android:fillColor="#222222" android:pathData="M30,60 Q50,20 70,60 Q50,80 30,60 Z"/>
+    <circle android:cx="50" android:cy="55" android:r="10" android:fillColor="#FFFFFF"/>
+    <circle android:cx="50" android:cy="55" android:r="5" android:fillColor="#222222"/>
+    <rect android:x="60" android:y="30" android:width="20" android:height="10" android:fillColor="#FFB74D"/>
+</vector> 
