@@ -24,6 +24,11 @@
         <activity android:name=".LearningActivity" android:exported="false" />
         <activity android:name=".ExploreActivity" android:exported="false" />
         <activity android:name=".ProfileActivity" android:exported="false" />
+        <activity android:name=".NotificationActivity" android:exported="false" />
+        <activity android:name=".ChatbotActivity" android:exported="false" />
+        <activity android:name=".SettingsActivity" android:exported="false" />
+        <activity android:name=".MyProfileActivity" android:exported="false" />
+        <activity android:name=".PrivacyActivity" android:exported="false" />
     </application>
 
 </manifest>
