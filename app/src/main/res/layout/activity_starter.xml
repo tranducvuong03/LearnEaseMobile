@@ -1,159 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#FFFFFF">
+    android:background="@color/white">
 
-    <ImageView
-        android:id="@+id/imageViewLogo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:src="@drawable/ic_logo"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="56dp"/>
-
-    <TextView
-        android:id="@+id/textViewAppName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LearnEase"
-        android:textSize="32sp"
-        android:textStyle="bold"
-        android:textColor="#222222"
-        app:layout_constraintTop_toBottomOf="@id/imageViewLogo"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="8dp"/>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/orangePanel"
-        android:layout_width="0dp"
+    <!-- Phần trên: Logo và tên app -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="240dp"
-        android:background="#FFB74D"
-        android:backgroundTint="#FFB74D"
-        android:clipToOutline="true"
-        android:elevation="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/textViewAppName">
+        android:layout_weight="1"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="32dp"
-            android:background="@drawable/top_rounded_orange"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+        <!-- Hình tròn chứa logo -->
+        <FrameLayout
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:background="@drawable/circle_background">
 
+            <ImageView
+                android:id="@+id/imageViewLogo"
+                android:layout_width="93.13dp"
+                android:layout_height="97.07dp"
+                android:layout_gravity="center"
+                android:src="@drawable/starter_image"
+                android:scaleType="centerInside" />
+        </FrameLayout>
+
+        <!-- Tên app -->
+        <TextView
+            android:id="@+id/textViewAppName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="LearnEase"
+            android:textAppearance="@style/learnease"
+            android:fontFamily="@font/lexend_black"
+            android:textSize="55sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextPrimary"
+            />
+    </LinearLayout>
+
+    <!-- Phần dưới: Panel cam -->
+    <LinearLayout
+        android:id="@+id/orangePanel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:background="@drawable/starter_rounded_bg"
+        android:paddingHorizontal="24dp"
+        android:gravity="center_horizontal">
+
+        <!-- Thanh kéo -->
         <View
             android:id="@+id/dragBar"
-            android:layout_width="48dp"
+            android:layout_width="60dp"
             android:layout_height="6dp"
-            android:layout_marginLeft="0dp"
             android:layout_marginTop="16dp"
-            android:layout_marginRight="0dp"
-            android:layout_marginBottom="8dp"
-            android:alpha="0.7"
             android:background="#FFFDE7"
-            android:backgroundRadius="8dp"
-            android:backgroundTint="#FFFDE7"
-            android:clipToOutline="true"
+            android:alpha="0.7"
             android:scaleX="1.2"
-            android:scaleY="0.7"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
+            android:scaleY="0.7" />
+        <!-- Tiêu đề -->
         <TextView
-            android:id="@+id/textViewStarterTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Learn the local language for free!"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:text="Learn the local language\nfor free!"
+            android:textColor="@color/white"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/dragBar" />
+            android:textSize="24sp"
+            android:gravity="center"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="48dp"
+            />
 
+        <!-- Mô tả -->
         <TextView
-            android:id="@+id/textViewStarterDesc"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Learn all local languages interactively at your fingertips!"
-            android:textColor="#FFFDE7"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewStarterTitle" />
-
-        <LinearLayout
-            android:id="@+id/layoutDots"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
+            android:text="Learn all local languages\ninteractively at your fingertips!"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
             android:gravity="center"
+            android:layout_marginBottom="32dp" />
+
+        <!-- Chấm chỉ thị -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:orientation="horizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/textViewStarterDesc">
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="8dp"
-                android:layout_marginEnd="4dp"
-                android:src="@drawable/dot_active" />
-
-            <ImageView
-                android:layout_width="8dp"
-                android:layout_height="8dp"
-                android:layout_marginEnd="4dp"
-                android:src="@drawable/dot_inactive" />
-
+            android:gravity="center"
+            android:layout_marginBottom="16dp">
+            <View android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/dot_active" android:layout_margin="4dp"/>
+            <View android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/dot_inactive" android:layout_margin="4dp"/>
+            <View android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/dot_inactive" android:layout_margin="4dp"/>
         </LinearLayout>
 
+        <!-- Nút Login / Register -->
         <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp"
-            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:orientation="horizontal"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent">
+            android:gravity="center"
+            >
+
 
             <Button
-                android:id="@+id/buttonRegister"
+                android:id="@+id/starterRegisterButton"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
-                android:layout_marginEnd="12dp"
+                android:layout_height="60dp"
+                android:layout_marginEnd="48dp"
                 android:layout_weight="1"
-                android:background="@drawable/rounded_button_white"
+                android:background="@drawable/rounded_button_orange"
                 android:drawableEnd="@drawable/ic_arrow_right"
-                android:drawablePadding="8dp"
+                android:fontFamily="@font/lexend_black"
+                android:padding="16dp"
                 android:text="Register"
-                android:textColor="#FFB74D"
+                android:textColor="@color/white"
+                android:textSize="16sp"
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/buttonLogin"
+                android:id="@+id/starterLoginButton"
                 android:layout_width="0dp"
-                android:layout_height="48dp"
+                android:layout_height="60dp"
                 android:layout_weight="1"
                 android:background="@drawable/rounded_button_white"
                 android:drawableEnd="@drawable/ic_arrow_right"
-                android:drawablePadding="8dp"
                 android:text="Login"
-                android:textColor="#FFB74D"
-                android:textStyle="bold" />
-        </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
+                android:textSize="16sp"
+                android:textColor="@color/colorTextPrimary"
+                android:textStyle="bold"
+                android:padding="16dp"
+                />
 
-</androidx.constraintlayout.widget.ConstraintLayout> 
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

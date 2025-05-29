@@ -20,4 +20,13 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">@color/colorOnBackground</item>
     </style>
+    <style name="learnease">
+        <item name="android:textSize">55sp</item>
+        <item name="android:letterSpacing">0</item>
+        <item name="android:textColor">#1C140D</item>
+        <item name="android:shadowColor">#40000000</item>
+        <item name="android:shadowDx">5</item>
+        <item name="android:shadowDy">4</item>
+        <item name="android:shadowRadius">6</item>
+    </style>
 </resources> 
