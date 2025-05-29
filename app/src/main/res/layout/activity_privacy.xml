@@ -68,7 +68,7 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="80dp"
-        android:src="@drawable/profile_placeholder"
+        android:src="@drawable/ic_mic"
         app:civ_border_color="@android:color/white"
         app:civ_border_width="2dp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -136,7 +136,7 @@
                 android:textSize="16sp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:background="@drawable/underline_edittext"
+                android:background="@drawable/ic_mic"
                 android:layout_marginBottom="16dp"
                 android:imeOptions="actionNext"
                 android:singleLine="true"/>
@@ -165,14 +165,14 @@
                     android:textSize="16sp"
                     android:paddingTop="8dp"
                     android:paddingBottom="8dp"
-                    android:background="@drawable/underline_edittext"
+                    android:background="@drawable/ic_mic"
                     android:imeOptions="actionNext"
                     android:singleLine="true"/>
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@drawable/ic_eye_open"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="View Username"
                     app:tint="#B0B0B0"
                     android:layout_marginStart="8dp"/>
@@ -195,7 +195,7 @@
                 android:textSize="16sp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:background="@drawable/underline_edittext"
+                android:background="@drawable/ic_mic"
                 android:imeOptions="actionDone"
                 android:singleLine="true"/>
 

@@ -87,7 +87,7 @@
                 android:layout_height="80dp"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:src="@drawable/profile_placeholder"
+                android:src="@drawable/ic_mic"
                 app:civ_border_color="@android:color/white"
                 app:civ_border_width="2dp"
                 app:layout_constraintStart_toStartOf="parent"
@@ -124,7 +124,7 @@
                 android:layout_marginEnd="16dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
                 android:contentDescription="Edit Profile"
-                android:src="@drawable/ic_edit"
+                android:src="@drawable/ic_mic"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/tv_user_name"
                 app:layout_constraintBottom_toBottomOf="@+id/tv_newbie_tag"
@@ -177,7 +177,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="?"
+                        android:text="as"
                         android:textColor="@android:color/black"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -265,7 +265,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_settings"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Settings Icon"
                     app:tint="#03A9F4" />
 
@@ -281,7 +281,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_forward"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Arrow"
                     app:tint="#B0B0B0" />
             </LinearLayout>
@@ -304,7 +304,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_achievements"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Achievements Icon"
                     app:tint="#FFC107" />
 
@@ -320,7 +320,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_new_tag"
+                    android:background="@drawable/ic_mic"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
                     android:paddingTop="4dp"
@@ -334,7 +334,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_forward"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Arrow"
                     app:tint="#B0B0B0" />
             </LinearLayout>
@@ -357,7 +357,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_subscription"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Subscription Icon"
                     app:tint="#673AB7" />
 
@@ -373,7 +373,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_forward"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Arrow"
                     app:tint="#B0B0B0" />
             </LinearLayout>
@@ -396,7 +396,7 @@
                 <ImageView
                     android:layout_width="32dp"
                     android:layout_height="32dp"
-                    android:src="@drawable/ic_activities"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Activities Icon"
                     app:tint="#4CAF50" />
 
@@ -412,7 +412,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_forward"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Arrow"
                     app:tint="#B0B0B0" />
             </LinearLayout>
@@ -464,130 +464,14 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
-    <LinearLayout
-        android:id="@+id/bottom_navigation_bar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:orientation="horizontal"
-        android:background="@android:color/white"
-        android:elevation="8dp"
-        android:weightSum="6"
-        android:gravity="center_vertical"
+    <include
+        layout="@layout/bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        app:layout_constraintEnd_toEndOf="parent" />
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_home"
-                app:tint="#808080" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Home"
-                android:textSize="10sp"
-                android:textColor="#808080" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_mic"
-                app:tint="#808080" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Speaking"
-                android:textSize="10sp"
-                android:textColor="#808080" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_learn"
-                app:tint="#808080" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Learn"
-                android:textSize="10sp"
-                android:textColor="#808080" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_rank"
-                app:tint="#808080" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Rank"
-                android:textSize="10sp"
-                android:textColor="#808080" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_ai"
-                app:tint="#808080" />
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="AI"
-                android:textSize="10sp"
-                android:textColor="#808080" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:orientation="vertical"
-            android:gravity="center">
-            <ImageView
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_profile"
-                app:tint="#FF9800" /> <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Profile"
-            android:textSize="10sp"
-            android:textColor="#FF9800" /> </LinearLayout>
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F2F5"
+    tools:context=".SearchLanguageActivity">
+
+    <!-- Header Background -->
+    <ImageView
+        android:id="@+id/header_background_clouds"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/"
+        app:layout_constraintDimensionRatio="H,16:9"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Header Question -->
+    <TextView
+        android:id="@+id/tv_header_question"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Which Language\nwould you like to learn?"
+        android:textColor="@android:color/white"
+        android:textSize="28sp"
+        android:textStyle="bold"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="48dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Search Input -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/search_input_layout"
+        style="@style/Widget.MaterialComponents.TextInputLayout.FilledBox"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="24dp"
+        android:background="@android:color/white"
+        app:boxBackgroundMode="none"
+        app:boxCornerRadiusTopStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxStrokeWidth="0dp"
+        app:boxStrokeWidthFocused="0dp"
+        app:hintEnabled="false"
+        app:startIconDrawable="@drawable/ic_setting"
+        app:startIconTint="@color/black"
+        app:layout_constraintTop_toBottomOf="@id/tv_header_question"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/et_search_language"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search Language..."
+            android:inputType="text"
+            android:paddingVertical="12dp"
+            android:paddingStart="16dp"
+            android:textColorHint="@color/black" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Stats -->
+    <LinearLayout
+        android:id="@+id/stats_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintTop_toBottomOf="@id/search_input_layout"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="4"
+            android:textColor="@color/"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="12dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="40"
+            android:textColor="@color/"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="18dp"
+            android:layout_height="18dp"
+            android:src="@drawable/"
+            android:layout_marginStart="4dp" />
+    </LinearLayout>
+
+    <!-- Category Label -->
+    <TextView
+        android:id="@+id/tv_category_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Category:"
+        android:textColor="@color/"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stats_container" />
+
+    <!-- Chip Group -->
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chip_group_categories"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="24dp"
+        app:chipSpacingHorizontal="8dp"
+        app:layout_constraintStart_toEndOf="@id/tv_category_label"
+        app:layout_constraintTop_toTopOf="@id/tv_category_label"
+        app:layout_constraintBottom_toBottomOf="@id/tv_category_label"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_sunda"
+            style="@style/Widget.MaterialComponents.Chip.Action"
+            android:text="#Sunda"
+            android:textColor="@color/"
+            app:chipBackgroundColor="@color/"
+            app:chipCornerRadius="16dp" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_javanese"
+            style="@style/Widget.MaterialComponents.Chip.Action"
+            android:text="#Javanese"
+            android:textColor="@color/"
+            app:chipBackgroundColor="@color/"
+            app:chipCornerRadius="16dp" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chip_bali"
+            style="@style/Widget.MaterialComponents.Chip.Action"
+            android:text="#Bali"
+            android:textColor="@color/"
+            app:chipBackgroundColor="@color/"
+            app:chipCornerRadius="16dp" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Content Container -->
+    <FrameLayout
+        android:id="@+id/content_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="16dp"
+        app:layout_constraintTop_toBottomOf="@id/chip_group_categories"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Not Found Layout -->
+        <LinearLayout
+            android:id="@+id/not_found_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/"
+                android:scaleType="fitCenter" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Not Found"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black"
+                android:layout_marginTop="16dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Sorry, the keyword you entered cannot be found, please check again or search with another keyword."
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray"
+                android:gravity="center"
+                android:paddingHorizontal="32dp"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+
+        <!-- RecyclerView -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view_languages"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+    </FrameLayout>
+
+    <!-- Bottom Navigation Include -->
+    <include
+        android:id="@+id/bottom_nav"
+        layout="@layout/bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>

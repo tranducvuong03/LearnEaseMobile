@@ -11,10 +11,12 @@
         android:id="@+id/status_bar_placeholder"
         android:layout_width="match_parent"
         android:layout_height="24dp"
+        android:layout_marginTop="16dp"
         android:background="@android:color/transparent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <View
         android:id="@+id/header_background"
@@ -116,7 +118,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_forward"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Arrow"
                     app:tint="#B0B0B0" />
             </LinearLayout>
@@ -146,7 +148,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_forward"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Arrow"
                     app:tint="#B0B0B0" />
             </LinearLayout>
@@ -205,7 +207,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_forward"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Arrow"
                     app:tint="#B0B0B0" />
             </LinearLayout>
@@ -235,7 +237,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_forward"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Arrow"
                     app:tint="#B0B0B0" />
             </LinearLayout>
@@ -265,7 +267,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_forward"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Arrow"
                     app:tint="#B0B0B0" />
             </LinearLayout>
@@ -295,7 +297,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_forward"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Arrow"
                     app:tint="#B0B0B0" />
             </LinearLayout>
@@ -325,13 +327,20 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/ic_arrow_forward"
+                    android:src="@drawable/ic_mic"
                     android:contentDescription="Arrow"
                     app:tint="#B0B0B0" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
-
+    <include
+        layout="@layout/bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

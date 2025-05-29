@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+
+    tools:context=".NoInternetActivity">
+    <TextView
+    android:id="@+id/tv_handling_error_status"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Handling error no network"
+    android:textColor="@android:color/black"
+    android:textSize="14sp"
+    android:gravity="center_horizontal"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:background="@color/cardview_light_background"
+    android:visibility="gone"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/no_internet_content"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toBottomOf="@id/tv_handling_error_status"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_bar_include" app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:padding="24dp">
+
+        <ImageView
+            android:id="@+id/img_cloud_disconnected"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/ic_cloud_disconnected"
+            android:scaleType="fitCenter" />
+
+        <TextView
+            android:id="@+id/tv_not_connected_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Not Connected"
+            android:textColor="@android:color/black"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginTop="32dp" />
+
+        <TextView
+            android:id="@+id/tv_not_connected_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ups.. You are not connected to internet\nTry again"
+            android:textColor="@android:color/darker_gray"
+            android:textSize="16sp"
+            android:gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:lineSpacingExtra="4dp" />
+
+        <Button
+            android:id="@+id/btn_try_again"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Try Again"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:background="@drawable/rounded_button_orange"
+            android:paddingHorizontal="48dp"
+            android:paddingVertical="12dp"
+            android:layout_marginTop="32dp"
+            android:elevation="4dp"
+            android:stateListAnimator="@null" />
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/bottom_navigation_bar_include"
+        layout="@layout/bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
