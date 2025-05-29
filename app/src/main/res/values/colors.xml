@@ -3,6 +3,7 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="colorBackground">#FCFAF7</color>
+    <color name="colorBackgroundLogo">#70EAFF</color>
     <color name="colorPrimary">#EB7812</color>
     <color name="colorButton">#EB7812</color>
     <color name="colorBorder">#E8D9CF</color>
