@@ -7,25 +7,21 @@
     </style>
 
     <style name="Theme.Mobile" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Màu nền & màu chính -->
+        <!-- Main colors -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
         <item name="colorOnPrimary">@color/colorOnPrimary</item>
-
-        <!-- Màu phụ -->
+        <!-- Secondary colors -->
         <item name="colorSecondary">@color/colorSecondary</item>
         <item name="colorSecondaryVariant">@color/colorSecondaryVariant</item>
         <item name="colorOnSecondary">@color/colorOnSecondary</item>
-
-
-        <!-- Màu nền & văn bản -->
+        <!-- Background and surface -->
         <item name="colorSurface">@color/colorSurface</item>
         <item name="android:colorBackground">@color/colorBackground</item>
         <item name="colorOnSurface">@color/colorOnSurface</item>
         <item name="android:statusBarColor">@color/colorPrimaryVariant</item>
         <item name="android:windowLightStatusBar">true</item>
-
-        <!-- Optional -->
+        <!-- Optional font -->
         <item name="android:fontFamily">@font/lexend_regular</item>
         <item name="fontFamily">@font/lexend_regular</item>
     </style>
@@ -33,5 +29,4 @@
         <item name="backgroundTint">@color/colorButton</item>
         <item name="android:textColor">@color/colorTextOnButton</item>
     </style>
-
-</resources>
+</resources> 
