@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F0F0F0"
+    tools:context=".MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_orange_section"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="#FFA500"
+        app:layout_constraintHeight_percent="0.65"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/text_congratulations"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="YOU WON,\nCONGRATULATIONS"
+            android:textColor="@android:color/white"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:layout_marginTop="60dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/illustration_won"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:src="@drawable/illustration_won"
+            android:contentDescription="@string/winner_illustration"
+            app:layout_constraintDimensionRatio="H,16:9"
+            app:layout_constraintWidth_percent="0.8"
+            app:layout_constraintBottom_toTopOf="@+id/btn_continue"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/text_congratulations"
+            app:layout_constraintVertical_bias="0.5"
+            android:layout_marginBottom="16dp"/>
+
+        <Button
+            android:id="@+id/btn_continue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/continue_button_text"
+            android:textColor="#FFA500"
+            android:backgroundTint="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:cornerRadius="24dp"
+            android:layout_marginBottom="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:paddingHorizontal="40dp"
+            android:paddingVertical="12dp" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/players_card"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHeight_percent="0.3"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline_card_start">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="16dp">
+
+            <ImageView
+                android:id="@+id/profile_alex_winner"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_avatar_alex_winner"
+                android:contentDescription="@string/profile_picture_alex"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"/>
+
+            <ImageView
+                android:id="@+id/icon_crown"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_crown"
+                android:contentDescription="@string/crown_icon"
+                app:layout_constraintEnd_toEndOf="@+id/profile_alex_winner"
+                app:layout_constraintTop_toTopOf="@+id/profile_alex_winner"
+                android:translationX="15dp"
+                android:translationY="-15dp"
+                />
+
+            <TextView
+                android:id="@+id/text_alex_name_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alex Darius"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/profile_alex_winner"
+                app:layout_constraintStart_toStartOf="@+id/profile_alex_winner"
+                app:layout_constraintEnd_toEndOf="@+id/profile_alex_winner"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:id="@+id/text_alex_country_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="EU"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@+id/text_alex_name_card"
+                app:layout_constraintStart_toStartOf="@+id/profile_alex_winner"
+                app:layout_constraintEnd_toEndOf="@+id/profile_alex_winner"/>
+
+            <TextView
+                android:id="@+id/text_alex_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="5/5"
+                android:textColor="#4CAF50"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/text_alex_country_card"
+                app:layout_constraintStart_toStartOf="@+id/profile_alex_winner"
+                app:layout_constraintEnd_toEndOf="@+id/profile_alex_winner"
+                android:layout_marginTop="8dp"/>
+
+            <ImageView
+                android:id="@+id/icon_vs"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_vs"
+                android:contentDescription="@string/vs_icon"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/profile_alex_winner"
+                app:layout_constraintEnd_toStartOf="@+id/profile_alice_loser"
+                />
+
+            <ImageView
+                android:id="@+id/profile_alice_loser"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_avatar_alice_loser"
+                android:contentDescription="@string/profile_picture_alice"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"/>
+
+            <TextView
+                android:id="@+id/text_alice_name_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Alice Helen"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/profile_alice_loser"
+                app:layout_constraintStart_toStartOf="@+id/profile_alice_loser"
+                app:layout_constraintEnd_toEndOf="@+id/profile_alice_loser"
+                android:layout_marginTop="8dp"/>
+
+            <TextView
+                android:id="@+id/text_alice_country_card"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="USA"
+                android:textColor="@android:color/darker_gray"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@+id/text_alice_name_card"
+                app:layout_constraintStart_toStartOf="@+id/profile_alice_loser"
+                app:layout_constraintEnd_toEndOf="@+id/profile_alice_loser"/>
+
+            <TextView
+                android:id="@+id/text_alice_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3/5"
+                android:textColor="#F44336"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                app:layout_constraintTop_toBottomOf="@+id/text_alice_country_card"
+                app:layout_constraintStart_toStartOf="@+id/profile_alice_loser"
+                app:layout_constraintEnd_toEndOf="@+id/profile_alice_loser"
+                android:layout_marginTop="8dp"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_card_start"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.55" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

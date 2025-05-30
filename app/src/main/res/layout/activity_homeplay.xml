@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F8F8F8"
+    tools:context=".MainActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/top_section"
+        android:layout_width="0dp"
+        android:layout_height="250dp"
+        android:background="#FFA500"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/back_arrow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/rounded_back_button_background"
+            android:padding="8dp"
+            android:src="@drawable/ic_arrow_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/lets_play_together_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:text="LET'S PLAY\nTOGETHER"
+            android:textColor="@android:color/white"
+            android:textSize="32sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/back_arrow" />
+
+        <ImageView
+            android:id="@+id/trophy_icon"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="32dp"
+            android:src="@drawable/ic_trophy"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:ignore="ContentDescription" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/categories_card"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        app:cardCornerRadius="24dp"
+        app:cardElevation="8dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:text="Featured categories"
+                android:textColor="@android:color/black"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <GridLayout
+                android:layout_width="345dp"
+                android:layout_height="334dp"
+                android:alignmentMode="alignMargins"
+                android:columnCount="2"
+                android:columnOrderPreserved="false">
+
+                <Button
+                    android:id="@+id/btn_biology"
+                    style="@style/CategoryButtonStyle"
+                    android:backgroundTint="#9B59B6"
+                    android:drawableTop="@drawable/ic_biology"
+                    android:text="Biology" />
+
+                <Button
+                    android:id="@+id/btn_travels"
+                    style="@style/CategoryButtonStyle"
+                    android:layout_width="150dp"
+                    android:layout_height="79dp"
+                    android:backgroundTint="#5DADE2"
+                    android:drawableTop="@drawable/ic_travels"
+                    android:text="Travels" />
+
+                <Button
+                    android:id="@+id/btn_animal"
+                    style="@style/CategoryButtonStyle"
+                    android:backgroundTint="#F4D03F"
+                    android:drawableTop="@drawable/ic_animal"
+                    android:text="Animal" />
+
+                <Button
+                    android:id="@+id/btn_education"
+                    style="@style/CategoryButtonStyle"
+                    android:layout_width="197dp"
+                    android:layout_height="122dp"
+                    android:backgroundTint="#4CAF50"
+                    android:drawableTop="@drawable/ic_education"
+                    android:text="Education" />
+
+                <Button
+                    android:id="@+id/btn_food"
+                    style="@style/CategoryButtonStyle"
+                    android:backgroundTint="#F0B27A"
+                    android:drawableTop="@drawable/ic_food"
+                    android:text="Food" />
+
+                <Button
+                    android:id="@+id/btn_history"
+                    style="@style/CategoryButtonStyle"
+                    android:backgroundTint="#2E86C1"
+                    android:drawableTop="@drawable/ic_history"
+                    android:text="History" />
+
+            </GridLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.28" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="?android:attr/windowBackground"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
