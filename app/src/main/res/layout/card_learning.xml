@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/layout/item_lesson_card.xml -->
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:cardUseCompatPadding="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="20dp"
+        android:background="@drawable/border_card_learning">
+
+        <!-- Icon Container -->
+        <FrameLayout
+            android:id="@+id/iconContainer"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/speaking_ic_bg">
+
+            <ImageView
+                android:id="@+id/lessonIcon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_speak"
+                android:scaleType="fitCenter" />
+
+        </FrameLayout>
+
+        <!-- Content Container -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="12dp">
+
+            <!-- Lesson Title -->
+            <TextView
+                android:id="@+id/lessonTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Speaking Lesson"
+                android:textSize="18sp"
+                android:textStyle="normal"
+                android:textColor="#4A4A4A"
+                android:fontFamily="sans-serif"
+                android:letterSpacing="0" />
+
+            <!-- Progress Bar -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_marginTop="12dp"
+                android:progress="18"
+                android:max="100"
+                android:progressDrawable="@drawable/progress_bar_orange"
+                android:indeterminate="false" />
+
+        </LinearLayout>
+
+        <!-- Progress Text -->
+        <TextView
+            android:id="@+id/progressText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="9/50"
+            android:textSize="14sp"
+            android:textColor="#999999"
+            android:fontFamily="sans-serif" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>
