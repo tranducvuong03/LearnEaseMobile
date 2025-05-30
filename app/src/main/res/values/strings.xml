@@ -23,4 +23,5 @@
 
 
     <string name="continue_button_text">Continue</string>
+    <string name="title_activity_quiz">QuizActivity</string>
 </resources>
