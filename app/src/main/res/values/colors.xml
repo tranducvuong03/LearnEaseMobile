@@ -13,6 +13,8 @@
     <color name="colorTextSecond">#99704D</color>
     <color name="colorTextOnButton">#FCFAF7</color>
     <color name="colorBorderCard">#DADADA</color>
+    <color name="colorButtonAnswerVocab">#3DB2FF</color>
+     <color name="colorButtonAnswerRightVocab">#99CC29</color>
     <color name="colorTextProgressNum">#898A8D</color>
     <color name="colorPrimaryVariant">#1565C0</color>
     <color name="colorSecondary">#FF9800</color>

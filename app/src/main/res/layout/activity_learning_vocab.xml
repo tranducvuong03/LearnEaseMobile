@@ -1,6 +1,409 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:padding="16dp"
+    tools:context=".QuizActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <!-- Nút Back -->
+        <FrameLayout
+            android:id="@+id/backButtonCard"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginEnd="12dp"
+            android:background="@drawable/back_button_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="12dp"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="Back" />
+        </FrameLayout>
+
+        <!-- Thanh tiến trình nằm giữa -->
+        <LinearLayout
+            android:id="@+id/progressDots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <View
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/blue_dot" />
+
+            <View
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/blue_dot" />
+
+            <View
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/blue_dot" />
+
+            <View
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/gray_dot" />
+
+            <View
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/gray_dot" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+    <!-- Câu hỏi -->
+    <TextView
+        android:id="@+id/questionText"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="What does the picture mean?"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="#000000"
+        android:textAlignment="center"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Hình ảnh -->
+    <ImageView
+        android:id="@+id/questionImage"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="35dp"
+        android:src="@drawable/img_vocab_test"
+        android:contentDescription="Face Profile"
+        app:layout_constraintTop_toBottomOf="@id/questionText"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Container cho các nút lựa chọn và feedback -->
+    <FrameLayout
+        android:id="@+id/answerContainer"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/questionImage"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <!-- Layout ban đầu với 4 nút theo lưới 2x2 -->
+        <LinearLayout
+            android:id="@+id/initialAnswerLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <!-- Hàng đầu tiên -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <Button
+                    android:id="@+id/buttonMouth"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Mouth"
+                    android:textSize="15sp"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/button_answer_background"
+                    android:textColor="@android:color/white"/>
+
+                <Button
+                    android:id="@+id/buttonEyes"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Eyes"
+                    android:textSize="15sp"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/button_answer_background"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+            <!-- Hàng thứ hai -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/buttonEar"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ear"
+                    android:textSize="15sp"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/button_answer_background"
+                    android:textColor="@android:color/white"/>
+
+                <Button
+                    android:id="@+id/buttonNose"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Nose"
+                    android:textSize="15sp"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/button_answer_background"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Layout sau khi trả lời đúng -->
+        <LinearLayout
+            android:id="@+id/feedbackLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!-- Hàng đầu tiên - 2 nút -->`
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <Button
+                    android:id="@+id/buttonMouthFeedback"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Mouth"
+                    android:textSize="15sp"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/button_answer_background"
+                    android:textColor="@android:color/white"/>
+
+                <Button
+                    android:id="@+id/buttonEyesFeedback"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Eyes"
+                    android:textSize="15sp"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/button_answer_background"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+            <!-- Hàng thứ hai - 2 nút -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <Button
+                    android:id="@+id/buttonEarFeedback"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ear"
+                    android:textSize="15sp"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/button_answer_background"
+                    android:textColor="@android:color/white"/>
+
+                <Button
+                    android:id="@+id/buttonNoseFeedback"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Nose"
+                    android:textSize="15sp"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/button_correct_background"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+            <!-- Feedback container -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/feedback_background"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/feedbackTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Amazing!"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/holo_green_dark"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/feedbackAnswer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Answer: Nose"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="16dp"/>
+
+                <Button
+                    android:id="@+id/nextQuestionButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Next Question"
+                    android:background="@drawable/button_next_background"
+                    android:textColor="@android:color/white"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Layout khi trả lời sai -->
+        <LinearLayout
+            android:id="@+id/wrongFeedbackLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <!-- Các đáp án -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="12dp">
+
+                <Button
+                    android:id="@+id/buttonMouthWrong"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Mouth"
+                    android:textSize="15sp"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/button_answer_background"
+                    android:textColor="@android:color/white"/>
+
+                <Button
+                    android:id="@+id/buttonEyesWrong"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Eyes"
+                    android:textSize="15sp"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/button_answer_background"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="16dp">
+
+                <Button
+                    android:id="@+id/buttonEarWrong"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Ear"
+                    android:textSize="15sp"
+                    android:layout_marginEnd="6dp"
+                    android:background="@drawable/button_answer_background"
+                    android:textColor="@android:color/white"/>
+
+                <Button
+                    android:id="@+id/buttonNoseWrong"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Nose"
+                    android:textSize="15sp"
+                    android:layout_marginStart="6dp"
+                    android:background="@drawable/button_correct_background"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+            <!-- Thông báo sai và đáp án đúng -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@drawable/feedback_wrong_background"
+                android:padding="16dp">
+
+                <TextView
+                    android:id="@+id/wrongFeedbackTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ups.. that's wrong"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/holo_red_dark"
+                    android:layout_marginBottom="8dp"/>
+
+                <TextView
+                    android:id="@+id/wrongFeedbackAnswer"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Answer: Nose"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="16dp"/>
+
+                <Button
+                    android:id="@+id/wrongNextQuestionButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Next Question"
+                    android:background="@drawable/button_next_background_wrong"
+                    android:textColor="@android:color/white"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
