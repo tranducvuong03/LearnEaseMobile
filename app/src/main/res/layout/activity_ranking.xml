@@ -4,27 +4,30 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_main_gradient" android:padding="16dp">
+    android:background="@drawable/circle_background" android:padding="0dp">
 
     <ImageButton
         android:id="@+id/backBtn"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:background="@android:color/transparent"
-        android:src="@drawable/ic_back_white" app:layout_constraintTop_toTopOf="parent"
+        android:src="@drawable/ic_back_white"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        android:layout_marginTop="8dp"/> <TextView
-    android:id="@+id/rankingTitle"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:text="Ranking"
-    android:textSize="20sp"
-    android:textStyle="bold"
-    android:textColor="@android:color/white"
-    app:layout_constraintTop_toTopOf="@id/backBtn"
-    app:layout_constraintBottom_toBottomOf="@id/backBtn"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"/>
+        android:layout_marginTop="8dp"/>
+
+    <TextView
+        android:id="@+id/rankingTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Ranking"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@android:color/white"
+        app:layout_constraintTop_toTopOf="@id/backBtn"
+        app:layout_constraintBottom_toBottomOf="@id/backBtn"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
         android:id="@+id/tabSwitch"
@@ -32,7 +35,8 @@
         android:layout_height="40dp"
         android:layout_marginTop="24dp"
         android:orientation="horizontal"
-        android:background="@drawable/bg_tab_switch" android:gravity="center_vertical"
+        android:background="@drawable/bg_tab_switch"
+        android:gravity="center_vertical"
         android:padding="4dp"
         app:layout_constraintTop_toBottomOf="@id/rankingTitle"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,7 +46,8 @@
             android:id="@+id/btnWeekly"
             android:layout_width="120dp"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_button_selected" android:text="Weekly"
+            android:background="@drawable/rounded_button_orange"
+            android:text="Weekly"
             android:textAllCaps="false"
             android:textColor="@android:color/white"
             android:textStyle="bold"/>
@@ -51,7 +56,8 @@
             android:id="@+id/btnAllTime"
             android:layout_width="120dp"
             android:layout_height="match_parent"
-            android:background="@drawable/bg_button_unselected" android:text="All Time"
+            android:background="@drawable/circle_background"
+            android:text="All Time"
             android:textAllCaps="false"
             android:textColor="@android:color/white"/>
     </LinearLayout>
@@ -123,14 +129,25 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="16dp"/>
 
+    <include
+        layout="@layout/bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerRanking"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp" android:background="@drawable/bg_recycler_card" android:paddingTop="16dp"
-        app:layout_constraintTop_toBottomOf="@+id/view_podium"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_recycler_card"
+        android:paddingTop="16dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+        app:layout_constraintTop_toBottomOf="@+id/view_podium" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -20,4 +20,7 @@
     <string name="california">California</string>
     <string name="login_success">Login successful!</string>
     <string name="login_failed">Login failed. Please try again.</string>
+
+
+    <string name="continue_button_text">Continue</string>
 </resources>
