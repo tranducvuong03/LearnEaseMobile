@@ -29,6 +29,9 @@
         <activity android:name=".SettingsActivity" android:exported="false" />
         <activity android:name=".MyProfileActivity" android:exported="false" />
         <activity android:name=".PrivacyActivity" android:exported="false" />
+        <activity android:name=".LanguageDetailActivity" android:exported="false" />
+        <activity android:name=".SearchLanguageNotfoundActivity" android:exported="false" />
+        <activity android:name=".NoInternetActivity" android:exported="false" />
     </application>
 
 </manifest>

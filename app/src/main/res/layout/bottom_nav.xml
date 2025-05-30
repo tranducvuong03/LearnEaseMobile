@@ -11,4 +11,5 @@
     app:itemIconTint="@color/colorIconPrimary"
     app:itemTextColor="@color/colorTextSecond"
     app:elevation="8dp"
-    app:labelVisibilityMode="labeled" />
+    app:labelVisibilityMode="labeled"
+    />
