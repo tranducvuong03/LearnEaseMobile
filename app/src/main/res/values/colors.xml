@@ -24,4 +24,5 @@
     <color name="colorOnSecondary">#FFFFFF</color>
     <color name="colorOnBackground">#212121</color>
     <color name="colorOnSurface">#212121</color>
+    <color name="colorRankScore">#858494</color>
 </resources>
