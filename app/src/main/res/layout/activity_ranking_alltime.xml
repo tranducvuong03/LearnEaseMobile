@@ -4,15 +4,11 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:padding="16dp"
-    android:scrollbars="none"
-    >
-
+    android:scrollbars="none">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
-
+        android:orientation="vertical">
         <!-- Layout 1: Top Bar -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -55,8 +51,8 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Weekly"
-                android:background="@drawable/bg_ranking_weekly_active"
-                android:textColor="@color/white"
+                android:background="@drawable/bg_ranking_weekly_inactive"
+                android:textColor="#87807A"
                 android:textStyle="bold"
                 />
 
@@ -64,302 +60,15 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/bg_ranking_weekly_inactive"
+                android:background="@drawable/bg_ranking_weekly_active"
                 android:text="All Time"
-                android:textColor="#87807A"
+                android:textColor="@color/white"
                 android:layout_marginStart="8dp" />
         </LinearLayout>
-
-        <!-- Layout 3: Your Rank Box -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:background="@drawable/bg_ranking_top4_note"
-            android:padding="12dp"
-            android:gravity="center"
-            android:layout_marginTop="16dp"
-            >
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="#4"
-                    android:textStyle="bold"
-                    android:gravity="start"
-                    android:padding="12dp"
-                    android:background="@drawable/bg_ranking_top4"
-                    android:textColor="@color/white"
-                    android:textSize="24sp"
-                    android:layout_marginEnd="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Try your best to get higher rank"
-                    android:textSize="16sp"
-                    android:textColor="@color/white" />
-
-        </LinearLayout>
-
-        <!-- Layout 5: Countdown Timer -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_ranking_time"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="6dp"
-            android:orientation="horizontal"
-            android:layout_gravity="end"
-            android:layout_marginTop="8dp">
-
-            <ImageView
-                android:layout_width="16dp"
-                android:layout_height="16dp"
-                android:src="@drawable/ic_ranking_time"
-                android:layout_marginEnd="6dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="06d 23h 00m"
-                android:textColor="@android:color/white"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-
-
-        <!-- Layout 4: Podium -->
-
-        <!-- Layout 6: RecyclerView for ranks 4+ -->
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
->
-
-            <!-- #1 Center -->
-            <LinearLayout
-                android:id="@+id/center_podium"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <!-- FrameLayout to overlay the crown on top of the avatar -->
-
-                <ImageView
-                    android:layout_width="36dp"
-                    android:layout_height="36dp"
-                    android:layout_gravity="center|center_horizontal"
-                    android:layout_marginTop="-2dp"
-                    android:src="@drawable/ranking_top1_crown_1" />
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <!-- Avatar Image -->
-                    <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:layout_gravity="center"
-                        android:padding="8dp"
-                        android:src="@drawable/user1" />
-
-                    <!-- Flag -->
-                    <ImageView
-                        android:layout_width="26.67dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="bottom|end"
-                        android:layout_marginEnd="-3dp"
-                        android:layout_marginBottom="-1dp"
-                        android:src="@drawable/ic_flag_1" />
-
-                </FrameLayout>
-
-
-                <!-- User Name -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:text="Davis Curtis"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <!-- Score -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:background="@drawable/bg_ranking_score"
-                    android:padding="8dp"
-                    android:text="2,569"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <!-- Podium Number -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/bg_ranking_rank_1"
-                    android:paddingHorizontal="32dp"
-                    android:paddingVertical="16dp"
-                    android:text="1"
-                    android:textColor="@color/white"
-                    android:textSize="100sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-
-            <!-- #2 Left -->
-
-            <!-- #3 Right -->
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/center_podium"
-                android:layout_marginRight="-1dp"
-                android:layout_marginBottom="0dp"
-                android:layout_toLeftOf="@id/center_podium"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <!-- Avatar Image -->
-                    <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:layout_gravity="center"
-                        android:padding="8dp"
-                        android:src="@drawable/user1" />
-
-                    <!-- Flag -->
-                    <ImageView
-                        android:layout_width="26.67dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="bottom|end"
-                        android:layout_marginEnd="-3dp"
-                        android:layout_marginBottom="-1dp"
-                        android:src="@drawable/ic_flag_1" />
-
-                </FrameLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="Alena Donin"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:background="@drawable/bg_ranking_score"
-                    android:padding="8dp"
-                    android:text="1,469"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/bg_ranking_rank_2_3"
-                    android:paddingHorizontal="32dp"
-                    android:paddingVertical="16dp"
-                    android:text="2"
-                    android:textColor="@color/white"
-                    android:textSize="80sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@id/center_podium"
-                android:layout_marginLeft="-1dp"
-                android:layout_marginBottom="0dp"
-                android:layout_toRightOf="@id/center_podium"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <FrameLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
-
-                    <!-- Avatar Image -->
-                    <ImageView
-                        android:layout_width="64dp"
-                        android:layout_height="64dp"
-                        android:layout_gravity="center"
-                        android:padding="8dp"
-                        android:src="@drawable/user1" />
-
-                    <!-- Country Flag Icon (góc dưới phải, tràn ra ngoài một chút) -->
-                    <ImageView
-                        android:layout_width="26.67dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="bottom|end"
-                        android:layout_marginEnd="-3dp"
-                        android:layout_marginBottom="-1dp"
-                        android:src="@drawable/ic_flag_1" />
-
-                </FrameLayout>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="20dp"
-                    android:text="Craig Gouse"
-                    android:textColor="@color/colorTextPrimary"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:background="@drawable/bg_ranking_score"
-                    android:padding="8dp"
-                    android:text="1,053"
-                    android:textColor="@color/white"
-                    android:textSize="12sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/bg_ranking_rank_2_3"
-                    android:gravity="center"
-                    android:paddingHorizontal="36dp"
-                    android:paddingVertical="16dp"
-                    android:text="3"
-                    android:textColor="@color/white"
-                    android:textSize="60sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-        </RelativeLayout>
-<!--        List -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="1200dp"
-            android:layout_marginTop="-5dp"
+            android:layout_marginTop="16dp"
             android:orientation="vertical"
             android:background="@drawable/bg_ranking_list">
 
@@ -386,6 +95,292 @@
                         android:layout_height="32dp"
                         android:background="@drawable/bg_ranking_number_circle"
                         android:gravity="center"
+                        android:text="1"
+                        android:textColor="#999999"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+
+                <!-- Avatar + Flag -->
+                <FrameLayout
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginStart="12dp">
+
+                    <!-- Avatar Image -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/user1" />
+
+                    <!-- Country Flag Icon -->
+                    <ImageView
+                        android:layout_width="26.67dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="bottom|end"
+                        android:layout_marginEnd="-3dp"
+                        android:layout_marginBottom="-1dp"
+                        android:src="@drawable/ic_flag_1" />
+                </FrameLayout>
+
+                <!-- Name + Points Container -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    >
+
+                    <!-- Name -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Davis Curtis"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <!-- Points -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="590 points"
+                        android:textColor="@color/colorRankScore"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="48dp"
+                    >
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="-2dp"
+                        android:src="@drawable/ranking_top1_crown_1" />
+                </LinearLayout>
+
+
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_ranking_top4_after"
+                android:padding="8dp"
+                android:orientation="horizontal">
+
+                <!-- Rank circle -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="4dp"
+                    >
+
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_ranking_number_circle"
+                        android:gravity="center"
+                        android:text="2"
+                        android:textColor="#999999"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+
+                <!-- Avatar + Flag -->
+                <FrameLayout
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginStart="12dp">
+
+                    <!-- Avatar Image -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/user1" />
+
+                    <!-- Country Flag Icon -->
+                    <ImageView
+                        android:layout_width="26.67dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="bottom|end"
+                        android:layout_marginEnd="-3dp"
+                        android:layout_marginBottom="-1dp"
+                        android:src="@drawable/ic_flag_1" />
+                </FrameLayout>
+
+                <!-- Name + Points Container -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    >
+
+                    <!-- Name -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Davis Curtis"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <!-- Points -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="590 points"
+                        android:textColor="@color/colorRankScore"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="48dp"
+                    >
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="-2dp"
+                        android:src="@drawable/ranking_top2_crown" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_ranking_top4_after"
+                android:padding="8dp"
+                android:orientation="horizontal">
+
+                <!-- Rank circle -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="4dp"
+                    >
+
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_ranking_number_circle"
+                        android:gravity="center"
+                        android:text="3"
+                        android:textColor="#999999"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+
+                <!-- Avatar + Flag -->
+                <FrameLayout
+                    android:layout_width="64dp"
+                    android:layout_height="64dp"
+                    android:layout_marginStart="12dp">
+
+                    <!-- Avatar Image -->
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:padding="8dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/user1" />
+
+                    <!-- Country Flag Icon -->
+                    <ImageView
+                        android:layout_width="26.67dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="bottom|end"
+                        android:layout_marginEnd="-3dp"
+                        android:layout_marginBottom="-1dp"
+                        android:src="@drawable/ic_flag_1" />
+                </FrameLayout>
+
+                <!-- Name + Points Container -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical"
+                    android:layout_gravity="center"
+                    >
+
+                    <!-- Name -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Davis Curtis"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <!-- Points -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="590 points"
+                        android:textColor="@color/colorRankScore"
+                        android:textSize="14sp" />
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="48dp"
+                    >
+                    <ImageView
+                        android:layout_width="36dp"
+                        android:layout_height="36dp"
+                        android:layout_marginTop="-2dp"
+                        android:src="@drawable/ranking_top3_crown" />
+                </LinearLayout>
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/bg_ranking_top4_after"
+                android:padding="8dp"
+                android:orientation="horizontal">
+
+                <!-- Rank circle -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="4dp"
+                    >
+
+                    <TextView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="@drawable/bg_ranking_number_circle"
+                        android:gravity="center"
                         android:text="4"
                         android:textColor="#999999"
                         android:textSize="14sp" />
@@ -611,14 +606,6 @@
             </LinearLayout>
 
         </LinearLayout>
-
-
-<!--        <androidx.recyclerview.widget.RecyclerView-->
-<!--            android:id="@+id/rankingRecyclerView"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="8dp"-->
-<!--            android:nestedScrollingEnabled="false" />-->
-
     </LinearLayout>
+
 </ScrollView>
