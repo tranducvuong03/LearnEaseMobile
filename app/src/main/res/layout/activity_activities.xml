@@ -7,141 +7,443 @@
 
     <!-- Header Section -->
     <LinearLayout
-        android:id="@+id/headerLayout"
-        android:layout_width="0dp"
-        android:layout_height="200dp"
-        android:orientation="vertical"
-        android:background="@color/colorBackgroundLogo"
-        android:padding="16dp"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:id="@+id/greetingText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Hi, John!"
-            android:textSize="24sp"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="What local language would you like to learn?"
-            android:textColor="@android:color/white"
-            android:textSize="16sp"/>
-    </LinearLayout>
-
-    <!-- Icon values (hearts and diamonds) -->
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@android:color/white"
+        >
     <LinearLayout
-        android:id="@+id/statusIcons"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:padding="8dp"
-        app:layout_constraintTop_toBottomOf="@id/headerLayout"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:background="@color/colorSearchBackground"
+            android:padding="16dp">
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/heart" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_gravity="end"
+                android:layout_marginTop="60dp"
+                >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="13dp"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Hi, "
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="John"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="What local language \nwould you like to learn?"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"/>
+            </LinearLayout>
+
+
+            <!-- Clouds are decorative images -->
+            <ImageView
+                android:layout_width="200dp"
+                android:layout_height="250dp"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="-20dp"
+
+                android:src="@drawable/activites_image"/>
+
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="4"
-            android:textSize="16sp"
-            android:paddingEnd="16dp"/>
+            android:orientation="horizontal"
+            android:layout_marginTop="16dp"
+            android:gravity="end|center_vertical"
+            >
 
-        <ImageView
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:src="@drawable/diamond"/>
-        <TextView
-            android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginEnd="16dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="4"
+                    android:drawableEnd="@drawable/heart"
+                    android:drawablePadding="4dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorTextPrimary"
+                    android:paddingHorizontal="4dp"
+                    android:layout_marginEnd="4dp"
+                    android:gravity="end"/>
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="40"
+                    android:drawableEnd="@drawable/diamond"
+                    android:drawablePadding="4dp"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorTextPrimary"
+                    android:paddingHorizontal="4dp"
+                    android:gravity="end"/>
+            </LinearLayout>
+
+        </LinearLayout>
+        <ScrollView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="40"
-            android:textSize="16sp"/>
+            android:paddingHorizontal="16dp"
+            android:scrollbars="none"
+            >
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                >
+
+                <!-- Title -->
+                <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Choose Activity"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/colorButtonAnswerVocab"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Subtitle -->
+                <TextView
+                    android:id="@+id/subtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Here, you can hone your language skills\nthrough interactive exercises and activities."
+                    android:textSize="16sp"
+                    android:gravity="center"
+                    android:textColor="@color/colorTextPrimary"
+                    android:layout_marginBottom="16dp"/>
+
+                <!-- Pronunciation Test -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:backgroundTint="#66A000"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="12dp">
+
+                        <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                            android:paddingVertical="8dp"
+                        >
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:text="Pronunciation Test"
+                            android:textColor="@color/white"
+                            android:textSize="14sp"
+                            android:textStyle="bold"/>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:text="Practice your pronunciation skills by speaking\nand recording phrases aloud."
+                            android:textColor="@color/white"
+                            android:textSize="12sp"/>
+                        </LinearLayout>
+                        <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="4"
+                            android:gravity="center"
+                        >
+                        <ImageView
+                            android:layout_width="37dp"
+                            android:layout_height="75dp"
+                            android:src="@drawable/activities_image_1"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Word Game -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:backgroundTint="#33B5E5"
+                    app:cardElevation="4dp">
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingVertical="8dp"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="4dp"
+                                android:text="Word Game"
+                                android:textColor="@color/white"
+                                android:textSize="14sp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:text="Test your vocabulary skills with a fun word game."
+                                android:textColor="@color/white"
+                                android:textSize="12sp"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:gravity="center|center_vertical"
+                            >
+                            <ImageView
+                                android:layout_width="70dp"
+                                android:layout_height="60dp"
+                                android:src="@drawable/activities_image_2"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Shop -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
+                    android:layout_marginBottom="12dp"
+                    android:backgroundTint="#AA66CC"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingVertical="8dp"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="4dp"
+                                android:text="Shop"
+                                android:textColor="@color/white"
+                                android:textSize="14sp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:text="Get new avatar and buy attempts to access AI chatbot frenquently."
+                                android:textColor="@color/white"
+                                android:textSize="12sp"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:gravity="center|center_vertical"
+
+                            >
+                            <ImageView
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:src="@drawable/activities_image_3"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+                <!-- Let's play together -->
+                <androidx.cardview.widget.CardView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardCornerRadius="12dp"
+                    android:layout_marginBottom="24dp"
+                    android:backgroundTint="#FF8800"
+                    app:cardElevation="4dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="5"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="12dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:paddingVertical="8dp"
+                            >
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="4dp"
+                                android:text="Let’s play together"
+                                android:textColor="@color/white"
+                                android:textSize="14sp"
+                                android:textStyle="bold"/>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+
+                                android:text="Get new avatar and buy attempts to access AI chatbot frenquently."
+                                android:textColor="@color/white"
+                                android:textSize="12sp"/>
+                        </LinearLayout>
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="4"
+                            android:gravity="center|center_vertical"
+                            >
+                            <ImageView
+                                android:layout_width="60dp"
+                                android:layout_height="70dp"
+                                android:src="@drawable/activities_image_4"/>
+                        </LinearLayout>
+                    </LinearLayout>
+                </androidx.cardview.widget.CardView>
+
+            </LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
     </LinearLayout>
 
     <!-- Choose Activity Title -->
 
     <!-- Description -->
-    <TextView
-        android:id="@+id/chooseActivity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="76dp"
-        android:layout_marginTop="8dp"
-        android:text="Choose Activity"
-        android:textColor="@color/colorBackgroundLogo"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/statusIcons" />
+<!--    <TextView-->
+<!--        android:id="@+id/chooseActivity"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginStart="76dp"-->
+<!--        android:layout_marginTop="8dp"-->
+<!--        android:text="Choose Activity"-->
+<!--        android:textColor="@color/colorBackgroundLogo"-->
+<!--        android:textSize="20sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/statusIcons" />-->
 
-    <TextView
-        android:id="@+id/activityDescription"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="Hej hẹ hẹ "
-        android:textSize="14sp"
-        android:layout_marginStart="16dp"
-        android:layout_marginEnd="16dp"
-        app:layout_constraintTop_toBottomOf="@id/chooseActivity"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"/>
+<!--    <TextView-->
+<!--        android:id="@+id/activityDescription"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Hej hẹ hẹ "-->
+<!--        android:textSize="14sp"-->
+<!--        android:layout_marginStart="16dp"-->
+<!--        android:layout_marginEnd="16dp"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/chooseActivity"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"/>-->
 
     <!-- Activity Buttons -->
-    <LinearLayout
-        android:id="@+id/activityButtons"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="16dp"
-        app:layout_constraintTop_toBottomOf="@id/activityDescription"
-        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/activityButtons"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:padding="16dp"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/activityDescription"-->
+<!--        app:layout_constraintBottom_toTopOf="@+id/bottom_navigation"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent">-->
 
-        <!-- Pronunciation -->
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#7BB442"
-            android:text="Pronunciation Test"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="8dp"/>
+<!--        &lt;!&ndash; Pronunciation &ndash;&gt;-->
+<!--        <Button-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:backgroundTint="#7BB442"-->
+<!--            android:text="Pronunciation Test"-->
+<!--            android:textColor="@android:color/white"-->
+<!--            android:layout_marginBottom="8dp"/>-->
 
-        <!-- Word Game -->
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#57B5F9"
-            android:text="Word Game"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="8dp"/>
+<!--        &lt;!&ndash; Word Game &ndash;&gt;-->
+<!--        <Button-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:backgroundTint="#57B5F9"-->
+<!--            android:text="Word Game"-->
+<!--            android:textColor="@android:color/white"-->
+<!--            android:layout_marginBottom="8dp"/>-->
 
-        <!-- Shop -->
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#C46BEB"
-            android:text="Shop"
-            android:textColor="@android:color/white"
-            android:layout_marginBottom="8dp"/>
+<!--        &lt;!&ndash; Shop &ndash;&gt;-->
+<!--        <Button-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:backgroundTint="#C46BEB"-->
+<!--            android:text="Shop"-->
+<!--            android:textColor="@android:color/white"-->
+<!--            android:layout_marginBottom="8dp"/>-->
 
-        <!-- Let's play together -->
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#F4A640"
-            android:text="Let's play together"
-            android:textColor="@android:color/white"/>
-    </LinearLayout>
+<!--        &lt;!&ndash; Let's play together &ndash;&gt;-->
+<!--        <Button-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:backgroundTint="#F4A640"-->
+<!--            android:text="Let's play together"-->
+<!--            android:textColor="@android:color/white"/>-->
+<!--    </LinearLayout>-->
 
     <!-- Bottom Navigation -->
     <include
