@@ -26,4 +26,5 @@
     <color name="colorOnSurface">#212121</color>
     <color name="colorRankScore">#858494</color>
     <color name="colorShopText">#96704F</color>
+    <color name="colorSearchBackground">#FFAE4A</color>
 </resources>
