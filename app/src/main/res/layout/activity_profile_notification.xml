@@ -103,8 +103,8 @@
 
                 <Switch
                     android:id="@+id/switchPracticeReminder"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     />
             </FrameLayout>
@@ -254,8 +254,8 @@
 
                 <Switch
                     android:id="@+id/switchNewLessons"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     />
             </FrameLayout>
@@ -301,8 +301,8 @@
 
                 <Switch
                     android:id="@+id/switchMilestones"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_gravity="center"
                     />
             </FrameLayout>
