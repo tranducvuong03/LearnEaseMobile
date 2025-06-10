@@ -3,6 +3,7 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.Mobile" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
+
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
@@ -24,6 +25,9 @@
         <!-- Optional font -->
         <item name="android:fontFamily">@font/lexend_regular</item>
         <item name="fontFamily">@font/lexend_regular</item>
+        <!-- Remove Action bar and title -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">false</item>
     </style>
 
     <style name="Button" parent="Widget.MaterialComponents.Button">

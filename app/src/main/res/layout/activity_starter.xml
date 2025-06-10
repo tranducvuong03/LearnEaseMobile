@@ -106,8 +106,6 @@
             android:orientation="horizontal"
             android:gravity="center"
             >
-
-
             <Button
                 android:id="@+id/starterRegisterButton"
                 android:layout_width="0dp"

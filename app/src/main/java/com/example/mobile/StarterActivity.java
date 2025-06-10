@@ -12,8 +12,8 @@ public class StarterActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_starter);
 
-        Button btnRegister = findViewById(R.id.buttonRegister);
-        Button btnLogin = findViewById(R.id.buttonLogin);
+        Button btnRegister = findViewById(R.id.starterRegisterButton);
+        Button btnLogin = findViewById(R.id.starterLoginButton);
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -21,6 +21,7 @@ public class StarterActivity extends Activity {
                 startActivity(new Intent(StarterActivity.this, RegisterActivity.class));
             }
         });
+
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -28,4 +29,4 @@ public class StarterActivity extends Activity {
             }
         });
     }
-} 
+}

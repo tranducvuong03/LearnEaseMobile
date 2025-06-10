@@ -7,7 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 
 public class SplashActivity extends Activity {
-    @Override
+    /*@Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
@@ -18,5 +18,27 @@ public class SplashActivity extends Activity {
                 finish();
             }
         }, 1500);
+    }*/
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_splash);
+
+        // Giả lập tác vụ tải dữ liệu trong 2 giây
+        new Thread(() -> {
+            // Giả lập load dữ liệu
+            try {
+                Thread.sleep(2000); // giả lập tải dữ liệu
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            // Sau khi tải xong, chuyển Activity
+            runOnUiThread(() -> {
+                startActivity(new Intent(SplashActivity.this, StarterActivity.class));
+                finish();
+            });
+        }).start();
     }
+
 } 

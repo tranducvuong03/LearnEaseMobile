@@ -54,10 +54,10 @@ public class RankingAdapter extends RecyclerView.Adapter<RankingAdapter.RankingV
 
         public RankingViewHolder(@NonNull View itemView) {
             super(itemView);
-            tvName = itemView.findViewById(R.id.tvName);
-            tvPoints = itemView.findViewById(R.id.tvPoints);
-            tvRank = itemView.findViewById(R.id.tvRank);
-            imgAvatar = itemView.findViewById(R.id.imgAvatar);
+            tvName = itemView.findViewById(R.id.tv_dashboard_title);
+            tvPoints = itemView.findViewById(R.id.tv_dashboard_title);
+            tvRank = itemView.findViewById(R.id.tv_dashboard_title);
+            imgAvatar = itemView.findViewById(R.id.menu_explore);
         }
     }
 }
