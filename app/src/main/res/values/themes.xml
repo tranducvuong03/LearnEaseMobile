@@ -1,13 +1,11 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
     <style name="Base.Theme.Mobile" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
-
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
 
-    <style name="Theme.Mobile" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+    <style name="Theme.Mobile" parent="Base.Theme.Mobile"> <!-- CHANGED THIS LINE -->
         <!-- Main colors -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryVariant</item>
@@ -27,11 +25,11 @@
         <item name="fontFamily">@font/lexend_regular</item>
         <!-- Remove Action bar and title -->
         <item name="windowActionBar">false</item>
-        <item name="windowNoTitle">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 
     <style name="Button" parent="Widget.MaterialComponents.Button">
         <item name="backgroundTint">@color/colorButton</item>
         <item name="android:textColor">@color/colorTextOnButton</item>
     </style>
-</resources> 
+</resources>

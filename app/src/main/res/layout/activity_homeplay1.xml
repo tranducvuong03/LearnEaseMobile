@@ -51,12 +51,17 @@
             android:layout_width="68dp"
             android:layout_height="57dp"
             android:layout_alignParentStart="true"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="23dp"
             android:background="@drawable/bg_top_orange_rounded"
             android:contentDescription="Back"
             android:elevation="4dp"
             android:src="@drawable/ic_arrow_back"
-            tools:layout_editor_absoluteX="16dp"
-            tools:layout_editor_absoluteY="25dp" />
+            app:layout_constraintBottom_toTopOf="@+id/text_are_you_ready"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.113"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

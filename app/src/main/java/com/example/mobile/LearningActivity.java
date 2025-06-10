@@ -13,7 +13,7 @@ public class LearningActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learning);
 
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        /*BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -34,6 +34,6 @@ public class LearningActivity extends AppCompatActivity {
                 return false;
             }
         });
-        bottomNavigationView.setSelectedItemId(R.id.menu_practice);
+        bottomNavigationView.setSelectedItemId(R.id.menu_practice);*/
     }
 } 

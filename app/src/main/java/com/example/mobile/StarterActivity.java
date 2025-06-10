@@ -19,6 +19,7 @@ public class StarterActivity extends Activity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(StarterActivity.this, RegisterActivity.class));
+                finish();
             }
         });
 
@@ -26,6 +27,7 @@ public class StarterActivity extends Activity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(StarterActivity.this, LoginActivity.class));
+                finish();
             }
         });
     }

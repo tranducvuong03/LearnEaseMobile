@@ -32,10 +32,10 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
         setContentView(R.layout.activity_learning_vocab);
 
         presenter = new QuizPresenter(this);
-        mapViews();
+        /*mapViews();*/
     }
 
-    private void mapViews() {
+    /*private void mapViews() {
         questionText = findViewById(R.id.questionText);
         questionImage = findViewById(R.id.questionImage);
 
@@ -81,7 +81,7 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
         nextQuestionButton.setOnClickListener(v -> presenter.nextQuestion());
         wrongNextQuestionButton.setOnClickListener(v -> presenter.nextQuestion());
     }
-
+*/
     @Override
     public void showQuestion(String question, int imageResId, String[] options) {
         questionText.setText(question);
