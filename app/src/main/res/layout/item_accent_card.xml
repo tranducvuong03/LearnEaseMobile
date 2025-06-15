@@ -19,7 +19,7 @@
             android:id="@+id/iconVolume"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@drawable/ic_volume"/>
+            android:src="@drawable/ic_volume" />
 
         <LinearLayout
             android:layout_width="0dp"
@@ -32,27 +32,25 @@
                 android:id="@+id/textViewAccentName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="American English"
+                android:text="Accent Name"
                 android:textStyle="bold"
                 android:textColor="#222222"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <TextView
                 android:id="@+id/textViewAccentCountry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="United States"
+                android:text="Country"
                 android:textColor="#B08B5E"
-                android:textSize="13sp"/>
+                android:textSize="13sp" />
         </LinearLayout>
 
         <ImageView
             android:id="@+id/iconChevron"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:src="@drawable/ic_chevron_right"/>
+            android:src="@drawable/ic_chevron_right" />
     </LinearLayout>
 
 </com.google.android.material.card.MaterialCardView>
-
-

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="12dp"
+    app:cardElevation="2dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="15dp"
+        android:background="@drawable/border_card_learning">
+
+        <FrameLayout
+            android:id="@+id/iconContainerSpeaking"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:background="@drawable/speaking_ic_bg">
+
+            <ImageView
+                android:id="@+id/speakingIcon"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_speak"
+                android:scaleType="fitCenter" />
+
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="12dp">
+
+            <TextView
+                android:id="@+id/speakingTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Speaking Lesson"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/colorTextPrimary"
+                android:letterSpacing="0" />
+
+            <ProgressBar
+                android:id="@+id/progressBarGreen"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="8dp"
+                android:layout_marginTop="12dp"
+                android:progress="80"
+                android:max="100"
+                android:progressDrawable="@drawable/progress_bar_green"
+                android:indeterminate="false" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/progressTextSpeaking"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="40/50"
+            android:textSize="14sp"
+            android:textColor="@color/colorTextProgressNum" />
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

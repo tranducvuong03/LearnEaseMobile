@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:orientation="vertical">
 
     <!-- Phần trên: Logo và tên app -->
     <LinearLayout
@@ -15,17 +15,19 @@
 
         <!-- Hình tròn chứa logo -->
         <FrameLayout
-            android:layout_width="130dp"
-            android:layout_height="130dp"
-            android:background="@drawable/circle_background">
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_background"
+            android:padding="8dp">
 
             <ImageView
                 android:id="@+id/imageViewLogo"
-                android:layout_width="93.13dp"
-                android:layout_height="97.07dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
                 android:layout_gravity="center"
-                android:src="@drawable/starter_image"
-                android:scaleType="centerInside" />
+                android:scaleType="fitCenter"
+                android:src="@drawable/starter_image" />
         </FrameLayout>
 
         <!-- Tên app -->
@@ -34,13 +36,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
+            android:fontFamily="@font/lexend_black"
             android:text="LearnEase"
             android:textAppearance="@style/learnease"
-            android:fontFamily="@font/lexend_black"
-            android:textSize="55sp"
-            android:textStyle="bold"
             android:textColor="@color/colorTextPrimary"
-            />
+            android:textSize="48sp"
+            android:textStyle="bold" />
     </LinearLayout>
 
     <!-- Phần dưới: Panel cam -->
@@ -49,10 +50,10 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:orientation="vertical"
         android:background="@drawable/starter_rounded_bg"
-        android:paddingHorizontal="24dp"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp">
 
         <!-- Thanh kéo -->
         <View
@@ -60,57 +61,72 @@
             android:layout_width="60dp"
             android:layout_height="6dp"
             android:layout_marginTop="16dp"
-            android:background="#FFFDE7"
             android:alpha="0.7"
+            android:background="#FFFDE7"
             android:scaleX="1.2"
             android:scaleY="0.7" />
         <!-- Tiêu đề -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="48dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
             android:text="Learn the local language\nfor free!"
             android:textColor="@color/white"
-            android:textStyle="bold"
             android:textSize="24sp"
-            android:gravity="center"
-            android:layout_marginBottom="16dp"
-            android:layout_marginTop="48dp"
-            />
+            android:textStyle="bold" />
 
         <!-- Mô tả -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="32dp"
+            android:gravity="center"
             android:text="Learn all local languages\ninteractively at your fingertips!"
             android:textColor="@android:color/white"
-            android:textSize="16sp"
-            android:gravity="center"
-            android:layout_marginBottom="32dp" />
+            android:textSize="16sp" />
 
         <!-- Chấm chỉ thị -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
-            android:layout_marginBottom="16dp">
-            <View android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/dot_active" android:layout_margin="4dp"/>
-            <View android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/dot_inactive" android:layout_margin="4dp"/>
-            <View android:layout_width="8dp" android:layout_height="8dp" android:background="@drawable/dot_inactive" android:layout_margin="4dp"/>
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/dot_active" />
+
+            <View
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/dot_inactive" />
+
+            <View
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:layout_margin="4dp"
+                android:background="@drawable/dot_inactive" />
         </LinearLayout>
 
         <!-- Nút Login / Register -->
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
+            android:layout_height="wrap_content"
             android:gravity="center"
-            >
+            android:orientation="horizontal"
+            android:paddingBottom="24dp">
+
             <Button
                 android:id="@+id/starterRegisterButton"
                 android:layout_width="0dp"
                 android:layout_height="60dp"
-                android:layout_marginEnd="48dp"
+                android:layout_marginEnd="16dp"
                 android:layout_weight="1"
                 android:background="@drawable/rounded_button_orange"
                 android:drawableEnd="@drawable/ic_arrow_right"
@@ -128,12 +144,11 @@
                 android:layout_weight="1"
                 android:background="@drawable/rounded_button_white"
                 android:drawableEnd="@drawable/ic_arrow_right"
-                android:text="Login"
-                android:textSize="16sp"
-                android:textColor="@color/colorTextPrimary"
-                android:textStyle="bold"
                 android:padding="16dp"
-                />
+                android:text="Login"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
         </LinearLayout>
     </LinearLayout>

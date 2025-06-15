@@ -4,38 +4,54 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View; // Import View
+import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.Volley;
+// Loại bỏ các import Volley không cần thiết nếu bạn không dùng Volley nữa
+// import com.android.volley.Request;
+// import com.android.volley.RequestQueue;
+// import com.android.volley.toolbox.JsonObjectRequest;
+// import com.android.volley.toolbox.Volley;
+// import com.android.volley.toolbox.HurlStack;
+
+import com.example.mobile.utils.RetrofitClient;
 import com.google.android.material.textfield.TextInputEditText;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+// Import các lớp Retrofit và API mới của bạn
+import com.example.mobile.api.ApiService;
+import com.example.mobile.model.LoginRequest; // Bạn cần tạo lớp này cho body request
+import com.example.mobile.model.LoginResponse; // Bạn cần tạo lớp này cho response
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-import java.security.cert.X509Certificate;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map; // Cần thiết nếu bạn muốn thêm header tùy chỉnh
 
-import com.android.volley.toolbox.HurlStack;
+// Loại bỏ các import SSL liên quan đến Volley HurlStack nếu bạn không dùng nữa
+// import javax.net.ssl.HostnameVerifier;
+// import javax.net.ssl.HttpsURLConnection;
+// import javax.net.ssl.SSLContext;
+// import javax.net.ssl.SSLSession;
+// import javax.net.ssl.SSLSocketFactory;
+// import javax.net.ssl.TrustManager;
+// import javax.net.ssl.X509TrustManager;
+// import java.security.cert.X509Certificate;
+
 
 public class LoginActivity extends Activity {
     private TextInputEditText editTextUsername, editTextPassword;
-    private RequestQueue requestQueue;
+    // Không cần RequestQueue của Volley nữa
+    // private RequestQueue requestQueue;
 
-    // Đã chuyển sang HTTPS vì lỗi trước đó cho thấy bạn đang dùng HTTPS hoặc cần dùng HTTPS
-    // Đảm bảo backend của bạn cũng đang chạy trên HTTPS và cùng port
-    private final String API_LOGIN_URL = "https://10.0.2.2:7083/api/auth/login";
+    // Không cần API_LOGIN_URL riêng nữa vì nó sẽ nằm trong ApiService.BASE_URL
+    // private final String API_LOGIN_URL = "https://10.0.2.2:7083/api/auth/login";
+
+    // Khai báo ApiService
+    private ApiService apiService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,10 +62,11 @@ public class LoginActivity extends Activity {
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
 
-        // Khởi tạo RequestQueue với cấu hình SSL tùy chỉnh
-        requestQueue = Volley.newRequestQueue(this, new HurlStack(null, getSslSocketFactory()));
+        // Khởi tạo ApiService thông qua RetrofitClient.
+        // RetrofitClient sẽ tự động xử lý SSL bypass và các Interceptor khác (như logging).
+        // KHÔNG CẦN DÙNG getSslSocketFactory() ở đây nữa vì RetrofitClient đã lo.
+        apiService = RetrofitClient.getApiService(this);
 
-        // Thay đổi từ lambda expression sang cú pháp ghi đè onClick truyền thống
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -67,101 +84,63 @@ public class LoginActivity extends Activity {
             return;
         }
 
-        JSONObject loginData = new JSONObject();
-        try {
-            loginData.put("username", username);
-            loginData.put("password", password);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Error creating login request", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        // Tạo đối tượng LoginRequest thay vì JSONObject
+        LoginRequest loginRequest = new LoginRequest(username, password);
 
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(
-                Request.Method.POST,
-                API_LOGIN_URL,
-                loginData,
-                response -> {
-                    try {
-                        String token = response.getString("token");
-                        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-                        prefs.edit().putString("auth_token", token).apply();
+        // Sử dụng ApiService để gọi API đăng nhập
+        // Bạn cần thêm phương thức login vào ApiService
+        Call<LoginResponse> call = apiService.login(loginRequest);
 
-                        Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    LoginResponse loginResponse = response.body();
+                    String token = loginResponse.getToken();
 
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                        startActivity(intent);
-                        finish();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        Toast.makeText(LoginActivity.this, "Login successful but no token received", Toast.LENGTH_LONG).show();
-                    }
-                },
-                error -> {
+                    SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                    prefs.edit().putString("auth_token", token).apply();
+
+                    Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    startActivity(intent);
+                    finish();
+                } else {
                     String errorMsg = "Login failed. Please try again.";
-                    if (error.networkResponse != null) {
-                        switch (error.networkResponse.statusCode) {
-                            case 401:
+                    if (response.errorBody() != null) {
+                        try {
+                            // Cố gắng đọc lỗi từ errorBody nếu server trả về JSON lỗi
+                            // Bạn có thể cần một Gson để parse errorBody thành một ErrorResponse Model
+                            // Ví dụ đơn giản:
+                            String errorBodyString = response.errorBody().string();
+                            if (response.code() == 401) {
                                 errorMsg = "Invalid username or password!";
-                                break;
-                            case 400:
-                                errorMsg = "Bad request. Please check your input.";
-                                break;
-                            default:
-                                errorMsg = "Server error: " + error.networkResponse.statusCode;
-                                break;
+                            } else if (response.code() == 400) {
+                                errorMsg = "Bad request: " + errorBodyString;
+                            } else {
+                                errorMsg = "Server error: " + response.code() + " - " + errorBodyString;
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            errorMsg = "Server error: " + response.code();
                         }
-                    } else if (error.getMessage() != null) {
-                        errorMsg = "Network error: " + error.getMessage();
-                        error.printStackTrace();
+                    } else {
+                        errorMsg = "Server error: " + response.code() + " " + response.message();
                     }
                     Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
                 }
-        );
+            }
 
-        requestQueue.add(jsonObjectRequest);
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                String errorMsg = "Network error: " + t.getMessage();
+                t.printStackTrace();
+                Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
-    /**
-     * Bỏ qua việc kiểm tra chứng chỉ SSL. KHÔNG BAO GIỜ SỬ DỤNG TRONG MÔI TRƯỜNG PRODUCTION!
-     * Phương pháp này tạo ra một SSLSocketFactory tin cậy tất cả các chứng chỉ.
-     *
-     * @return SSLSocketFactory đã được cấu hình để tin cậy tất cả các chứng chỉ.
-     */
-    private SSLSocketFactory getSslSocketFactory() {
-        try {
-            // Tạo TrustManager tin cậy tất cả các chứng chỉ
-            TrustManager[] trustAllCerts = new TrustManager[]{
-                    new X509TrustManager() {
-                        public X509Certificate[] getAcceptedIssuers() {
-                            return null;
-                        }
-
-                        public void checkClientTrusted(X509Certificate[] certs, String authType) {
-                        }
-
-                        public void checkServerTrusted(X509Certificate[] certs, String authType) {
-                        }
-                    }
-            };
-
-            // Khởi tạo SSLContext với TrustManager đã tạo
-            SSLContext sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-
-            // Thiết lập HostnameVerifier để chấp nhận tất cả các hostnames
-            // Điều này giải quyết các lỗi liên quan đến tên host trong chứng chỉ
-            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-                @Override
-                public boolean verify(String hostname, SSLSession session) {
-                    return true; // Luôn trả về true để chấp nhận bất kỳ hostname nào
-                }
-            });
-
-            return sslContext.getSocketFactory();
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null; // Trả về null nếu có lỗi, nhưng điều này không mong muốn
-        }
-    }
+    // KHÔNG CẦN PHƯƠNG THỨC getSslSocketFactory() NỮA VÌ NÓ ĐÃ ĐƯỢC CHUYỂN VÀO RetrofitClient
+    // private SSLSocketFactory getSslSocketFactory() { /* ... */ }
 }
