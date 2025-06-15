@@ -46,6 +46,14 @@ public class LearningActivity extends AppCompatActivity {
                 fetchNextLesson();
             }
         });
+
+        findViewById(R.id.backButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
     }
 
     private void fetchNextLesson() {

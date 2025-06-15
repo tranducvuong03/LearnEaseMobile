@@ -33,6 +33,12 @@
             android:name=".LoginActivity"
             android:exported="false" />
         <activity
+            android:name=".ActivitiesActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubscriptionActivity"
+            android:exported="false" />
+        <activity
             android:name=".HomeActivity"
             android:exported="false" />
         <activity
@@ -68,9 +74,14 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
+        <activity
+            android:name=".AchievementsActivity"
+            android:exported="false" />
         <activity android:name=".SpeakingLessonActivity" />
         <activity android:name=".TheoryLessonActivity" />
         <activity android:name=".VocabularyLessonActivity" />
+        <activity android:name=".PlayTogetherActivity" />
+        <activity android:name=".ShopActivity" />
     </application>
 
 </manifest>
