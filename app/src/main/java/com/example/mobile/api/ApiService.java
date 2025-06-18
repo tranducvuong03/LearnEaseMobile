@@ -1,5 +1,6 @@
 package com.example.mobile.api;
 
+import com.example.mobile.GoogleLoginRequest;
 import com.example.mobile.model.LoginRequest;
 import com.example.mobile.model.LoginResponse;
 import com.example.mobile.model.NextLessonModel;
@@ -18,6 +19,8 @@ public interface ApiService {
 
     @POST("auth/login")
     Call<LoginResponse> login(@Body LoginRequest request);
+    @POST("auth/google-login")
+    Call<LoginResponse> loginWithGoogle(@Body GoogleLoginRequest request);
 
     @GET("VocabularyItems")
     Call<List<VocabularyItem>> getAllVocabularyItems();

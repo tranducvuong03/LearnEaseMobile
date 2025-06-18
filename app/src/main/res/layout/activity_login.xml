@@ -140,27 +140,12 @@
 
 
     <!-- Phần 2: Nút Login With Google -->
-    <LinearLayout
+    <com.google.android.gms.common.SignInButton
+        android:id="@+id/buttonGoogleLogin"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:orientation="vertical">
+        android:layout_height="56dp"
+        android:layout_marginTop="24dp" />
 
-        <Button
-            android:id="@+id/buttonGoogleLogin"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@drawable/rounded_button_orange"
-            android:drawableEnd="@drawable/login_google_icon"
-            android:drawablePadding="12dp"
-            android:elevation="0dp"
-            android:paddingEnd="16dp"
-            android:text="Login With Google"
-            android:textAllCaps="false"
-            android:textColor="#222222"
-            android:textStyle="bold" />
-
-    </LinearLayout>
 
 
 </LinearLayout>

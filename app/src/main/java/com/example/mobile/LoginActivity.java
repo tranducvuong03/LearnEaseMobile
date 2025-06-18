@@ -16,6 +16,13 @@ import android.widget.Toast;
 // import com.android.volley.toolbox.HurlStack;
 
 import com.example.mobile.utils.RetrofitClient;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 
 // Import các lớp Retrofit và API mới của bạn
@@ -52,6 +59,10 @@ public class LoginActivity extends Activity {
 
     // Khai báo ApiService
     private ApiService apiService;
+    private static final int RC_SIGN_IN = 100;
+    private GoogleSignInClient mGoogleSignInClient;
+    private SignInButton btnGoogleLogin;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,14 +78,33 @@ public class LoginActivity extends Activity {
         // KHÔNG CẦN DÙNG getSslSocketFactory() ở đây nữa vì RetrofitClient đã lo.
         apiService = RetrofitClient.getApiService(this);
 
+        //login bang google
         buttonLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 login();
             }
         });
+        btnGoogleLogin = findViewById(R.id.buttonGoogleLogin); // Nút trong XML
+
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.server_client_id)) // client_id lấy từ Google Cloud
+                .requestEmail()
+                .build();
+
+        mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
+
+        btnGoogleLogin.setOnClickListener(v -> {
+            mGoogleSignInClient.signOut().addOnCompleteListener(this, task -> {
+                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                startActivityForResult(signInIntent, RC_SIGN_IN);
+            });
+        });
+
+
     }
 
+    //login username&password
     private void login() {
         String username = editTextUsername.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
@@ -140,6 +170,54 @@ public class LoginActivity extends Activity {
             }
         });
     }
+
+    //login by google
+    private void sendGoogleTokenToBackend(String idToken) {
+        GoogleLoginRequest request = new GoogleLoginRequest(idToken);
+        Call<LoginResponse> call = apiService.loginWithGoogle(request); // Phải khai báo trong ApiService
+
+        call.enqueue(new Callback<LoginResponse>() {
+            @Override
+            public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String token = response.body().getToken();
+                    SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                    prefs.edit().putString("auth_token", token).apply();
+
+                    Toast.makeText(LoginActivity.this, "Google login successful!", Toast.LENGTH_SHORT).show();
+                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                    finish();
+                } else {
+                    Toast.makeText(LoginActivity.this, "Google login failed", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LoginResponse> call, Throwable t) {
+                Toast.makeText(LoginActivity.this, "Google login error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                t.printStackTrace();
+            }
+        });
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == RC_SIGN_IN) {
+            Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
+            try {
+                GoogleSignInAccount account = task.getResult(ApiException.class);
+                if (account != null) {
+                    sendGoogleTokenToBackend(account.getIdToken()); // gọi hàm gửi token
+                }
+            } catch (ApiException e) {
+                e.printStackTrace();
+                Toast.makeText(this, "Google Sign-In failed", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+
 
     // KHÔNG CẦN PHƯƠNG THỨC getSslSocketFactory() NỮA VÌ NÓ ĐÃ ĐƯỢC CHUYỂN VÀO RetrofitClient
     // private SSLSocketFactory getSslSocketFactory() { /* ... */ }

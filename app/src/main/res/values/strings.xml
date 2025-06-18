@@ -24,4 +24,6 @@
 
     <string name="continue_button_text">Continue</string>
     <string name="title_activity_quiz">QuizActivity</string>
+    <string name="server_client_id">909487080653-v97e9mgi6furl2mmj52601tsp5rp20pl.apps.googleusercontent.com</string>
+
 </resources>
