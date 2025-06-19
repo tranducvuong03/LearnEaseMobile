@@ -9,6 +9,7 @@ import com.example.mobile.api.ApiService;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
+import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -22,19 +23,17 @@ import javax.net.ssl.X509TrustManager;
 import java.io.IOException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.concurrent.TimeUnit; // Import này để thêm timeout
 
 /**
  * Lớp tiện ích để cấu hình Retrofit và OkHttpClient.
- * Bao gồm:
- * 1. Cấu hình để bỏ qua xác minh chứng chỉ SSL (KHÔNG NÊN DÙNG TRONG MÔI TRƯỜNG PRODUCTION!).
- * 2. Thêm một Interceptor để tự động đính kèm JWT token vào header Authorization.
- * 3. Thêm HttpLoggingInterceptor để ghi log các yêu cầu và phản hồi HTTP.
+ * Cung cấp các instance ApiService cho cả API công khai (không cần token)
+ * và API được bảo vệ (cần JWT token).
+ *
+ * KHÔNG NÊN DÙNG CẤU HÌNH SSL BỎ QUA TRONG MÔI TRƯỜNG PRODUCTION!
  */
 public class RetrofitClient {
-
-    private static Retrofit retrofit = null;
-    private static ApiService apiService = null; // Để giữ một instance duy nhất của ApiService
-
+    /**
     /**
      * Trả về một instance của ApiService đã được cấu hình sẵn.
      * Phương thức này sẽ khởi tạo Retrofit và OkHttpClient

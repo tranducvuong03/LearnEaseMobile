@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Mobile</string>
+    <string name="app_name">LearnEase</string>
     <string name="login">Login</string>
     <string name="email">Email</string>
     <string name="password">Password</string>

@@ -7,23 +7,18 @@
     android:layout_height="match_parent"
     android:background="#F3F3F3">
 
-    <!-- Top Bar -->
-
-    <!-- Back Button -->
     <ImageButton
         android:id="@+id/btnBack"
         android:layout_width="51dp"
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
-        android:contentDescription="."
+        android:contentDescription="test"
         android:elevation="4dp"
         android:scaleType="center"
         android:src="@drawable/ic_arrow_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-
-    <!-- Phrase Prompt -->
 
     <TextView
         android:id="@+id/tvPrompt"
@@ -50,7 +45,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Mascot Image -->
     <ImageView
         android:id="@+id/imgMascot"
         android:layout_width="180dp"
@@ -61,34 +55,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Audio Playback Bar -->
     <LinearLayout
         android:id="@+id/layoutAudio"
-        android:layout_width="212dp"
-        android:layout_height="35dp"
+        android:layout_width="265dp"
+        android:layout_height="52dp"
         android:layout_marginTop="16dp"
         android:background="@drawable/sound"
+        android:clickable="true"
+        android:contentDescription="test"
+        android:focusable="true"
         android:orientation="horizontal"
         android:paddingStart="16dp"
+        android:paddingTop="6.5dp"
         android:paddingEnd="16dp"
+        android:paddingBottom="6.5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgMascot"/>
+        app:layout_constraintTop_toBottomOf="@id/imgMascot" />
 
-    <!-- Microphone Button -->
     <ImageButton
         android:id="@+id/btnMic"
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:background="@drawable/mic"
-        android:contentDescription="."
+        android:contentDescription="test"
         android:src="@drawable/mic"
         android:layout_marginTop="32dp"
         app:layout_constraintTop_toBottomOf="@id/layoutAudio"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- Hold To Pronounce -->
     <TextView
         android:id="@+id/tvHold"
         android:layout_width="wrap_content"
@@ -100,8 +96,5 @@
         app:layout_constraintTop_toBottomOf="@id/btnMic"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
-
-    <!-- Placeholder for API integration -->
-    <!-- Add your dynamic data and API logic in the corresponding Activity/Fragment -->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

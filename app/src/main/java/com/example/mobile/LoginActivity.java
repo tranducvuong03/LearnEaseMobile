@@ -1,6 +1,7 @@
 package com.example.mobile;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -13,17 +14,9 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-// Loại bỏ các import Volley không cần thiết nếu bạn không dùng Volley nữa
-// import com.android.volley.Request;
-// import com.android.volley.RequestQueue;
-// import com.android.volley.toolbox.JsonObjectRequest;
-// import com.android.volley.toolbox.Volley;
-// import com.android.volley.toolbox.HurlStack;
-
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mobile.model.userData.UserResponse;
-import com.example.mobile.utils.ApiCaller;
+import com.example.mobile.api.LoginAPI;
 import com.example.mobile.utils.RetrofitClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -35,15 +28,20 @@ import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 
 // Import các lớp Retrofit và API mới của bạn
-import com.example.mobile.api.ApiService;
+import com.example.mobile.api.LoginAPI;
 import com.example.mobile.model.LoginRequest; // Bạn cần tạo lớp này cho body request
 import com.example.mobile.model.LoginResponse; // Bạn cần tạo lớp này cho response
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map; // Cần thiết nếu bạn muốn thêm header tùy chỉnh
 
 // Loại bỏ các import SSL liên quan đến Volley HurlStack nếu bạn không dùng nữa
 // import javax.net.ssl.HostnameVerifier;
@@ -65,7 +63,7 @@ public class LoginActivity extends AppCompatActivity {
     // private final String API_LOGIN_URL = "https://10.0.2.2:7083/api/auth/login";
 
     // Khai báo ApiService
-    private ApiService apiService;
+    private LoginAPI apiService;
     private static final int RC_SIGN_IN = 100;
     private GoogleSignInClient mGoogleSignInClient;
     private SignInButton btnGoogleLogin;
@@ -82,9 +80,7 @@ public class LoginActivity extends AppCompatActivity {
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
 
-        // Khởi tạo ApiService thông qua RetrofitClient.
-        // RetrofitClient sẽ tự động xử lý SSL bypass và các Interceptor khác (như logging).
-        // KHÔNG CẦN DÙNG getSslSocketFactory() ở đây nữa vì RetrofitClient đã lo.
+        // Khởi tạo ApiService cho các API CÔNG KHAI (không cần token), ví dụ như API login.
         apiService = RetrofitClient.getApiService(this);
 
         //login bang google
@@ -117,8 +113,6 @@ public class LoginActivity extends AppCompatActivity {
         });
 
 
-
-
     }
 
     //login username&password
@@ -131,14 +125,13 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // Tạo đối tượng LoginRequest thay vì JSONObject
         LoginRequest loginRequest = new LoginRequest(username, password);
 
         // Sử dụng ApiService để gọi API đăng nhập
         // Bạn cần thêm phương thức login vào ApiService
         Call<LoginResponse> call = apiService.login(loginRequest);
 
-        ApiCaller.callWithLoading(this, call, new Callback<LoginResponse>() {
+        call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -157,9 +150,6 @@ public class LoginActivity extends AppCompatActivity {
                     String errorMsg = "Login failed. Please try again.";
                     if (response.errorBody() != null) {
                         try {
-                            // Cố gắng đọc lỗi từ errorBody nếu server trả về JSON lỗi
-                            // Bạn có thể cần một Gson để parse errorBody thành một ErrorResponse Model
-                            // Ví dụ đơn giản:
                             String errorBodyString = response.errorBody().string();
                             if (response.code() == 401) {
                                 errorMsg = "Invalid username or password!";
@@ -193,7 +183,7 @@ public class LoginActivity extends AppCompatActivity {
         GoogleLoginRequest request = new GoogleLoginRequest(idToken);
         Call<LoginResponse> call = apiService.loginWithGoogle(request); // Phải khai báo trong ApiService
 
-        ApiCaller.callWithLoading(this, call, new Callback<LoginResponse>() {
+        call.enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 textGoogle.setVisibility(View.VISIBLE);
