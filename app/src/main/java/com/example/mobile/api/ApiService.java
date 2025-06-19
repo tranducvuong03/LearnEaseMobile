@@ -6,10 +6,13 @@ import com.example.mobile.model.LoginResponse;
 import com.example.mobile.model.NextLessonModel;
 import com.example.mobile.model.VocabularyItem;
 import com.example.mobile.model.SpeakingExercise;
+import com.example.mobile.model.userData.UserResponse;
+
 import java.util.List;
 import java.util.UUID;
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Body;
 import retrofit2.http.Path;
@@ -21,6 +24,10 @@ public interface ApiService {
     Call<LoginResponse> login(@Body LoginRequest request);
     @POST("auth/google-login")
     Call<LoginResponse> loginWithGoogle(@Body GoogleLoginRequest request);
+    @GET("users/me")
+    Call<UserResponse> getMyProfile(@Header("Authorization") String token);
+
+
 
     @GET("VocabularyItems")
     Call<List<VocabularyItem>> getAllVocabularyItems();

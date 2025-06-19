@@ -15,6 +15,7 @@ import android.widget.Toast;
 // import com.android.volley.toolbox.Volley;
 // import com.android.volley.toolbox.HurlStack;
 
+import com.example.mobile.model.userData.UserResponse;
 import com.example.mobile.utils.RetrofitClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -35,8 +36,6 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map; // Cần thiết nếu bạn muốn thêm header tùy chỉnh
 
 // Loại bỏ các import SSL liên quan đến Volley HurlStack nếu bạn không dùng nữa
 // import javax.net.ssl.HostnameVerifier;
@@ -180,9 +179,17 @@ public class LoginActivity extends Activity {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    String token = response.body().getToken();
+                    LoginResponse loginResponse = response.body();
+                    String token = loginResponse.getToken();
+                    UserResponse userResponse = loginResponse.getUser();
                     SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-                    prefs.edit().putString("auth_token", token).apply();
+                    prefs.edit()
+                            .putString("auth_token", token)
+                            .putString("user_id", userResponse.getUserId())
+                            .putString("user_name", userResponse.getUsername())
+                            .putString("user_email", userResponse.getEmail())
+                            .putString("user_avatar", userResponse.getAvatarUrl())
+                            .apply();
 
                     Toast.makeText(LoginActivity.this, "Google login successful!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
