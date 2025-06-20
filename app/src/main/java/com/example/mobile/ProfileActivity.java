@@ -18,7 +18,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.mobile.api.ApiService;
 import com.example.mobile.model.userData.UserResponse;
-import com.example.mobile.utils.JwtUtils;
 import com.example.mobile.utils.RetrofitClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
