@@ -27,6 +27,7 @@
     <color name="colorRankScore">#858494</color>
     <color name="colorShopText">#96704F</color>
     <color name="colorSearchBackground">#FFAE4A</color>
+    <color name="green">#4CAF50</color>
     <color name="gradientStart">#FF9A30</color>
     <color name="gradientEnd">#FF5EC3</color>
     <color name="bluePrimary">#208DFF</color>

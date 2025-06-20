@@ -11,117 +11,130 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mobile.presenter.QuizPresenter;
 import com.example.mobile.view.QuizView;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.util.List;
+
+/**
+ * QuizActivity dùng layout activity_learning_vocab.xml
+ * – Hai layout: initialAnswerLayout & feedbackLayout (dùng chung cho đúng / sai).
+ * – 9 “dot” tiến trình (dot0 → dot8).
+ * – Khi hoàn thành câu (đúng hoặc ấn Next) → finish() về màn trước.
+ */
 public class QuizActivity extends AppCompatActivity implements QuizView {
+
+    /*-------------- Presenter ---------------*/
     private QuizPresenter presenter;
 
-    private TextView questionText;
+    /*-------------- View refs ---------------*/
+    private TextView  questionText;
     private ImageView questionImage;
 
-    private LinearLayout initialAnswerLayout, feedbackLayout, wrongFeedbackLayout;
-    private TextView feedbackTitle, feedbackAnswer, wrongFeedbackTitle, wrongFeedbackAnswer;
-    private Button nextQuestionButton, wrongNextQuestionButton;
+    private LinearLayout initialAnswerLayout;
+    private LinearLayout feedbackLayout;
+
+    private TextView feedbackTitle;
+    private TextView feedbackAnswer;
+    private Button   nextQuestionButton;
 
     private Button[] initialButtons;
-    private Button[] feedbackButtons;
-    private Button[] wrongButtons;
+    private View[]   progressDots;
+    /*---------------------------------------*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learning_vocab);
 
-        presenter = new QuizPresenter(this);
-        /*mapViews();*/
+        mapViews();
+        mapProgressDots();
+
+        /*--- Nhận dữ liệu Intent ---*/
+        String word            = getIntent().getStringExtra("WORD");
+        String distractorsJson = getIntent().getStringExtra("DISTRACTORS_JSON");
+        List<String> distractors = new Gson().fromJson(
+                distractorsJson, new TypeToken<List<String>>(){}.getType());
+
+        presenter = new QuizPresenter(this, word, distractors, /*imageResId*/ -1);
     }
 
-    /*private void mapViews() {
-        questionText = findViewById(R.id.questionText);
+    /* ------------ Ánh xạ View ------------ */
+    private void mapViews() {
+        questionText  = findViewById(R.id.questionText);
         questionImage = findViewById(R.id.questionImage);
 
         initialAnswerLayout = findViewById(R.id.initialAnswerLayout);
-        feedbackLayout = findViewById(R.id.feedbackLayout);
-        wrongFeedbackLayout = findViewById(R.id.wrongFeedbackLayout);
+        feedbackLayout      = findViewById(R.id.wrongFeedbackLayout);  // reuse
+        feedbackTitle       = findViewById(R.id.wrongFeedbackTitle);
+        feedbackAnswer      = findViewById(R.id.wrongFeedbackAnswer);
+        nextQuestionButton  = findViewById(R.id.wrongNextQuestionButton);
 
-        feedbackTitle = findViewById(R.id.feedbackTitle);
-        feedbackAnswer = findViewById(R.id.feedbackAnswer);
-        wrongFeedbackTitle = findViewById(R.id.wrongFeedbackTitle);
-        wrongFeedbackAnswer = findViewById(R.id.wrongFeedbackAnswer);
-
-        nextQuestionButton = findViewById(R.id.nextQuestionButton);
-        wrongNextQuestionButton = findViewById(R.id.wrongNextQuestionButton);
-
-        // Khởi tạo mảng 4 nút
         initialButtons = new Button[]{
                 findViewById(R.id.buttonMouth),
                 findViewById(R.id.buttonEyes),
                 findViewById(R.id.buttonEar),
                 findViewById(R.id.buttonNose)
         };
-
-        feedbackButtons = new Button[]{
-                findViewById(R.id.buttonMouthFeedback),
-                findViewById(R.id.buttonEyesFeedback),
-                findViewById(R.id.buttonEarFeedback),
-                findViewById(R.id.buttonNoseFeedback)
-        };
-
-        wrongButtons = new Button[]{
-                findViewById(R.id.buttonMouthWrong),
-                findViewById(R.id.buttonEyesWrong),
-                findViewById(R.id.buttonEarWrong),
-                findViewById(R.id.buttonNoseWrong)
-        };
-
         for (int i = 0; i < 4; i++) {
-            final int index = i;
-            initialButtons[i].setOnClickListener(v -> presenter.handleAnswer(index));
+            final int idx = i;
+            initialButtons[i].setOnClickListener(v -> presenter.handleAnswer(idx));
         }
 
-        nextQuestionButton.setOnClickListener(v -> presenter.nextQuestion());
-        wrongNextQuestionButton.setOnClickListener(v -> presenter.nextQuestion());
+        /*  Bấm Next => kết thúc QuizActivity  */
+        nextQuestionButton.setOnClickListener(v -> finish());
     }
-*/
-    @Override
-    public void showQuestion(String question, int imageResId, String[] options) {
-        questionText.setText(question);
-        questionImage.setImageResource(imageResId);
 
-        for (int i = 0; i < 4; i++) {
-            initialButtons[i].setText(options[i]);
-            feedbackButtons[i].setText(options[i]);
-            wrongButtons[i].setText(options[i]);
+    /* ----------- Progress dots ----------- */
+    private void mapProgressDots() {
+        progressDots = new View[]{
+                findViewById(R.id.dot0), findViewById(R.id.dot1), findViewById(R.id.dot2),
+                findViewById(R.id.dot3), findViewById(R.id.dot4), findViewById(R.id.dot5),
+                findViewById(R.id.dot6), findViewById(R.id.dot7), findViewById(R.id.dot8)
+        };
+    }
+    private void updateProgress(int currentIndex) {
+        for (int i = 0; i < progressDots.length; i++) {
+            int res = (i <= currentIndex) ? R.drawable.blue_dot : R.drawable.gray_dot;
+            progressDots[i].setBackgroundResource(res);
         }
+    }
+
+    /* ---------- QuizView impl ------------ */
+    @Override
+    public void showQuestion(String text, int imageResId, String[] options) {
+        questionText.setText(text);
+        if (imageResId != -1) {
+            questionImage.setVisibility(View.VISIBLE);
+            questionImage.setImageResource(imageResId);
+        } else {
+            questionImage.setVisibility(View.GONE);
+        }
+        for (int i = 0; i < 4; i++) initialButtons[i].setText(options[i]);
+        updateProgress(0);           // luôn chỉ có 1 câu
     }
 
     @Override
     public void showFeedback(boolean isCorrect, String correctAnswer) {
         initialAnswerLayout.setVisibility(View.GONE);
-        if (isCorrect) {
-            feedbackLayout.setVisibility(View.VISIBLE);
-            feedbackTitle.setText("Amazing!");
-            feedbackAnswer.setText("Answer: " + correctAnswer);
-        } else {
-            wrongFeedbackLayout.setVisibility(View.VISIBLE);
-            wrongFeedbackTitle.setText("Oops... that's wrong");
-            wrongFeedbackAnswer.setText("Answer: " + correctAnswer);
-        }
+        feedbackLayout.setVisibility(View.VISIBLE);
+
+        feedbackLayout.setBackgroundResource(
+                isCorrect ? R.drawable.feedback_correct_background
+                        : R.drawable.feedback_wrong_background);
+
+        feedbackTitle.setText(isCorrect ? "Great job!" : "Oops… that's wrong");
+        feedbackAnswer.setText("Answer: " + correctAnswer);
+
+        /* Nếu trả lời đúng, auto đóng sau 1.2 s  */
+        if (isCorrect) questionImage.postDelayed(this::finish, 1200);
     }
 
-    @Override
-    public void showCorrectAnswer(String correctAnswer) {
-        // Optional: Show correct answer UI (merged with showFeedback here)
-    }
-
-    @Override
-    public void showWrongAnswer(String correctAnswer) {
-        // Optional: Show wrong answer UI (merged with showFeedback here)
-    }
-
-    @Override
-    public void resetView() {
+    @Override public void resetView() {
         initialAnswerLayout.setVisibility(View.VISIBLE);
         feedbackLayout.setVisibility(View.GONE);
-        wrongFeedbackLayout.setVisibility(View.GONE);
     }
+
+    @Override public void showCorrectAnswer(String s) { }
+    @Override public void showWrongAnswer(String s)   { }
 }

@@ -13,7 +13,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="16dp"
         android:layout_marginTop="40dp"
-        android:contentDescription="test"
+        android:contentDescription="Back"
         android:elevation="4dp"
         android:scaleType="center"
         android:src="@drawable/ic_arrow_back"
@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="148dp"
-        android:text="Say the Phrase "
+        android:text="Say the Phrase"
         android:textColor="#222222"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -37,7 +37,7 @@
         android:id="@+id/tvPhrase"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="'Brisrish'"
+        android:text="'British'"
         android:textColor="#1976D2"
         android:textSize="18sp"
         android:textStyle="bold"
@@ -62,7 +62,6 @@
         android:layout_marginTop="16dp"
         android:background="@drawable/sound"
         android:clickable="true"
-        android:contentDescription="test"
         android:focusable="true"
         android:orientation="horizontal"
         android:paddingStart="16dp"
@@ -78,7 +77,6 @@
         android:layout_width="64dp"
         android:layout_height="64dp"
         android:background="@drawable/mic"
-        android:contentDescription="test"
         android:src="@drawable/mic"
         android:layout_marginTop="32dp"
         app:layout_constraintTop_toBottomOf="@id/layoutAudio"
@@ -97,4 +95,30 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- NEW: Kết quả đánh giá -->
+    <TextView
+        android:id="@+id/tvScore"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="#1976D2"
+        android:visibility="gone"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@id/tvHold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- NEW: Nút Next -->
+    <Button
+        android:id="@+id/btnNext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Next"
+        android:visibility="gone"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/tvScore"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>

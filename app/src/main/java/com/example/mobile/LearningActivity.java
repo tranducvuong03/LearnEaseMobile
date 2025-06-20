@@ -7,16 +7,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mobile.api.ApiService;
+import com.example.mobile.api.LoginAPI;
 import com.example.mobile.model.NextLessonModel;
 import com.example.mobile.utils.RetrofitClient; // Sử dụng RetrofitClient mới
 
 // Import các Activity mục tiêu của bạn
-import com.example.mobile.QuizActivity;          // Đảm bảo import này
-import com.example.mobile.SpeakingLessonActivity; // Đảm bảo import này
-import com.example.mobile.TheoryLessonActivity;   // Đảm bảo import này
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -24,7 +22,7 @@ import retrofit2.Response;
 
 public class LearningActivity extends AppCompatActivity {
 
-    private ApiService apiService;
+    private LoginAPI loginAPI;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +45,7 @@ public class LearningActivity extends AppCompatActivity {
         }
 
         // Phương thức này sẽ tự động lấy token từ SharedPreferences và thêm vào header Authorization.
-        apiService = RetrofitClient.getProtectedApiService(this);
+        loginAPI = RetrofitClient.getProtectedApiService(this);
 
         findViewById(R.id.learnNowButton).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,12 +63,11 @@ public class LearningActivity extends AppCompatActivity {
     }
 
     private void fetchNextLesson() {
-        apiService.getNextLessonForUser().enqueue(new Callback<NextLessonModel>() {
+        loginAPI.getNextLessonForUser().enqueue(new Callback<NextLessonModel>() {
             @Override
             public void onResponse(Call<NextLessonModel> call, Response<NextLessonModel> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     NextLessonModel nextLesson = response.body();
-                    Log.d("LearningActivity", "Next Lesson: " + nextLesson.getLessonType() + " - " + nextLesson.getPromptOrWord());
                     startLessonActivity(nextLesson);
                 } else if (response.code() == 401) {
                     Toast.makeText(LearningActivity.this, "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.", Toast.LENGTH_LONG).show();
@@ -82,8 +79,7 @@ public class LearningActivity extends AppCompatActivity {
                 } else if (response.code() == 404) {
                     Toast.makeText(LearningActivity.this, "Không còn bài học nào hoặc bạn đã hoàn thành tất cả các bài.", Toast.LENGTH_LONG).show();
                     Log.d("LearningActivity", "No more lessons available (HTTP 404).");
-                }
-                else {
+                } else {
                     String errorMessage = "Failed to fetch next lesson. HTTP Code: " + response.code();
                     try {
                         if (response.errorBody() != null) {
@@ -123,11 +119,7 @@ public class LearningActivity extends AppCompatActivity {
             intent.putExtra("MEANING", nextLesson.getMeaning());
             intent.putExtra("AUDIO_URL", nextLesson.getAudioUrl());
             intent.putExtra("DIALECT_ID", nextLesson.getDialectId().toString());
-        } else if ("Theory".equalsIgnoreCase(nextLesson.getLessonType())) {
-            intent = new Intent(LearningActivity.this, TheoryLessonActivity.class);
-            intent.putExtra("LESSON_ID", nextLesson.getLessonId().toString());
-            intent.putExtra("TITLE", nextLesson.getPromptOrWord());
-            // Thêm các dữ liệu khác nếu cần cho bài Theory
+            intent.putExtra("DISTRACTORS_JSON", nextLesson.getDistractorsJson());
         } else {
             Toast.makeText(LearningActivity.this, "Unknown lesson type: " + nextLesson.getLessonType(), Toast.LENGTH_SHORT).show();
             Log.e("LearningActivity", "Received unknown lesson type: " + nextLesson.getLessonType());

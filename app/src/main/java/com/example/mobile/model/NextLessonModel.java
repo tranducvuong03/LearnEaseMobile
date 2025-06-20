@@ -1,6 +1,7 @@
 package com.example.mobile.model;
 
 import com.google.gson.annotations.SerializedName;
+
 import java.util.UUID;
 
 public class NextLessonModel {
@@ -16,11 +17,11 @@ public class NextLessonModel {
     private String meaning;
     @SerializedName("dialectId")
     private UUID dialectId;
+    @SerializedName("distractorsJson")
+    private String distractorsJson;
 
-    public NextLessonModel() { // <-- Constructor cũng đổi tên
-    }
+    public NextLessonModel() { }
 
-    // Getters and Setters (tên phương thức không đổi)
     public String getLessonType() { return lessonType; }
     public void setLessonType(String lessonType) { this.lessonType = lessonType; }
     public UUID getLessonId() { return lessonId; }
@@ -33,4 +34,7 @@ public class NextLessonModel {
     public void setMeaning(String meaning) { this.meaning = meaning; }
     public UUID getDialectId() { return dialectId; }
     public void setDialectId(UUID dialectId) { this.dialectId = dialectId; }
+
+    public String getDistractorsJson() { return distractorsJson; }
+    public void setDistractorsJson(String distractorsJson) { this.distractorsJson = distractorsJson; }
 }

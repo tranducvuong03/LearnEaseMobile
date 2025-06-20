@@ -138,41 +138,61 @@ public class LoginActivity extends AppCompatActivity {
                     LoginResponse loginResponse = response.body();
                     String token = loginResponse.getToken();
 
-                    SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-                    prefs.edit().putString("auth_token", token).apply();
+                    if (token != null && !token.isEmpty()) {
+                        // Lưu JWT Token vào SharedPreferences với key "auth_token"
+                        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                        prefs.edit().putString("auth_token", token).apply(); // Sử dụng key "auth_token" nhất quán
 
-                    Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
+                        Log.d("LoginActivity", "Login successful. Token saved.");
 
-                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                    startActivity(intent);
-                    finish();
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class); // Thay thế HomeActivity bằng Activity chính của bạn
+                        startActivity(intent);
+                        finish();
+                    } else {
+                        Toast.makeText(LoginActivity.this, "Phản hồi token không hợp lệ từ server.", Toast.LENGTH_LONG).show();
+                        Log.e("LoginActivity", "Login successful but token is null or empty.");
+                    }
+
                 } else {
                     String errorMsg = "Login failed. Please try again.";
                     if (response.errorBody() != null) {
                         try {
                             String errorBodyString = response.errorBody().string();
+                            Log.e("LoginActivity", "Raw Error Body: " + errorBodyString); // Log cả body lỗi
                             if (response.code() == 401) {
                                 errorMsg = "Invalid username or password!";
                             } else if (response.code() == 400) {
-                                errorMsg = "Bad request: " + errorBodyString;
+                                // Có thể là lỗi validation từ server
+                                try {
+                                    JSONObject errorJson = new JSONObject(errorBodyString);
+                                    if (errorJson.has("message")) {
+                                        errorMsg = errorJson.getString("message");
+                                    } else {
+                                        errorMsg = "Bad request. Details: " + errorBodyString;
+                                    }
+                                } catch (JSONException jsonE) {
+                                    errorMsg = "Bad request. Details: " + errorBodyString;
+                                }
                             } else {
                                 errorMsg = "Server error: " + response.code() + " - " + errorBodyString;
                             }
                         } catch (IOException e) {
-                            e.printStackTrace();
+                            Log.e("LoginActivity", "Error reading error body", e);
                             errorMsg = "Server error: " + response.code();
                         }
                     } else {
                         errorMsg = "Server error: " + response.code() + " " + response.message();
                     }
                     Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+                    Log.e("LoginActivity", "Login failed: " + errorMsg);
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
                 String errorMsg = "Network error: " + t.getMessage();
-                t.printStackTrace();
+                Log.e("LoginActivity", "Network error during login", t);
                 Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
             }
         });

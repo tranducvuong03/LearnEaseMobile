@@ -1,53 +1,64 @@
 package com.example.mobile.presenter;
 
-import com.example.mobile.R;
-import com.example.mobile.model.QuizModel;
 import com.example.mobile.view.QuizView;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+/**
+ * QuizPresenter: điều khiển logic cho một câu hỏi Vocabulary.
+ * Hỗ trợ:
+ *   – getCurrentQuestionIndex() để QuizActivity cập nhật tiến trình dot.
+ */
 public class QuizPresenter {
-    private QuizView view;
-    private List<QuizModel> questions;
-    private int currentQuestionIndex;
 
-    public QuizPresenter(QuizView view) {
-        this.view = view;
-        this.questions = loadQuestions();
-        this.currentQuestionIndex = 0;
-        loadCurrentQuestion();
+    private final QuizView view;
+    private final String   correctWord;
+    private final int      imageResId;
+    private final String[] options;      // 4 đáp án đã shuffle
+    private final int      correctIndex; // vị trí đáp án đúng (0‑3)
+
+    // Index câu hiện tại (0-based) – cần cho progress dot
+    private int currentQuestionIndex = 0; // presenter hiện chỉ có 1 câu nên luôn 0
+
+    public QuizPresenter(QuizView view,
+                         String word,
+                         List<String> distractors,
+                         int imageResId) {
+        this.view        = view;
+        this.correctWord = word;
+        this.imageResId  = imageResId;
+
+        // Ghép word + distractors → đủ 4 đáp án
+        List<String> mix = new ArrayList<>();
+        mix.add(word);
+        if (distractors != null) mix.addAll(distractors);
+        while (mix.size() < 4) mix.add("-");
+        mix = mix.subList(0, 4);
+        Collections.shuffle(mix);
+
+        this.options      = mix.toArray(new String[0]);
+        this.correctIndex = mix.indexOf(word);
+
+        // Hiển thị câu hỏi ngay lập tức
+        view.resetView();
+        view.showQuestion(word, this.imageResId, this.options);
     }
 
-    private List<QuizModel> loadQuestions() {
-        List<QuizModel> list = new ArrayList<>();
-        list.add(new QuizModel("What does the picture mean?",
-                R.drawable.img_vocab_test,
-                new String[]{"Mouth", "Eyes", "Ear", "Nose"},
-                3)); // Nose is correct
-        return list;
-    }
-
-    public void loadCurrentQuestion() {
-        if (currentQuestionIndex < questions.size()) {
-            QuizModel q = questions.get(currentQuestionIndex);
-            view.resetView();
-            view.showQuestion(q.getQuestionText(), q.getImageResId(), q.getOptions());
-        }
-    }
-
+    /** Người dùng chọn 1 đáp án (index 0‑3) */
     public void handleAnswer(int selectedIndex) {
-        QuizModel q = questions.get(currentQuestionIndex);
-        boolean isCorrect = selectedIndex == q.getCorrectIndex();
-        view.showFeedback(isCorrect, q.getOptions()[q.getCorrectIndex()]);
+        boolean isCorrect = (selectedIndex == correctIndex);
+        view.showFeedback(isCorrect, correctWord);
     }
 
+    /** Chuyển sang câu tiếp theo – demo: chỉ reset nhưng vẫn tăng index để dot cập nhật */
     public void nextQuestion() {
         currentQuestionIndex++;
-        if (currentQuestionIndex < questions.size()) {
-            loadCurrentQuestion();
-        } else {
-            // No more questions - you can show a "Quiz Complete" dialog or return to menu
-        }
+        view.resetView();
+    }
+
+    /** Trả về chỉ số câu hiện tại để QuizActivity cập nhật progress dot */
+    public int getCurrentQuestionIndex() {
+        return currentQuestionIndex;
     }
 }

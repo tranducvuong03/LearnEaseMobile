@@ -23,7 +23,7 @@ import retrofit2.http.Body;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
-public interface ApiService {
+public interface LoginAPI {
     String BASE_URL = "https://10.0.2.2:7083/api/";
 
     @POST("auth/login")

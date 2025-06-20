@@ -50,30 +50,63 @@
             app:layout_constraintEnd_toEndOf="parent">
 
             <View
+                android:id="@+id/dot0"
                 android:layout_width="24dp"
                 android:layout_height="6dp"
                 android:layout_margin="2dp"
                 android:background="@drawable/blue_dot" />
 
             <View
+                android:id="@+id/dot1"
                 android:layout_width="24dp"
                 android:layout_height="6dp"
                 android:layout_margin="2dp"
                 android:background="@drawable/blue_dot" />
 
             <View
+                android:id="@+id/dot2"
                 android:layout_width="24dp"
                 android:layout_height="6dp"
                 android:layout_margin="2dp"
                 android:background="@drawable/blue_dot" />
 
             <View
+                android:id="@+id/dot3"
                 android:layout_width="24dp"
                 android:layout_height="6dp"
                 android:layout_margin="2dp"
                 android:background="@drawable/gray_dot" />
 
             <View
+                android:id="@+id/dot4"
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/gray_dot" />
+
+            <View
+                android:id="@+id/dot5"
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/gray_dot" />
+
+            <View
+                android:id="@+id/dot6"
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/gray_dot" />
+
+            <View
+                android:id="@+id/dot7"
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/gray_dot" />
+
+            <View
+                android:id="@+id/dot8"
                 android:layout_width="24dp"
                 android:layout_height="6dp"
                 android:layout_margin="2dp"
@@ -191,7 +224,43 @@
 
         </LinearLayout>
 
-        <!-- Layout sau khi trả lời đúng -->
+        <!-- Layout khi trả lời ĐÚNG -->
+        <LinearLayout
+            android:id="@+id/correctFeedbackLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/feedback_correct_background"
+            android:padding="16dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/correctFeedbackTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Great job!"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@color/green"
+                android:layout_marginBottom="8dp"/>
+
+            <TextView
+                android:id="@+id/correctFeedbackAnswer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Answer: "
+                android:textSize="14sp"
+                android:textColor="@android:color/black"
+                android:layout_marginBottom="16dp"/>
+
+            <Button
+                android:id="@+id/correctNextQuestionButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Next Question"
+                android:background="@drawable/button_next_background"
+                android:textColor="@android:color/white"/>
+        </LinearLayout>
 
         <!-- Layout khi trả lời sai -->
         <LinearLayout
