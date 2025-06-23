@@ -6,6 +6,7 @@ import com.example.mobile.model.LoginResponse;
 import com.example.mobile.model.NextLessonModel;
 import com.example.mobile.model.VocabularyItem;
 import com.example.mobile.model.SpeakingExercise;
+import com.example.mobile.model.userData.UpdateUsernameRequest;
 import com.example.mobile.model.userData.UserResponse;
 
 import java.util.List;
@@ -15,6 +16,7 @@ import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.Body;
+import retrofit2.http.PUT;
 import retrofit2.http.Path;
 
 public interface ApiService {
@@ -27,6 +29,9 @@ public interface ApiService {
     @GET("users/me")
     Call<UserResponse> getMyProfile(@Header("Authorization") String token);
 
+    @PUT("users/{id}/username")
+    Call<Void> updateUserNameById(@Path("id") String userId,
+                                  @Body UpdateUsernameRequest request);
 
 
     @GET("VocabularyItems")

@@ -3,9 +3,14 @@ package com.example.mobile;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -17,6 +22,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.mobile.api.ApiService;
+import com.example.mobile.model.userData.UpdateUsernameRequest;
 import com.example.mobile.model.userData.UserResponse;
 import com.example.mobile.utils.ApiCaller;
 import com.example.mobile.utils.LoadingManager;
@@ -25,6 +31,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.io.IOException;
+
+import okhttp3.FormBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -35,6 +47,55 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView tvUserName, tvNewbieTag;
     private ImageView ivProfilePic;
     private ApiService apiService;
+    private String userId;
+    private void showEditUsernameDialog(String currentUsername) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = getLayoutInflater();
+        View dialogView = inflater.inflate(R.layout.dialog_edit_username, null);
+        builder.setView(dialogView);
+
+        EditText etUsername = dialogView.findViewById(R.id.et_username_input);
+        etUsername.setText(currentUsername);
+
+        builder.setPositiveButton("Update", null); // Gắn sau để kiểm tra không rỗng
+        builder.setNegativeButton("Cancel", (dialog, which) -> dialog.dismiss());
+
+        AlertDialog dialog = builder.create();
+        dialog.setOnShowListener(dlg -> {
+            Button updateBtn = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            updateBtn.setOnClickListener(v -> {
+                String newUsername = etUsername.getText().toString().trim();
+                if (!newUsername.isEmpty()) {
+                    updateUserNameAPI(userId, newUsername);
+                    dialog.dismiss();
+                } else {
+                    etUsername.setError("Username cannot be empty");
+                }
+            });
+        });
+
+        dialog.show();
+    }
+
+
+    private void updateUserNameAPI(String userId, String newName) {
+        UpdateUsernameRequest request = new UpdateUsernameRequest(newName);
+        apiService.updateUserNameById(userId, request).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(ProfileActivity.this, "Tên đã được cập nhật", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ProfileActivity.this, "Cập nhật thất bại: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(ProfileActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +116,7 @@ public class ProfileActivity extends AppCompatActivity {
                             LoadingManager.getInstance().dismiss();
                             if (response.isSuccessful() && response.body() != null) {
                                 UserResponse user = response.body();
+                                userId = user.getUserId();
                                 tvUserName.setText(user.getUsername());
                                 tvNewbieTag.setText(user.getEmail());
 
@@ -83,7 +145,13 @@ public class ProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "No token found", Toast.LENGTH_SHORT).show();
             return;
         }
+        // --- Edit username ---
+        ImageButton editProfileButton = findViewById(R.id.btn_edit_profile);
+        TextView userNameTextView = findViewById(R.id.tv_user_name);
 
+        editProfileButton.setOnClickListener(v -> {
+            showEditUsernameDialog(userNameTextView.getText().toString());
+        });
 
         // --- Bottom Navigation View Setup ---
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -181,10 +249,10 @@ public class ProfileActivity extends AppCompatActivity {
             btnBack.setOnClickListener(v -> onBackPressed());
         }
 
-        ImageButton btnEditProfile = findViewById(R.id.btn_edit_profile);
-        if (btnEditProfile != null) {
-            btnEditProfile.setOnClickListener(v -> Toast.makeText(ProfileActivity.this, "Edit Profile clicked (Functionality not implemented)", Toast.LENGTH_SHORT).show());
-        }
+//        ImageButton btnEditProfilee = findViewById(R.id.btn_edit_profile);
+//        if (btnEditProfilee != null) {
+//            btnEditProfilee.setOnClickListener(v -> Toast.makeText(ProfileActivity.this, "Edit Profile clicked (Functionality not implemented)", Toast.LENGTH_SHORT).show());
+//        }
 
     }
 
