@@ -4,8 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 // Loại bỏ các import Volley không cần thiết nếu bạn không dùng Volley nữa
@@ -64,7 +69,9 @@ public class LoginActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 100;
     private GoogleSignInClient mGoogleSignInClient;
     private SignInButton btnGoogleLogin;
-
+    private FrameLayout btnGoogle;
+    private TextView textGoogle;
+    private ProgressBar loadingGoogle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +94,9 @@ public class LoginActivity extends AppCompatActivity {
                 login();
             }
         });
-        btnGoogleLogin = findViewById(R.id.buttonGoogleLogin); // Nút trong XML
+        btnGoogle = findViewById(R.id.buttonGoogleLogin);
+        textGoogle = findViewById(R.id.textGoogle);
+        loadingGoogle = findViewById(R.id.loadingGoogle);
 
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_client_id)) // client_id lấy từ Google Cloud
@@ -96,12 +105,18 @@ public class LoginActivity extends AppCompatActivity {
 
         mGoogleSignInClient = GoogleSignIn.getClient(this, gso);
 
-        btnGoogleLogin.setOnClickListener(v -> {
-            mGoogleSignInClient.signOut().addOnCompleteListener(this, task -> {
+        btnGoogle.setOnClickListener(v -> {
+            textGoogle.setVisibility(View.GONE);
+            loadingGoogle.setVisibility(View.VISIBLE);
+
+            // Không reset UI ở đây
+            new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
-            });
+            }, 1000); // thời gian nhỏ để tạo hiệu ứng loading
         });
+
+
 
 
     }
@@ -181,6 +196,8 @@ public class LoginActivity extends AppCompatActivity {
         ApiCaller.callWithLoading(this, call, new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                textGoogle.setVisibility(View.VISIBLE);
+                loadingGoogle.setVisibility(View.GONE);
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse loginResponse = response.body();
                     String token = loginResponse.getToken();
@@ -222,6 +239,8 @@ public class LoginActivity extends AppCompatActivity {
                 }
             } catch (ApiException e) {
                 e.printStackTrace();
+                textGoogle.setVisibility(View.VISIBLE);
+                loadingGoogle.setVisibility(View.GONE);
                 Toast.makeText(this, "Google Sign-In failed", Toast.LENGTH_SHORT).show();
             }
         }

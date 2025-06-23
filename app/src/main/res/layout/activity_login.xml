@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#FFFFFF"
     android:gravity="center"
     android:orientation="vertical"
@@ -140,12 +141,50 @@
 
 
     <!-- Phần 2: Nút Login With Google -->
-    <com.google.android.gms.common.SignInButton
+    <FrameLayout
         android:id="@+id/buttonGoogleLogin"
         android:layout_width="match_parent"
         android:layout_height="56dp"
-        android:layout_marginTop="24dp" />
+        android:layout_marginTop="24dp"
+        android:background="@drawable/rounded_button_white"
+        android:clickable="true"
+        android:focusable="true">
 
+        <LinearLayout
+            android:id="@+id/googleContentLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp">
 
+            <ImageView
+                android:id="@+id/iconGoogle"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_google"
+                android:contentDescription="Google icon" />
+
+            <TextView
+                android:id="@+id/textGoogle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:text="Sign in with Google"
+                android:textColor="#222222"
+                android:textStyle="bold"
+                android:textSize="16sp" />
+
+            <ProgressBar
+                android:id="@+id/loadingGoogle"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginStart="12dp"
+                android:visibility="gone"
+                android:indeterminate="true" />
+        </LinearLayout>
+    </FrameLayout>
 
 </LinearLayout>
