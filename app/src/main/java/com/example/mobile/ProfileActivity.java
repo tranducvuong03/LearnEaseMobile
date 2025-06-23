@@ -18,6 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
 import com.example.mobile.api.ApiService;
 import com.example.mobile.model.userData.UserResponse;
+import com.example.mobile.utils.ApiCaller;
+import com.example.mobile.utils.LoadingManager;
 import com.example.mobile.utils.RetrofitClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
@@ -45,32 +47,35 @@ public class ProfileActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String token = prefs.getString("auth_token", null);
         if (token != null) {
-            apiService.getMyProfile("Bearer " + token).enqueue(new Callback<UserResponse>() {
-                @Override
-                public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
-                    if (response.isSuccessful() && response.body() != null) {
-                        UserResponse user = response.body();
-                        tvUserName.setText(user.getUsername());
-                        tvNewbieTag.setText(user.getEmail());
+            ApiCaller.callWithLoading(this,
+                    apiService.getMyProfile("Bearer " + token),
+                    new Callback<UserResponse>() {
+                        @Override
+                        public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                            LoadingManager.getInstance().dismiss();
+                            if (response.isSuccessful() && response.body() != null) {
+                                UserResponse user = response.body();
+                                tvUserName.setText(user.getUsername());
+                                tvNewbieTag.setText(user.getEmail());
 
-                        if (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) {
-                            Glide.with(ProfileActivity.this)
-                                    .load(user.getAvatarUrl())
-                                    .into(ivProfilePic);
+                                if (user.getAvatarUrl() != null && !user.getAvatarUrl().isEmpty()) {
+                                    Glide.with(ProfileActivity.this)
+                                            .load(user.getAvatarUrl())
+                                            .into(ivProfilePic);
+                                }
+                            } else {
+                                Log.e(TAG, "Failed with code: " + response.code());
+                                Toast.makeText(ProfileActivity.this, "Failed to load profile", Toast.LENGTH_SHORT).show();
+                            }
                         }
 
-                    } else {
-                        Log.e(TAG, "Failed with code: " + response.code());
-                        Toast.makeText(ProfileActivity.this, "Failed to load profile", Toast.LENGTH_SHORT).show();
-                    }
-                }
-
-                @Override
-                public void onFailure(Call<UserResponse> call, Throwable t) {
-                    Log.e(TAG, "Error: " + t.getMessage());
-                    Toast.makeText(ProfileActivity.this, "Network error", Toast.LENGTH_SHORT).show();
-                }
-            });
+                        @Override
+                        public void onFailure(Call<UserResponse> call, Throwable t) {
+                            LoadingManager.getInstance().dismiss();
+                            Log.e(TAG, "Error: " + t.getMessage());
+                            Toast.makeText(ProfileActivity.this, "Network error", Toast.LENGTH_SHORT).show();
+                        }
+                    });
         } else {
             Intent intent = new Intent(ProfileActivity.this, LoginActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

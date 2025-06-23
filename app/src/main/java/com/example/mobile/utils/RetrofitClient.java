@@ -1,5 +1,6 @@
 package com.example.mobile.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 
@@ -44,92 +45,60 @@ public class RetrofitClient {
      */
     public static synchronized ApiService getApiService(Context context) {
         if (apiService == null) {
-            // Lấy token từ SharedPreferences
-            // "MyAppPrefs" phải khớp với tên bạn dùng để lưu token trong LoginActivity
             SharedPreferences prefs = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
             String authToken = prefs.getString("auth_token", null);
 
             try {
-                // Tạo một TrustManager chấp nhận mọi thứ (KHÔNG kiểm tra chứng chỉ nào).
                 final TrustManager[] trustAllCerts = new TrustManager[]{
                         new X509TrustManager() {
                             @Override
-                            public void checkClientTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                                // Không làm gì cả
-                            }
-
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) {}
                             @Override
-                            public void checkServerTrusted(java.security.cert.X509Certificate[] chain, String authType) throws CertificateException {
-                                // Không làm gì cả
-                            }
-
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) {}
                             @Override
-                            public java.security.cert.X509Certificate[] getAcceptedIssuers() {
-                                return new X509Certificate[0]; // Trả về mảng rỗng
+                            public X509Certificate[] getAcceptedIssuers() {
+                                return new X509Certificate[0];
                             }
                         }
                 };
 
-                // Khởi tạo SSLContext với TrustManager chấp nhận mọi thứ
                 final SSLContext sslContext = SSLContext.getInstance("SSL");
                 sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
-
-                // Tạo SSLSocketFactory từ SSLContext
                 final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
 
-                // Cấu hình HttpLoggingInterceptor để ghi log các request/response
                 HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
-                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY); // Đặt mức log body để xem chi tiết
+                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-                // Tạo Interceptor để thêm Authorization header
                 Interceptor authInterceptor = chain -> {
-                    Request originalRequest = chain.request();
-                    Request.Builder requestBuilder = originalRequest.newBuilder();
-
+                    Request original = chain.request();
+                    Request.Builder builder = original.newBuilder();
                     if (authToken != null) {
-                        // Nếu có token, thêm vào header "Authorization"
-                        // Định dạng chuẩn là "Bearer <token>"
-                        requestBuilder.header("Authorization", "Bearer " + authToken);
+                        builder.header("Authorization", "Bearer " + authToken);
                     }
-
-                    // Xây dựng request mới và tiếp tục chuỗi
-                    Request newRequest = requestBuilder.build();
-                    return chain.proceed(newRequest);
+                    return chain.proceed(builder.build());
                 };
 
-                // Xây dựng OkHttpClient
-                OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-                okHttpClientBuilder.addInterceptor(loggingInterceptor); // Thêm logging interceptor
-                okHttpClientBuilder.addInterceptor(authInterceptor);    // Thêm auth interceptor
-                okHttpClientBuilder.sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0]);
+                OkHttpClient client = new OkHttpClient.Builder()
+                        .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
+                        .hostnameVerifier((hostname, session) -> true)
+                        .addInterceptor(loggingInterceptor)
+                        .addInterceptor(authInterceptor)
+                        .build();
 
-                // Thêm HostnameVerifier bỏ qua xác minh Hostname
-                // CỰC KỲ KHÔNG AN TOÀN TRONG MÔI TRƯỜNG PRODUCTION.
-                okHttpClientBuilder.hostnameVerifier(new HostnameVerifier() {
-                    @Override
-                    public boolean verify(String hostname, SSLSession session) {
-                        return true; // Luôn trả về true để chấp nhận mọi hostname
-                    }
-                });
-
-                OkHttpClient okHttpClient = okHttpClientBuilder.build();
-
-                // Khởi tạo Retrofit instance
                 retrofit = new Retrofit.Builder()
-                        .baseUrl(ApiService.BASE_URL) // Lấy BASE_URL từ interface ApiService
-                        .addConverterFactory(GsonConverterFactory.create()) // Sử dụng Gson để chuyển đổi JSON
-                        .client(okHttpClient) // Gán OkHttpClient đã cấu hình
+                        .baseUrl(ApiService.BASE_URL)
+                        .client(client)
+                        .addConverterFactory(GsonConverterFactory.create())
                         .build();
 
                 apiService = retrofit.create(ApiService.class);
 
             } catch (Exception e) {
-                // In stack trace để xem lỗi nếu có
                 e.printStackTrace();
-                // Ném RuntimeException để làm crash ứng dụng và dễ dàng debug hơn
-                throw new RuntimeException("Failed to initialize RetrofitClient with SSL bypass: " + e.getMessage(), e);
+                throw new RuntimeException("Failed to create RetrofitClient: " + e.getMessage(), e);
             }
         }
         return apiService;
     }
+
 }

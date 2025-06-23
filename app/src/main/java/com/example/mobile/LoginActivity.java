@@ -15,7 +15,10 @@ import android.widget.Toast;
 // import com.android.volley.toolbox.Volley;
 // import com.android.volley.toolbox.HurlStack;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.mobile.model.userData.UserResponse;
+import com.example.mobile.utils.ApiCaller;
 import com.example.mobile.utils.RetrofitClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -48,7 +51,7 @@ import java.io.IOException;
 // import java.security.cert.X509Certificate;
 
 
-public class LoginActivity extends Activity {
+public class LoginActivity extends AppCompatActivity {
     private TextInputEditText editTextUsername, editTextPassword;
     // Không cần RequestQueue của Volley nữa
     // private RequestQueue requestQueue;
@@ -120,7 +123,7 @@ public class LoginActivity extends Activity {
         // Bạn cần thêm phương thức login vào ApiService
         Call<LoginResponse> call = apiService.login(loginRequest);
 
-        call.enqueue(new Callback<LoginResponse>() {
+        ApiCaller.callWithLoading(this, call, new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -175,7 +178,7 @@ public class LoginActivity extends Activity {
         GoogleLoginRequest request = new GoogleLoginRequest(idToken);
         Call<LoginResponse> call = apiService.loginWithGoogle(request); // Phải khai báo trong ApiService
 
-        call.enqueue(new Callback<LoginResponse>() {
+        ApiCaller.callWithLoading(this, call, new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
