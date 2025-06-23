@@ -59,17 +59,6 @@
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="28dp" />
 
-                <ImageButton
-                    android:id="@+id/btn_menu"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="?attr/selectableItemBackgroundBorderless"
-                    android:contentDescription="Menu"
-                    android:src="@drawable/ic_more_vert"
-                    android:layout_gravity="end|top"
-                    app:tint="@android:color/white" />
             </FrameLayout>
 
             <androidx.cardview.widget.CardView
@@ -91,7 +80,7 @@
                         android:id="@+id/iv_profile_pic"
                         android:layout_width="80dp"
                         android:layout_height="80dp"
-                        android:layout_marginStart="24dp"
+                        android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
                         android:src="@drawable/ic_profile_placeholder"
                         app:civ_border_color="@android:color/white"
@@ -101,12 +90,14 @@
 
                     <TextView
                         android:id="@+id/tv_user_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
+                        android:maxWidth="200dp"
                         android:text="John Doe"
                         android:textColor="@android:color/black"
                         android:textSize="22sp"
+                        android:singleLine="false"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@+id/iv_profile_pic"
                         app:layout_constraintTop_toTopOf="@+id/iv_profile_pic" />
@@ -125,8 +116,8 @@
 
                     <ImageButton
                         android:id="@+id/btn_edit_profile"
-                        android:layout_width="66dp"
-                        android:layout_height="64dp"
+                        android:layout_width="60dp"
+                        android:layout_height="60dp"
                         android:layout_marginEnd="16dp"
                         android:background="?attr/selectableItemBackgroundBorderless"
                         android:contentDescription="Edit Profile"
