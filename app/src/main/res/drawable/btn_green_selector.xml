@@ -1,0 +1,26 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Nếu bị disable -->
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <solid android:color="#EEEEEE"/>
+            <corners android:radius="24dp"/>
+        </shape>
+    </item>
+
+    <!-- Khi nhấn -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#4CAF50"/>
+            <corners android:radius="24dp"/>
+        </shape>
+    </item>
+
+    <!-- Mặc định -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF"/>
+            <stroke android:width="2dp" android:color="#4CAF50"/>
+            <corners android:radius="24dp"/>
+        </shape>
+    </item>
+</selector>

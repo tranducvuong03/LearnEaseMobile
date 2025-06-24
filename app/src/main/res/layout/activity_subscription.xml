@@ -1,191 +1,185 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="@color/colorSecondary"
-    android:padding="16dp"
-    >
+    android:layout_height="match_parent"
+    android:background="@color/colorBackground"
+    android:padding="16dp">
+
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center|center_vertical"
-        android:paddingTop="16dp"
-        android:paddingBottom="16dp">
+        android:orientation="vertical">
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_back_button"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_gravity="start"
+            android:layout_marginBottom="12dp"
+            android:layout_marginTop="4dp"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="6dp"
+            app:cardBackgroundColor="@android:color/white">
 
+            <ImageView
+                android:id="@+id/btn_back_subscription"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="12dp"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="Back"/>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Linh vật -->
         <ImageView
-            android:id="@+id/btn_back_subscription"  android:layout_width="28dp"
-            android:layout_height="24dp"
-            android:layout_marginStart="0dp"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="Back"
-            android:src="@drawable/ic_arrow_back" />
+            android:id="@+id/mascotImage"
+            android:layout_width="120dp"
+            android:layout_height="120dp"
+            android:src="@drawable/animal_main"
+            android:layout_gravity="center_horizontal"
+            android:contentDescription="Mascot"
+            android:layout_marginBottom="12dp"/>
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Subscription"
-            android:layout_marginRight="20dp"
-            android:textColor="@color/white"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:gravity="center" />
-    </LinearLayout>
+        <!-- Tiêu đề -->
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Unlock all the power of this mobile tool and\n enjoy digital experience like never before!"
-        android:textColor="@color/white"
-        android:padding="16dp"
-        android:gravity="center"
-        android:layout_marginTop="16dp"
-        android:textSize="14sp" />
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/titleContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:flexWrap="wrap"
+                app:justifyContent="center"
+                android:gravity="center"/>
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:src="@drawable/subscription_image"
-        android:layout_marginTop="12dp" />
 
-    <LinearLayout
-        android:id="@+id/layout_free_plan" android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_subscription_free"
-        android:padding="16dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        android:elevation="4dp">
 
+
+        <!-- Gói tháng -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp"
+            android:backgroundTintMode="src_in"
+            android:backgroundTint="#FFE082"
+            android:elevation="2dp"
+            android:layout_marginTop="4dp"
+            android:clipToOutline="true"
+            android:background="@drawable/rounded_bg_gray">
 
             <TextView
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Free"
-                android:textColor="#FFFFFF"
+                android:text="Gói tháng"
+                android:textStyle="bold"
                 android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textColor="#FF7043"/>
 
             <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="66.000 ₫ / tháng"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#FF5722"
+                android:layout_marginVertical="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="• Bài học không giới hạn\n• Phản hồi phát âm AI\n• Lộ trình cá nhân\n• Học offline"
+                android:textSize="14sp"
+                android:textColor="#333333"
+                android:lineSpacingExtra="4dp"/>
+
+            <android.widget.Button
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="With our Free Plan, you get access to essential features, allowing you to enjoy a great experience at no cost."
-                android:textColor="@color/white"
+                android:text="🚀 Bắt đầu với 66.000 ₫"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textColor="@color/btn_orange_text_selector"
+                android:background="@drawable/btn_orange_selector"
+                android:layout_marginTop="12dp"/>
+
+
+        </LinearLayout>
+
+        <!-- Gói năm -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:backgroundTint="#C8E6C9"
+            android:elevation="3dp"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/rounded_bg_green">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Gói năm"
+                    android:textStyle="bold"
+                    android:textSize="18sp"
+                    android:textColor="#388E3C"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text=" Tiết kiệm 15%"
+                    android:padding="6dp"
+                    android:background="@drawable/banner_gradient"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="673.200 ₫ / năm"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:textColor="#388E3C"
+                android:layout_marginVertical="8dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="• Tất cả tính năng của gói tháng\n• Tiết kiệm hơn 120.000 ₫"
                 android:textSize="14sp"
-                android:justificationMode="inter_word"
-                android:layout_marginTop="4dp" />
+                android:textColor="#333333"
+                android:lineSpacingExtra="4dp"/>
+
+            <android.widget.Button
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="🎉 Tiết kiệm ngay – chọn gói năm"
+                android:textAllCaps="false"
+                android:textStyle="bold"
+                android:textColor="@color/btn_green_text_selector"
+                android:background="@drawable/btn_green_selector"
+                android:layout_marginTop="12dp"/>
+
         </LinearLayout>
 
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:id="@+id/layout_monthly_plan" android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_subscription_monthly_yearly"
-        android:padding="16dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        android:elevation="4dp">
-
-        <LinearLayout
+        <!-- Ghi chú -->
+        <TextView
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Monthly"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:text="66,000 VND/month"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-
-        <TextView
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Upgrade for just 66,000 VND/month and enjoy exclusive benefits:"
-            android:textColor="@color/white"
-            android:justificationMode="inter_word"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp" />
+            android:text="🔥 Hơn 5.000 học viên đã nâng cấp trong tháng này!"
+            android:textColor="#555555"
+            android:textStyle="italic"
+            android:gravity="center"
+            android:layout_marginTop="12dp"/>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
-            android:text="- Full access to all premium features\n- Unlimited access to chatbot\n- Priority customer support"
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp" />
     </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/layout_yearly_plan" android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/bg_subscription_monthly_yearly"
-        android:padding="16dp"
-        android:layout_marginTop="16dp"
-        android:orientation="vertical"
-        android:elevation="4dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal">
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:text="Yearly "
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="(-15%)"
-                android:textColor="@color/colorPrimaryVariant"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="2"
-                android:gravity="end"
-                android:text="673,200 VND/year"
-                android:textColor="@color/white"
-                android:textSize="16sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Upgrade now for just 673,200 VND/year and enjoy a seamless experience with full access to all premium features, unlimited chatbot usage, and priority customer support."
-            android:textColor="@color/white"
-            android:textSize="14sp"
-            android:layout_marginTop="4dp" />
-    </LinearLayout>
-
-</LinearLayout>
+</ScrollView>

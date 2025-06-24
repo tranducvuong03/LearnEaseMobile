@@ -1,0 +1,18 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Đầu tiên: trạng thái nhấn -->
+    <item android:state_pressed="true">
+        <shape android:shape="rectangle">
+            <solid android:color="#FF7043"/>
+            <corners android:radius="24dp"/>
+        </shape>
+    </item>
+
+    <!-- Sau cùng: trạng thái mặc định -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FFFFFF"/>
+            <stroke android:width="2dp" android:color="#FF7043"/>
+            <corners android:radius="24dp"/>
+        </shape>
+    </item>
+</selector>
