@@ -11,7 +11,6 @@ public class CloudinaryManager {
         if (!isInitialized) {
             Map<String, String> config = new HashMap<>();
             config.put("cloud_name", "dixycod0d");
-            config.put("api_key", "454232827316293");
             config.put("api_secret", "wCZxoJhK2vsydT3wrZ4e6ofeGso");
             config.put("use_scheduled_uploads", "false");
 
