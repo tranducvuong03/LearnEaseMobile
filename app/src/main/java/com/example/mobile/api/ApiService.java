@@ -6,6 +6,7 @@ import com.example.mobile.model.LoginResponse;
 import com.example.mobile.model.NextLessonModel;
 import com.example.mobile.model.VocabularyItem;
 import com.example.mobile.model.SpeakingExercise;
+import com.example.mobile.model.userData.UpdateAvatarRequest;
 import com.example.mobile.model.userData.UpdateUsernameRequest;
 import com.example.mobile.model.userData.UserResponse;
 
@@ -33,7 +34,9 @@ public interface ApiService {
     Call<Void> updateUserNameById(@Path("id") String userId,
                                   @Body UpdateUsernameRequest request);
 
-
+    @PUT("users/{id}/avatar")
+    Call<Void> updateAvatarById(@Path("id") String userId,
+                                  @Body UpdateAvatarRequest request);
     @GET("VocabularyItems")
     Call<List<VocabularyItem>> getAllVocabularyItems();
 

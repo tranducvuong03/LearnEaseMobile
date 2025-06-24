@@ -2,7 +2,9 @@ package com.example.mobile;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,18 +23,27 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.cloudinary.android.MediaManager;
+import com.cloudinary.android.callback.ErrorInfo;
+import com.cloudinary.android.callback.UploadCallback;
+import com.cloudinary.android.policy.TimeWindow;
 import com.example.mobile.api.ApiService;
+import com.example.mobile.model.userData.UpdateAvatarRequest;
 import com.example.mobile.model.userData.UpdateUsernameRequest;
 import com.example.mobile.model.userData.UserResponse;
 import com.example.mobile.utils.ApiCaller;
+import com.example.mobile.utils.CloudinaryManager;
 import com.example.mobile.utils.LoadingManager;
 import com.example.mobile.utils.RetrofitClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
+import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import okhttp3.FormBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -48,6 +59,8 @@ public class ProfileActivity extends AppCompatActivity {
     private ImageView ivProfilePic;
     private ApiService apiService;
     private String userId;
+    private static final int PICK_IMAGE = 1;
+
     private void showEditUsernameDialog(String currentUsername) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         LayoutInflater inflater = getLayoutInflater();
@@ -96,9 +109,83 @@ public class ProfileActivity extends AppCompatActivity {
             }
         });
     }
+
+
+    private void selectImage() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, PICK_IMAGE);
+
+    }
+    private void uploadAvatarToCloudinary(Uri imageUri) {
+        MediaManager.get().upload(imageUri)
+                .unsigned("LearnEase") // 👈 thay bằng preset name thật
+                .option("resource_type", "image")
+                .constrain(TimeWindow.immediate()) // 👈 ép upload ngay, không dùng JobScheduler
+                .callback(new UploadCallback() {
+                    @Override
+                    public void onStart(String requestId) {}
+
+                    @Override
+                    public void onProgress(String requestId, long bytes, long totalBytes) {}
+
+                    @Override
+                    public void onSuccess(String requestId, Map resultData) {
+                        String imageUrl = resultData.get("secure_url").toString();
+                        runOnUiThread(() -> {
+                            Glide.with(ProfileActivity.this).load(imageUrl).into(ivProfilePic);
+                            updateAvatarAPI(userId, imageUrl);
+                        });
+                    }
+
+                    @Override
+                    public void onError(String requestId, ErrorInfo error) {
+                        runOnUiThread(() ->
+                                Toast.makeText(ProfileActivity.this, "Upload lỗi: " + error.getDescription(), Toast.LENGTH_SHORT).show());
+                    }
+
+                    @Override
+                    public void onReschedule(String requestId, ErrorInfo error) {}
+                })
+                .dispatch();
+    }
+
+
+    private void updateAvatarAPI(String userId, String imageUrl) {
+        UpdateAvatarRequest request = new UpdateAvatarRequest(imageUrl); // nếu chỉ cần avatarUrl
+        apiService.updateAvatarById(userId, request).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(ProfileActivity.this, "Ảnh đại diện đã được cập nhật", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(ProfileActivity.this, "Lỗi cập nhật ảnh: " + response.code(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Toast.makeText(ProfileActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == PICK_IMAGE && resultCode == RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            if (selectedImage != null) {
+                uploadAvatarToCloudinary(selectedImage);
+            }
+        }
+    }
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Cloudinary chỉ nên init 1 lần
+        CloudinaryManager.init(this);
         setContentView(R.layout.activity_profile);
         tvUserName = findViewById(R.id.tv_user_name);
         tvNewbieTag = findViewById(R.id.tv_newbie_tag);
@@ -152,6 +239,14 @@ public class ProfileActivity extends AppCompatActivity {
         editProfileButton.setOnClickListener(v -> {
             showEditUsernameDialog(userNameTextView.getText().toString());
         });
+
+        // --- Edit avayar ---
+
+        ivProfilePic.setOnClickListener(v -> selectImage());
+
+        // Bắt sự kiện click ảnh
+        ivProfilePic.setOnClickListener(v -> selectImage());
+
 
         // --- Bottom Navigation View Setup ---
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
