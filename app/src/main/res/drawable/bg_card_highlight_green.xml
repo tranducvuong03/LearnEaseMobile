@@ -1,0 +1,17 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Viền -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#4CAF50" /> <!-- Viền xanh -->
+            <corners android:radius="18dp" />
+        </shape>
+    </item>
+
+    <!-- Màu nền xanh nhạt -->
+    <item android:left="3dp" android:top="3dp" android:right="3dp" android:bottom="3dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#E8F5E9" /> <!-- Nền xanh nhạt -->
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+</layer-list>

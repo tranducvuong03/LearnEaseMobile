@@ -1,0 +1,17 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Viền -->
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="#FF9800" /> <!-- Viền cam -->
+            <corners android:radius="18dp" />
+        </shape>
+    </item>
+
+    <!-- Màu nền vàng nhạt -->
+    <item android:left="3dp" android:top="3dp" android:right="3dp" android:bottom="3dp">
+        <shape android:shape="rectangle">
+            <solid android:color="#FFF3E0" /> <!-- Nền vàng nhạt -->
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+</layer-list>
