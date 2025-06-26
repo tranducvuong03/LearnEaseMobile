@@ -115,8 +115,6 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-
     <!-- Câu hỏi -->
     <TextView
         android:id="@+id/questionText"
@@ -230,7 +228,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:background="@drawable/feedback_correct_background"
             android:padding="16dp"
             android:visibility="gone">
 
@@ -329,39 +326,41 @@
                     android:textColor="@android:color/white"/>
             </LinearLayout>
 
-            <!-- Thông báo sai và đáp án đúng -->
+            <!-- Feedback chung cho đúng và sai -->
             <LinearLayout
+                android:id="@+id/feedbackLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:background="@drawable/feedback_wrong_background"
-                android:padding="16dp">
+                android:padding="16dp"
+                android:visibility="gone"
+                android:background="@drawable/feedback_wrong_background">
 
                 <TextView
-                    android:id="@+id/wrongFeedbackTitle"
+                    android:id="@+id/feedbackTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ups.. that's wrong"
+                    android:text="Feedback title"
                     android:textSize="20sp"
                     android:textStyle="bold"
-                    android:textColor="@android:color/holo_red_dark"
+                    android:textColor="@android:color/black"
                     android:layout_marginBottom="8dp"/>
 
                 <TextView
-                    android:id="@+id/wrongFeedbackAnswer"
+                    android:id="@+id/feedbackAnswer"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Answer: Nose"
+                    android:text="Answer: ..."
                     android:textSize="14sp"
                     android:textColor="@android:color/black"
                     android:layout_marginBottom="16dp"/>
 
                 <Button
-                    android:id="@+id/wrongNextQuestionButton"
+                    android:id="@+id/nextQuestionButton"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Next Question"
-                    android:background="@drawable/button_next_background_wrong"
+                    android:background="@drawable/button_next_background"
                     android:textColor="@android:color/white"/>
             </LinearLayout>
 

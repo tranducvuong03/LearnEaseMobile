@@ -9,8 +9,9 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mobile.QuizPresenter;
-import com.example.mobile.QuizPresenter.Item;
+import com.example.mobile.model.VocabularyItem;
+import com.example.mobile.presenter.QuizPresenter;
+import com.example.mobile.presenter.QuizPresenter.Item;
 import com.example.mobile.view.QuizView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -18,29 +19,21 @@ import com.google.gson.reflect.TypeToken;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * QuizActivity – chơi nhiều câu hỏi liên tiếp.
- * • layout: activity_learning_vocab.xml (đã có các id dot0 → dot8).
- * • Hai phần chính: initialAnswerLayout & feedbackLayout.
- */
 public class QuizActivity extends AppCompatActivity implements QuizView {
 
-    /*----------- Presenter -----------*/
     private QuizPresenter presenter;
 
-    /*----------- View refs -----------*/
-    private TextView  questionText;
+    private TextView questionText;
     private ImageView questionImage;
 
     private LinearLayout initialAnswerLayout;
-    private LinearLayout feedbackLayout;      // dùng chung đúng / sai
-    private TextView  feedbackTitle;
-    private TextView  feedbackAnswer;
-    private Button    nextQuestionButton;
+    private LinearLayout feedbackLayout;
+    private TextView feedbackTitle;
+    private TextView feedbackAnswer;
+    private Button nextQuestionButton;
 
     private Button[] answerBtns;
-    private View[]   progressDots;
-    /*---------------------------------*/
+    private View[] progressDots;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,51 +43,52 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
         mapViews();
         mapProgressDots();
 
-        /*-------- Nhận danh sách câu hỏi từ Intent --------*/
-        // Nếu chỉ truyền 1 câu: WORD + DISTRACTORS_JSON
-        // Nếu truyền nhiều câu: QUESTIONS_JSON (array Item)
-        List<Item> items;
+        List<Item> items = new ArrayList<>();
 
+        // Nhận danh sách vocab (có distractorsJson dạng String)
         String questionsJson = getIntent().getStringExtra("QUESTIONS_JSON");
-        if (questionsJson != null) {                       // nhiều câu
-            items = new Gson().fromJson(
+        if (questionsJson != null) {
+            List<VocabularyItem> vocabList = new Gson().fromJson(
                     questionsJson,
-                    new TypeToken<List<Item>>(){}.getType());
-        } else {                                           // 1 câu
-            items = new ArrayList<>();
-            String word   = getIntent().getStringExtra("WORD");
-            String distJs = getIntent().getStringExtra("DISTRACTORS_JSON");
-            List<String> distractors = new Gson().fromJson(
-                    distJs, new TypeToken<List<String>>(){}.getType());
+                    new TypeToken<List<VocabularyItem>>() {}.getType()
+            );
 
-            Item it      = new Item();
-            it.word      = word;
-            it.distractors = distractors;
-            it.imageResId  = -1;
-            items.add(it);
+            for (VocabularyItem v : vocabList) {
+                Item item = new Item();
+                item.word = v.getWord();
+
+                // Parse distractorsJson → List<String>
+                List<String> distractors = new Gson().fromJson(
+                        v.getDistractorsJson(),
+                        new TypeToken<List<String>>() {}.getType()
+                );
+                item.distractors = distractors;
+
+                item.imageResId = -1;
+                items.add(item);
+            }
         }
 
-        /*-------- Khởi tạo presenter --------*/
         presenter = new QuizPresenter(this, items);
     }
 
-    /*======================== MAP VIEW ========================*/
+
     private void mapViews() {
-        questionText  = findViewById(R.id.questionText);
+        questionText = findViewById(R.id.questionText);
         questionImage = findViewById(R.id.questionImage);
-
         initialAnswerLayout = findViewById(R.id.initialAnswerLayout);
-        feedbackLayout      = findViewById(R.id.wrongFeedbackLayout);
-        feedbackTitle       = findViewById(R.id.wrongFeedbackTitle);
-        feedbackAnswer      = findViewById(R.id.wrongFeedbackAnswer);
-        nextQuestionButton  = findViewById(R.id.wrongNextQuestionButton);
+        feedbackLayout = findViewById(R.id.feedbackLayout);
+        feedbackTitle = findViewById(R.id.feedbackTitle);
+        feedbackAnswer = findViewById(R.id.feedbackAnswer);
+        nextQuestionButton = findViewById(R.id.nextQuestionButton);
 
-        answerBtns = new Button[] {
+        answerBtns = new Button[]{
                 findViewById(R.id.buttonMouth),
                 findViewById(R.id.buttonEyes),
                 findViewById(R.id.buttonEar),
                 findViewById(R.id.buttonNose)
         };
+
         for (int i = 0; i < 4; i++) {
             final int idx = i;
             answerBtns[i].setOnClickListener(v -> presenter.handleAnswer(idx));
@@ -104,7 +98,7 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
     }
 
     private void mapProgressDots() {
-        progressDots = new View[] {
+        progressDots = new View[]{
                 findViewById(R.id.dot0), findViewById(R.id.dot1), findViewById(R.id.dot2),
                 findViewById(R.id.dot3), findViewById(R.id.dot4), findViewById(R.id.dot5),
                 findViewById(R.id.dot6), findViewById(R.id.dot7), findViewById(R.id.dot8)
@@ -117,14 +111,11 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
                     (i <= curIdx) ? R.drawable.blue_dot : R.drawable.gray_dot);
         }
     }
-    /*==========================================================*/
 
-    /*===================== QuizView impl ======================*/
     @Override
-    public void showQuestion(String text, int imageResId,
-                             String[] options, int curIndex) {
-
+    public void showQuestion(String text, int imageResId, String[] options, int curIndex) {
         questionText.setText(text);
+
         if (imageResId != -1) {
             questionImage.setVisibility(View.VISIBLE);
             questionImage.setImageResource(imageResId);
@@ -132,7 +123,9 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
             questionImage.setVisibility(View.GONE);
         }
 
-        for (int i = 0; i < 4; i++) answerBtns[i].setText(options[i]);
+        for (int i = 0; i < 4; i++) {
+            answerBtns[i].setText(options[i]);
+        }
 
         updateProgress(curIndex);
     }
@@ -146,20 +139,23 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
                 isCorrect ? R.drawable.feedback_correct_background
                         : R.drawable.feedback_wrong_background);
 
-        feedbackTitle .setText(isCorrect ? "Great job!" : "Oops… that's wrong");
+        feedbackTitle.setText(isCorrect ? "Great job!" : "Oops… that's wrong");
         feedbackAnswer.setText("Answer: " + correctAnswer);
 
-        if (isCorrect) questionImage.postDelayed(() -> presenter.nextQuestion(), 800);
+        if (isCorrect) {
+            questionImage.postDelayed(() -> presenter.nextQuestion(), 800);
+        }
     }
 
-    @Override public void resetView() {
+    @Override
+    public void resetView() {
         initialAnswerLayout.setVisibility(View.VISIBLE);
-        feedbackLayout     .setVisibility(View.GONE);
+        feedbackLayout.setVisibility(View.GONE);
     }
 
-    @Override public void finishQuiz() {
+    @Override
+    public void finishQuiz() {
         setResult(RESULT_OK);
         finish();
     }
-
 }

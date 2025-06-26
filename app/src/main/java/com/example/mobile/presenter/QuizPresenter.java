@@ -1,4 +1,4 @@
-package com.example.mobile;
+package com.example.mobile.presenter;
 
 import com.example.mobile.view.QuizView;
 
@@ -69,8 +69,8 @@ public class QuizPresenter {
         List<String> opts = new ArrayList<>();
         opts.add(it.word);
         if (it.distractors != null) opts.addAll(it.distractors);
-        while (opts.size() < 4) opts.add("-");          // đủ 4
-        opts = opts.subList(0, 4);                      // an toàn
+        while (opts.size() < 4) opts.add("-");
+        opts = opts.subList(0, 4);
         Collections.shuffle(opts);
 
         /* Lưu lại để so sánh ở handleAnswer() */
