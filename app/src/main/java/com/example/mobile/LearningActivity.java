@@ -5,16 +5,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mobile.api.LoginAPI;
-import com.example.mobile.model.NextLessonModel;
-import com.example.mobile.utils.RetrofitClient; // Sử dụng RetrofitClient mới
+import com.example.mobile.model.LessonModel;
+import com.example.mobile.model.VocabularyItem;
+import com.example.mobile.model.SpeakingExercise;
+import com.example.mobile.utils.RetrofitClient;
+import com.google.gson.Gson;
 
-// Import các Activity mục tiêu của bạn
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -22,109 +25,99 @@ import retrofit2.Response;
 
 public class LearningActivity extends AppCompatActivity {
 
+    private static final int REQ_VOCAB = 1001;
+    private static final int REQ_SPEAKING = 1002;
+
     private LoginAPI loginAPI;
+    private List<VocabularyItem> vocabList;
+    private List<SpeakingExercise> speakingList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learning);
 
-        // Lấy JWT token từ SharedPreferences.
-        SharedPreferences sharedPref = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        String jwtToken = sharedPref.getString("auth_token", null);
-
-        if (jwtToken == null || jwtToken.isEmpty()) {
-            // Nếu không có token, người dùng chưa đăng nhập hoặc token đã hết hạn
+        SharedPreferences sp = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        String jwt = sp.getString("auth_token", null);
+        if (jwt == null || jwt.isEmpty()) {
             Toast.makeText(this, "Bạn cần đăng nhập để tiếp tục!", Toast.LENGTH_LONG).show();
-            // Điều hướng về màn hình đăng nhập
-            Intent loginIntent = new Intent(this, LoginActivity.class);
-            loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(loginIntent);
+            startActivity(new Intent(this, LoginActivity.class)
+                    .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
             finish();
             return;
         }
 
-        // Phương thức này sẽ tự động lấy token từ SharedPreferences và thêm vào header Authorization.
         loginAPI = RetrofitClient.getProtectedApiService(this);
-
-        findViewById(R.id.learnNowButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                fetchNextLesson();
-            }
-        });
-
-        findViewById(R.id.backButton).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        findViewById(R.id.learnNowButton).setOnClickListener(v -> fetchNextLesson());
+        findViewById(R.id.backButton).setOnClickListener(v -> finish());
     }
 
     private void fetchNextLesson() {
-        loginAPI.getNextLessonForUser().enqueue(new Callback<NextLessonModel>() {
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String token = prefs.getString("auth_token", null);
+
+        if (token == null || token.isEmpty()) {
+            relogin();
+            return;
+        }
+
+        loginAPI.getNextLessonBlock("Bearer " + token).enqueue(new Callback<LessonModel>() {
             @Override
-            public void onResponse(Call<NextLessonModel> call, Response<NextLessonModel> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    NextLessonModel nextLesson = response.body();
-                    startLessonActivity(nextLesson);
-                } else if (response.code() == 401) {
-                    Toast.makeText(LearningActivity.this, "Phiên đăng nhập đã hết hạn. Vui lòng đăng nhập lại.", Toast.LENGTH_LONG).show();
-                    // Điều hướng về màn hình đăng nhập và xóa các Activity khác khỏi stack
-                    Intent loginIntent = new Intent(LearningActivity.this, LoginActivity.class);
-                    loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                    startActivity(loginIntent);
-                    finish();
-                } else if (response.code() == 404) {
-                    Toast.makeText(LearningActivity.this, "Không còn bài học nào hoặc bạn đã hoàn thành tất cả các bài.", Toast.LENGTH_LONG).show();
-                    Log.d("LearningActivity", "No more lessons available (HTTP 404).");
+            public void onResponse(Call<LessonModel> call, Response<LessonModel> res) {
+                if (res.isSuccessful() && res.body() != null) {
+                    vocabList = res.body().getVocabularies();
+                    speakingList = res.body().getSpeakingExercises();
+                    startVocabPart();
+                } else if (res.code() == 404) {
+                    Toast.makeText(LearningActivity.this,
+                            "Bạn đã hoàn thành tất cả bài học!", Toast.LENGTH_LONG).show();
+                } else if (res.code() == 401) {
+                    relogin();
                 } else {
-                    String errorMessage = "Failed to fetch next lesson. HTTP Code: " + response.code();
-                    try {
-                        if (response.errorBody() != null) {
-                            String errorBody = response.errorBody().string();
-                            errorMessage += " Details: " + errorBody;
-                            Log.e("LearningActivity", "API Error Body: " + errorBody);
-                        }
-                    } catch (Exception e) {
-                        Log.e("LearningActivity", "Error reading error body", e);
-                    }
-                    Log.e("LearningActivity", errorMessage);
-                    Toast.makeText(LearningActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+                    showError("Fail " + res.code());
                 }
             }
 
             @Override
-            public void onFailure(Call<NextLessonModel> call, Throwable t) {
-                String errorMessage = "Network error: " + t.getMessage();
-                Log.e("LearningActivity", errorMessage, t);
-                Toast.makeText(LearningActivity.this, errorMessage, Toast.LENGTH_LONG).show();
+            public void onFailure(Call<LessonModel> call, Throwable t) {
+                showError("Network: " + t.getMessage());
             }
         });
     }
 
-    private void startLessonActivity(NextLessonModel nextLesson) {
-        Intent intent;
-        if ("Speaking".equalsIgnoreCase(nextLesson.getLessonType())) {
-            intent = new Intent(LearningActivity.this, SpeakingLessonActivity.class);
-            intent.putExtra("EXERCISE_ID", nextLesson.getLessonId().toString());
-            intent.putExtra("PROMPT", nextLesson.getPromptOrWord());
-            intent.putExtra("SAMPLE_AUDIO_URL", nextLesson.getAudioUrl());
-            intent.putExtra("DIALECT_ID", nextLesson.getDialectId().toString());
-        } else if ("Vocabulary".equalsIgnoreCase(nextLesson.getLessonType())) {
-            intent = new Intent(LearningActivity.this, QuizActivity.class); // Giả sử QuizActivity xử lý Vocabulary
-            intent.putExtra("VOCAB_ID", nextLesson.getLessonId().toString());
-            intent.putExtra("WORD", nextLesson.getPromptOrWord());
-            intent.putExtra("MEANING", nextLesson.getMeaning());
-            intent.putExtra("AUDIO_URL", nextLesson.getAudioUrl());
-            intent.putExtra("DIALECT_ID", nextLesson.getDialectId().toString());
-            intent.putExtra("DISTRACTORS_JSON", nextLesson.getDistractorsJson());
-        } else {
-            Toast.makeText(LearningActivity.this, "Unknown lesson type: " + nextLesson.getLessonType(), Toast.LENGTH_SHORT).show();
-            Log.e("LearningActivity", "Received unknown lesson type: " + nextLesson.getLessonType());
-            return;
+    private void startVocabPart() {
+        Intent intent = new Intent(this, QuizActivity.class);
+        intent.putExtra("QUESTIONS_JSON", new Gson().toJson(vocabList));
+        startActivityForResult(intent, REQ_VOCAB);
+    }
+
+    private void startSpeakingPart() {
+        Intent intent = new Intent(this, SpeakingLessonActivity.class);
+        intent.putExtra("SPEAKING_LIST", new Gson().toJson(speakingList));
+        startActivityForResult(intent, REQ_SPEAKING);
+    }
+
+    @Override
+    protected void onActivityResult(int reqCode, int resCode, @Nullable Intent data) {
+        super.onActivityResult(reqCode, resCode, data);
+        if (resCode != RESULT_OK) return;
+
+        if (reqCode == REQ_VOCAB) {
+            startSpeakingPart();
+        } else if (reqCode == REQ_SPEAKING) {
+            fetchNextLesson(); // cả lesson đã hoàn thành
         }
-        startActivity(intent);
+    }
+
+    private void relogin() {
+        Toast.makeText(this, "Phiên đăng nhập hết hạn!", Toast.LENGTH_LONG).show();
+        startActivity(new Intent(this, LoginActivity.class)
+                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
+        finish();
+    }
+
+    private void showError(String msg) {
+        Log.e("LearningActivity", msg);
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 }

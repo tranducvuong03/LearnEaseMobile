@@ -9,38 +9,38 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.mobile.presenter.QuizPresenter;
+import com.example.mobile.QuizPresenter;
+import com.example.mobile.QuizPresenter.Item;
 import com.example.mobile.view.QuizView;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * QuizActivity dùng layout activity_learning_vocab.xml
- * – Hai layout: initialAnswerLayout & feedbackLayout (dùng chung cho đúng / sai).
- * – 9 “dot” tiến trình (dot0 → dot8).
- * – Khi hoàn thành câu (đúng hoặc ấn Next) → finish() về màn trước.
+ * QuizActivity – chơi nhiều câu hỏi liên tiếp.
+ * • layout: activity_learning_vocab.xml (đã có các id dot0 → dot8).
+ * • Hai phần chính: initialAnswerLayout & feedbackLayout.
  */
 public class QuizActivity extends AppCompatActivity implements QuizView {
 
-    /*-------------- Presenter ---------------*/
+    /*----------- Presenter -----------*/
     private QuizPresenter presenter;
 
-    /*-------------- View refs ---------------*/
+    /*----------- View refs -----------*/
     private TextView  questionText;
     private ImageView questionImage;
 
     private LinearLayout initialAnswerLayout;
-    private LinearLayout feedbackLayout;
+    private LinearLayout feedbackLayout;      // dùng chung đúng / sai
+    private TextView  feedbackTitle;
+    private TextView  feedbackAnswer;
+    private Button    nextQuestionButton;
 
-    private TextView feedbackTitle;
-    private TextView feedbackAnswer;
-    private Button   nextQuestionButton;
-
-    private Button[] initialButtons;
+    private Button[] answerBtns;
     private View[]   progressDots;
-    /*---------------------------------------*/
+    /*---------------------------------*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,27 +50,46 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
         mapViews();
         mapProgressDots();
 
-        /*--- Nhận dữ liệu Intent ---*/
-        String word            = getIntent().getStringExtra("WORD");
-        String distractorsJson = getIntent().getStringExtra("DISTRACTORS_JSON");
-        List<String> distractors = new Gson().fromJson(
-                distractorsJson, new TypeToken<List<String>>(){}.getType());
+        /*-------- Nhận danh sách câu hỏi từ Intent --------*/
+        // Nếu chỉ truyền 1 câu: WORD + DISTRACTORS_JSON
+        // Nếu truyền nhiều câu: QUESTIONS_JSON (array Item)
+        List<Item> items;
 
-        presenter = new QuizPresenter(this, word, distractors, /*imageResId*/ -1);
+        String questionsJson = getIntent().getStringExtra("QUESTIONS_JSON");
+        if (questionsJson != null) {                       // nhiều câu
+            items = new Gson().fromJson(
+                    questionsJson,
+                    new TypeToken<List<Item>>(){}.getType());
+        } else {                                           // 1 câu
+            items = new ArrayList<>();
+            String word   = getIntent().getStringExtra("WORD");
+            String distJs = getIntent().getStringExtra("DISTRACTORS_JSON");
+            List<String> distractors = new Gson().fromJson(
+                    distJs, new TypeToken<List<String>>(){}.getType());
+
+            Item it      = new Item();
+            it.word      = word;
+            it.distractors = distractors;
+            it.imageResId  = -1;
+            items.add(it);
+        }
+
+        /*-------- Khởi tạo presenter --------*/
+        presenter = new QuizPresenter(this, items);
     }
 
-    /* ------------ Ánh xạ View ------------ */
+    /*======================== MAP VIEW ========================*/
     private void mapViews() {
         questionText  = findViewById(R.id.questionText);
         questionImage = findViewById(R.id.questionImage);
 
         initialAnswerLayout = findViewById(R.id.initialAnswerLayout);
-        feedbackLayout      = findViewById(R.id.wrongFeedbackLayout);  // reuse
+        feedbackLayout      = findViewById(R.id.wrongFeedbackLayout);
         feedbackTitle       = findViewById(R.id.wrongFeedbackTitle);
         feedbackAnswer      = findViewById(R.id.wrongFeedbackAnswer);
         nextQuestionButton  = findViewById(R.id.wrongNextQuestionButton);
 
-        initialButtons = new Button[]{
+        answerBtns = new Button[] {
                 findViewById(R.id.buttonMouth),
                 findViewById(R.id.buttonEyes),
                 findViewById(R.id.buttonEar),
@@ -78,31 +97,33 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
         };
         for (int i = 0; i < 4; i++) {
             final int idx = i;
-            initialButtons[i].setOnClickListener(v -> presenter.handleAnswer(idx));
+            answerBtns[i].setOnClickListener(v -> presenter.handleAnswer(idx));
         }
 
-        /*  Bấm Next => kết thúc QuizActivity  */
-        nextQuestionButton.setOnClickListener(v -> finish());
+        nextQuestionButton.setOnClickListener(v -> presenter.nextQuestion());
     }
 
-    /* ----------- Progress dots ----------- */
     private void mapProgressDots() {
-        progressDots = new View[]{
+        progressDots = new View[] {
                 findViewById(R.id.dot0), findViewById(R.id.dot1), findViewById(R.id.dot2),
                 findViewById(R.id.dot3), findViewById(R.id.dot4), findViewById(R.id.dot5),
                 findViewById(R.id.dot6), findViewById(R.id.dot7), findViewById(R.id.dot8)
         };
     }
-    private void updateProgress(int currentIndex) {
+
+    private void updateProgress(int curIdx) {
         for (int i = 0; i < progressDots.length; i++) {
-            int res = (i <= currentIndex) ? R.drawable.blue_dot : R.drawable.gray_dot;
-            progressDots[i].setBackgroundResource(res);
+            progressDots[i].setBackgroundResource(
+                    (i <= curIdx) ? R.drawable.blue_dot : R.drawable.gray_dot);
         }
     }
+    /*==========================================================*/
 
-    /* ---------- QuizView impl ------------ */
+    /*===================== QuizView impl ======================*/
     @Override
-    public void showQuestion(String text, int imageResId, String[] options) {
+    public void showQuestion(String text, int imageResId,
+                             String[] options, int curIndex) {
+
         questionText.setText(text);
         if (imageResId != -1) {
             questionImage.setVisibility(View.VISIBLE);
@@ -110,8 +131,10 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
         } else {
             questionImage.setVisibility(View.GONE);
         }
-        for (int i = 0; i < 4; i++) initialButtons[i].setText(options[i]);
-        updateProgress(0);           // luôn chỉ có 1 câu
+
+        for (int i = 0; i < 4; i++) answerBtns[i].setText(options[i]);
+
+        updateProgress(curIndex);
     }
 
     @Override
@@ -123,18 +146,20 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
                 isCorrect ? R.drawable.feedback_correct_background
                         : R.drawable.feedback_wrong_background);
 
-        feedbackTitle.setText(isCorrect ? "Great job!" : "Oops… that's wrong");
+        feedbackTitle .setText(isCorrect ? "Great job!" : "Oops… that's wrong");
         feedbackAnswer.setText("Answer: " + correctAnswer);
 
-        /* Nếu trả lời đúng, auto đóng sau 1.2 s  */
-        if (isCorrect) questionImage.postDelayed(this::finish, 1200);
+        if (isCorrect) questionImage.postDelayed(() -> presenter.nextQuestion(), 800);
     }
 
     @Override public void resetView() {
         initialAnswerLayout.setVisibility(View.VISIBLE);
-        feedbackLayout.setVisibility(View.GONE);
+        feedbackLayout     .setVisibility(View.GONE);
     }
 
-    @Override public void showCorrectAnswer(String s) { }
-    @Override public void showWrongAnswer(String s)   { }
+    @Override public void finishQuiz() {
+        setResult(RESULT_OK);
+        finish();
+    }
+
 }

@@ -1,64 +1,88 @@
-package com.example.mobile.presenter;
+package com.example.mobile;
 
 import com.example.mobile.view.QuizView;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 /**
- * QuizPresenter: điều khiển logic cho một câu hỏi Vocabulary.
- * Hỗ trợ:
- *   – getCurrentQuestionIndex() để QuizActivity cập nhật tiến trình dot.
+ * Presenter cho màn Quiz (MVP pattern – độc lập UI).
+ *
+ * – Mỗi {@link Item} tương ứng 1 câu hỏi Vocabulary.
+ * – Không truy cập trực tiếp tới View implementation (không cast sang Activity).
  */
 public class QuizPresenter {
 
+    /*===================== DTO =====================*/
+    public static class Item {
+        public String word;              // đáp án đúng
+        public List<String> distractors; // tối đa 3 đáp án nhiễu
+        public int imageResId = -1;      // -1 nếu không có
+    }
+    /*================================================*/
+
     private final QuizView view;
-    private final String   correctWord;
-    private final int      imageResId;
-    private final String[] options;      // 4 đáp án đã shuffle
-    private final int      correctIndex; // vị trí đáp án đúng (0‑3)
+    private final List<Item> items;
 
-    // Index câu hiện tại (0-based) – cần cho progress dot
-    private int currentQuestionIndex = 0; // presenter hiện chỉ có 1 câu nên luôn 0
+    private int currentIndex = 0;       // chỉ số câu hiện tại
+    private String[] currentOptions;    // 4 đáp án của câu hiện tại
+    private int      correctIndex;      // vị trí đáp án đúng trong currentOptions
 
-    public QuizPresenter(QuizView view,
-                         String word,
-                         List<String> distractors,
-                         int imageResId) {
-        this.view        = view;
-        this.correctWord = word;
-        this.imageResId  = imageResId;
+    /*-------------- CONSTRUCTOR ----------------------------------*/
+    public QuizPresenter(QuizView view, List<Item> items) {
+        this.view  = view;
+        this.items = items != null ? items : new ArrayList<>();
 
-        // Ghép word + distractors → đủ 4 đáp án
-        List<String> mix = new ArrayList<>();
-        mix.add(word);
-        if (distractors != null) mix.addAll(distractors);
-        while (mix.size() < 4) mix.add("-");
-        mix = mix.subList(0, 4);
-        Collections.shuffle(mix);
-
-        this.options      = mix.toArray(new String[0]);
-        this.correctIndex = mix.indexOf(word);
-
-        // Hiển thị câu hỏi ngay lập tức
-        view.resetView();
-        view.showQuestion(word, this.imageResId, this.options);
+        loadCurrentQuestion();
     }
 
-    /** Người dùng chọn 1 đáp án (index 0‑3) */
-    public void handleAnswer(int selectedIndex) {
-        boolean isCorrect = (selectedIndex == correctIndex);
-        view.showFeedback(isCorrect, correctWord);
-    }
-
-    /** Chuyển sang câu tiếp theo – demo: chỉ reset nhưng vẫn tăng index để dot cập nhật */
-    public void nextQuestion() {
-        currentQuestionIndex++;
-        view.resetView();
-    }
-
-    /** Trả về chỉ số câu hiện tại để QuizActivity cập nhật progress dot */
+    /*============== API cho View ==================*/
     public int getCurrentQuestionIndex() {
-        return currentQuestionIndex;
+        return currentIndex;
     }
+
+    /** Được View gọi khi user chọn đáp án <code>chosenIdx</code> (0-3). */
+    public void handleAnswer(int chosenIdx) {
+        boolean isCorrect = (chosenIdx == correctIndex);
+        view.showFeedback(isCorrect, currentOptions[correctIndex]);
+    }
+
+    /** View gọi khi bấm “Next question”. */
+    public void nextQuestion() {
+        currentIndex++;
+        loadCurrentQuestion();
+    }
+    /*=============================================*/
+
+    /*-------------- LOGIC PRIVATE ----------------*/
+    private void loadCurrentQuestion() {
+        if (currentIndex >= items.size()) {
+            // Hết câu hỏi → thông báo cho View đóng quiz
+            view.finishQuiz();
+            return;
+        }
+
+        Item it = items.get(currentIndex);
+
+        /*--- Tạo danh sách 4 đáp án ---*/
+        List<String> opts = new ArrayList<>();
+        opts.add(it.word);
+        if (it.distractors != null) opts.addAll(it.distractors);
+        while (opts.size() < 4) opts.add("-");          // đủ 4
+        opts = opts.subList(0, 4);                      // an toàn
+        Collections.shuffle(opts);
+
+        /* Lưu lại để so sánh ở handleAnswer() */
+        currentOptions = opts.toArray(new String[0]);
+        correctIndex   = opts.indexOf(it.word);
+
+        /* Gửi câu hỏi cho View */
+        view.resetView();
+        view.showQuestion(it.word,
+                it.imageResId,
+                currentOptions,
+                currentIndex);  // để tô dot tiến trình
+    }
+    /*-------------------------------------------------------------*/
 }

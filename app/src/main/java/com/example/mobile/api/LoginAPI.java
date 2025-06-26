@@ -1,6 +1,7 @@
 package com.example.mobile.api;
 
 import com.example.mobile.GoogleLoginRequest;
+import com.example.mobile.model.LessonModel;
 import com.example.mobile.model.CheckoutResponse;
 import com.example.mobile.model.LoginRequest;
 import com.example.mobile.model.LoginResponse;
@@ -51,6 +52,12 @@ public interface LoginAPI {
 
     @GET("SpeakingExercises/{id}")
     Call<SpeakingExercise> getSpeakingExerciseById(@Path("id") UUID id);
+
+    @GET("learning/next-lesson-block")
+    Call<LessonModel> getNextLessonBlock(@Header("Authorization") String token);
+
+    @GET("learning/next-lesson")
+    Call<NextLessonModel> getNextLessonForUser(@Header("Authorization") String token);
 
     @GET("Learning/next-lesson")
     Call<NextLessonModel> getNextLessonForUser();

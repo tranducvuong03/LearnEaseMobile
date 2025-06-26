@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -17,6 +18,9 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.mobile.api.LoginAPI;
+import com.example.mobile.model.LoginRequest;
+import com.example.mobile.model.LoginResponse;
+import com.example.mobile.model.userData.UserResponse;
 import com.example.mobile.utils.RetrofitClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -27,13 +31,10 @@ import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
 
-// Import các lớp Retrofit và API mới của bạn
-import com.example.mobile.api.LoginAPI;
-import com.example.mobile.model.LoginRequest; // Bạn cần tạo lớp này cho body request
-import com.example.mobile.model.LoginResponse; // Bạn cần tạo lớp này cho response
-
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -56,27 +57,19 @@ import java.util.Map; // Cần thiết nếu bạn muốn thêm header tùy ch�
 
 public class LoginActivity extends AppCompatActivity {
     private TextInputEditText editTextUsername, editTextPassword;
-    // Không cần RequestQueue của Volley nữa
-    // private RequestQueue requestQueue;
-
-    // Không cần API_LOGIN_URL riêng nữa vì nó sẽ nằm trong ApiService.BASE_URL
-    // private final String API_LOGIN_URL = "https://10.0.2.2:7083/api/auth/login";
-
-    // Khai báo ApiService
+    private Button buttonLogin;
     private LoginAPI apiService;
     private static final int RC_SIGN_IN = 100;
     private GoogleSignInClient mGoogleSignInClient;
     private SignInButton btnGoogleLogin;
-    private FrameLayout btnGoogle;
-    private TextView textGoogle;
-    private ProgressBar loadingGoogle;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        Button buttonLogin = findViewById(R.id.buttonLogin);
+        buttonLogin = findViewById(R.id.buttonLogin);
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
 
@@ -94,8 +87,9 @@ public class LoginActivity extends AppCompatActivity {
         textGoogle = findViewById(R.id.textGoogle);
         loadingGoogle = findViewById(R.id.loadingGoogle);
 
+        btnGoogleLogin = findViewById(R.id.buttonGoogleLogin);
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(getString(R.string.server_client_id)) // client_id lấy từ Google Cloud
+                .requestIdToken(getString(R.string.server_client_id))
                 .requestEmail()
                 .build();
 
@@ -112,10 +106,38 @@ public class LoginActivity extends AppCompatActivity {
             }, 1000); // thời gian nhỏ để tạo hiệu ứng loading
         });
 
-
+        checkLoginStatus()
     }
 
-    //login username&password
+    private void checkLoginStatus() {
+        SharedPreferences sharedPref = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+        String jwtToken = sharedPref.getString("auth_token", null);
+
+        if (jwtToken != null && !jwtToken.isEmpty()) {
+            LoginAPI protectedApi = RetrofitClient.getPublicApiService(); // hoặc getProtectedApiService nếu đã cấu hình interceptor
+
+            protectedApi.getMyProfile("Bearer " + jwtToken).enqueue(new Callback<UserResponse>() {
+                @Override
+                public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
+                    if (response.isSuccessful() && response.body() != null) {
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                        startActivity(intent);
+                        finish();
+                    } else if (response.code() == 401) {
+                        sharedPref.edit().remove("auth_token").apply();
+                        Toast.makeText(LoginActivity.this, "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<UserResponse> call, Throwable t) {
+                    Log.e("LoginActivity", "Error checking token", t);
+                    Toast.makeText(LoginActivity.this, "Không kiểm tra được trạng thái đăng nhập.", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+    }
+
     private void login() {
         String username = editTextUsername.getText().toString().trim();
         String password = editTextPassword.getText().toString().trim();
@@ -126,9 +148,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         LoginRequest loginRequest = new LoginRequest(username, password);
-
-        // Sử dụng ApiService để gọi API đăng nhập
-        // Bạn cần thêm phương thức login vào ApiService
         Call<LoginResponse> call = apiService.login(loginRequest);
 
         call.enqueue(new Callback<LoginResponse>() {
@@ -139,31 +158,28 @@ public class LoginActivity extends AppCompatActivity {
                     String token = loginResponse.getToken();
 
                     if (token != null && !token.isEmpty()) {
-                        // Lưu JWT Token vào SharedPreferences với key "auth_token"
                         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-                        prefs.edit().putString("auth_token", token).apply(); // Sử dụng key "auth_token" nhất quán
+                        prefs.edit().putString("auth_token", token).apply();
 
                         Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
                         Log.d("LoginActivity", "Login successful. Token saved.");
 
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class); // Thay thế HomeActivity bằng Activity chính của bạn
+                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
                         Toast.makeText(LoginActivity.this, "Phản hồi token không hợp lệ từ server.", Toast.LENGTH_LONG).show();
                         Log.e("LoginActivity", "Login successful but token is null or empty.");
                     }
-
                 } else {
                     String errorMsg = "Login failed. Please try again.";
                     if (response.errorBody() != null) {
                         try {
                             String errorBodyString = response.errorBody().string();
-                            Log.e("LoginActivity", "Raw Error Body: " + errorBodyString); // Log cả body lỗi
+                            Log.e("LoginActivity", "Raw Error Body: " + errorBodyString);
                             if (response.code() == 401) {
                                 errorMsg = "Invalid username or password!";
                             } else if (response.code() == 400) {
-                                // Có thể là lỗi validation từ server
                                 try {
                                     JSONObject errorJson = new JSONObject(errorBodyString);
                                     if (errorJson.has("message")) {
@@ -198,10 +214,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    //login by google
     private void sendGoogleTokenToBackend(String idToken) {
         GoogleLoginRequest request = new GoogleLoginRequest(idToken);
-        Call<LoginResponse> call = apiService.loginWithGoogle(request); // Phải khai báo trong ApiService
+        Call<LoginResponse> call = apiService.loginWithGoogle(request);
 
         call.enqueue(new Callback<LoginResponse>() {
             @Override
@@ -236,6 +251,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -245,7 +261,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
                 if (account != null) {
-                    sendGoogleTokenToBackend(account.getIdToken()); // gọi hàm gửi token
+                    sendGoogleTokenToBackend(account.getIdToken());
                 }
             } catch (ApiException e) {
                 e.printStackTrace();
@@ -255,9 +271,5 @@ public class LoginActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
-    // KHÔNG CẦN PHƯƠNG THỨC getSslSocketFactory() NỮA VÌ NÓ ĐÃ ĐƯỢC CHUYỂN VÀO RetrofitClient
-    // private SSLSocketFactory getSslSocketFactory() { /* ... */ }
+}
 }

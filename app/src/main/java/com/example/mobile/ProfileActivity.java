@@ -23,6 +23,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.mobile.api.LoginAPI;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
@@ -57,6 +58,7 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
     private TextView tvUserName, tvNewbieTag;
     private ImageView ivProfilePic;
+    private LoginAPI apiService;
     private ApiService apiService;
     private String userId;
     private static final int PICK_IMAGE = 1;
@@ -191,7 +193,7 @@ public class ProfileActivity extends AppCompatActivity {
         tvNewbieTag = findViewById(R.id.tv_newbie_tag);
         ivProfilePic = findViewById(R.id.iv_profile_pic);
 
-        apiService = RetrofitClient.getApiService(this);
+        apiService = RetrofitClient.getProtectedApiService(this);
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String token = prefs.getString("auth_token", null);
         if (token != null) {
