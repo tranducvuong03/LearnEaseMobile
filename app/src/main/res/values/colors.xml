@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="white">#FFFFFF</color>
     <color name="colorBackground">#FCFAF7</color>
     <color name="colorBackgroundLogo">#70EAFF</color>
     <color name="colorPrimary">#EB7812</color>
@@ -27,4 +27,9 @@
     <color name="colorRankScore">#858494</color>
     <color name="colorShopText">#96704F</color>
     <color name="colorSearchBackground">#FFAE4A</color>
+    <color name="gradientStart">#FF9A30</color>
+    <color name="gradientEnd">#FF5EC3</color>
+    <color name="bluePrimary">#208DFF</color>
+    <color name="textPrimary">#222222</color>
+    <color name="textSecondary">#888888</color>
 </resources>
