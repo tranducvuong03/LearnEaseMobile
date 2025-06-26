@@ -77,17 +77,53 @@
         app:layout_constraintTop_toBottomOf="@id/top_orange_section">
 
         <TextView
-            android:id="@+id/text_looking_for_someone"
+            android:id="@+id/text_choose_skill"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Looking for someone"
-            android:textColor="#808080"
-            android:textSize="18sp"
-            app:layout_constraintBottom_toTopOf="@id/progress_bar"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            android:text="Choose a Skill"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:textColor="#333"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed" />
+            app:layout_constraintBottom_toTopOf="@id/skills_group"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="24dp"/>
+
+        <LinearLayout
+            android:id="@+id/skills_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/text_choose_skill"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="16dp">
+
+            <Button
+                android:id="@+id/btn_listening"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:text="🎧 Listening" />
+
+            <Button
+                android:id="@+id/btn_speaking"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:text="🗣️ Speaking"
+                android:layout_marginTop="12dp"/>
+
+            <Button
+                android:id="@+id/btn_reading"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:text="📖 Reading"
+                android:layout_marginTop="12dp"/>
+
+            <Button
+                android:id="@+id/btn_writing"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:text="✍️ Writing"
+                android:layout_marginTop="12dp"/>
+        </LinearLayout>
 
         <ProgressBar
             android:id="@+id/progress_bar"
@@ -95,10 +131,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:indeterminateTint="#3498DB"
+            android:visibility="gone"
+            app:layout_constraintTop_toBottomOf="@id/skills_group"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/text_looking_for_someone" />
+            app:layout_constraintEnd_toEndOf="parent" />
+        />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

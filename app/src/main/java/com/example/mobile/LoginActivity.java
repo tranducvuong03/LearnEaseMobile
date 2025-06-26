@@ -150,7 +150,7 @@ public class LoginActivity extends AppCompatActivity {
 
                     Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
 
-                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                    Intent intent = new Intent(LoginActivity.this, SoloSkillActivity.class);
                     startActivity(intent);
                     finish();
                 } else {
@@ -212,7 +212,8 @@ public class LoginActivity extends AppCompatActivity {
                             .apply();
 
                     Toast.makeText(LoginActivity.this, "Google login successful!", Toast.LENGTH_SHORT).show();
-                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                    startActivity(new Intent(LoginActivity.this, SoloSkillActivity.class));
+
                     finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "Google login failed", Toast.LENGTH_SHORT).show();
