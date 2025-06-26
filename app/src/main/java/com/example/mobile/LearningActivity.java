@@ -47,7 +47,7 @@ public class LearningActivity extends AppCompatActivity {
             return;
         }
 
-        loginAPI = RetrofitClient.getProtectedApiService(this);
+        loginAPI = RetrofitClient.getApiService(this);
         findViewById(R.id.learnNowButton).setOnClickListener(v -> fetchNextLesson());
         findViewById(R.id.backButton).setOnClickListener(v -> finish());
     }

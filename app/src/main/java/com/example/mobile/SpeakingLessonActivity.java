@@ -27,8 +27,6 @@ import com.example.mobile.utils.RetrofitClient;
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
-import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -37,9 +35,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-/**
- * SpeakingLessonActivity – phiên bản mới: ghi âm WAV → gửi Flask → nhận similarity → hiển thị.
- */
 public class SpeakingLessonActivity extends AppCompatActivity {
 
     private static final int REQ_AUDIO_PERM = 200;
@@ -54,33 +49,31 @@ public class SpeakingLessonActivity extends AppCompatActivity {
     private String sampleAudioUrl;
     private String prompt;
 
-    @Override protected void onCreate(Bundle saved) {
-        super.onCreate(saved);
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_speaking_test);
 
-        tvPhrase  = findViewById(R.id.tvPhrase);
-        tvHold    = findViewById(R.id.tvHold);
-        tvScore   = findViewById(R.id.tvScore);   // TextView mới trong layout
-        btnMic    = findViewById(R.id.btnMic);
-        btnNext   = findViewById(R.id.btnNext);   // Button Next trong layout
+        tvPhrase    = findViewById(R.id.tvPhrase);
+        tvHold      = findViewById(R.id.tvHold);
+        tvScore     = findViewById(R.id.tvScore);
+        btnMic      = findViewById(R.id.btnMic);
+        btnNext     = findViewById(R.id.btnNext);
         layoutAudio = findViewById(R.id.layoutAudio);
         mediaPlayer = new MediaPlayer();
 
-        // Lấy dữ liệu Intent
-        prompt          = getIntent().getStringExtra("PROMPT");
-        sampleAudioUrl  = getIntent().getStringExtra("SAMPLE_AUDIO_URL");
+        prompt         = getIntent().getStringExtra("PROMPT");
+        sampleAudioUrl = getIntent().getStringExtra("SAMPLE_AUDIO_URL");
         if (prompt != null) tvPhrase.setText("'" + prompt + "'");
 
         layoutAudio.setOnClickListener(v -> playSampleAudio());
 
-        // Permission
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                     new String[]{Manifest.permission.RECORD_AUDIO}, REQ_AUDIO_PERM);
         }
 
-        /* ───── Mic button: press & hold để ghi, nhả để stop + gửi ───── */
         btnMic.setOnTouchListener((v, e) -> {
             switch (e.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -97,16 +90,15 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         btnNext.setOnClickListener(v -> finish());
     }
 
-    /* ─────────────────── Recorder helpers ─────────────────── */
     private void startRecording() {
         try {
             File dir = getExternalFilesDir(Environment.DIRECTORY_MUSIC);
-            if (!dir.exists()) dir.mkdirs();
+            if (dir != null && !dir.exists()) dir.mkdirs();
             userAudioFile = new File(dir, "user_" + System.currentTimeMillis() + ".wav");
 
             recorder = new MediaRecorder();
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            recorder.setOutputFormat(MediaRecorder.OutputFormat.DEFAULT);
+            recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4); // WAV không hỗ trợ tốt → dùng MPEG_4
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
             recorder.setAudioSamplingRate(16000);
             recorder.setOutputFile(userAudioFile.getAbsolutePath());
@@ -131,18 +123,18 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         }
     }
 
-    /* ─────────────────── Retrofit upload ─────────────────── */
     private void uploadAndCompare(File userFile, String sampleUrl) {
-        CompareSpeakingAPI api = RetrofitClient.getCompareApiService();
+        CompareSpeakingAPI api = RetrofitClient.getCompareApiService(this);
 
-        RequestBody audioBody = RequestBody.create(userFile, MediaType.parse("audio/wav"));
+        RequestBody audioBody = RequestBody.create(userFile, MediaType.parse("audio/mp4")); // tương ứng với MPEG_4
         MultipartBody.Part userPart = MultipartBody.Part.createFormData("user_audio",
                 userFile.getName(), audioBody);
         RequestBody urlBody = RequestBody.create(sampleUrl, MediaType.parse("text/plain"));
 
         api.compareWithUrl(userPart, urlBody).enqueue(new Callback<CompareSpeakingAPI.SimilarityRes>() {
-            @Override public void onResponse(Call<CompareSpeakingAPI.SimilarityRes> call,
-                                             Response<CompareSpeakingAPI.SimilarityRes> resp) {
+            @Override
+            public void onResponse(Call<CompareSpeakingAPI.SimilarityRes> call,
+                                   Response<CompareSpeakingAPI.SimilarityRes> resp) {
                 if (!resp.isSuccessful() || resp.body() == null) {
                     showToast("API lỗi: " + resp.code());
                     tvHold.setText("Hold To Pronounce");
@@ -151,14 +143,15 @@ public class SpeakingLessonActivity extends AppCompatActivity {
                 float sim = resp.body().similarity;
                 showResult(sim);
             }
-            @Override public void onFailure(Call<CompareSpeakingAPI.SimilarityRes> call, Throwable t) {
+
+            @Override
+            public void onFailure(Call<CompareSpeakingAPI.SimilarityRes> call, Throwable t) {
                 showToast("Lỗi mạng: " + t.getMessage());
                 tvHold.setText("Hold To Pronounce");
             }
         });
     }
 
-    /* ─────────────────── UI helpers ─────────────────── */
     private void showResult(float sim) {
         tvScore.setVisibility(View.VISIBLE);
         tvScore.setText(String.format(Locale.US, "Similarity: %.0f%%", sim * 100));
@@ -188,7 +181,9 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         }
     }
 
-    private void showToast(String m) { Toast.makeText(this, m, Toast.LENGTH_SHORT).show(); }
+    private void showToast(String m) {
+        Toast.makeText(this, m, Toast.LENGTH_SHORT).show();
+    }
 
     @Override
     public void onRequestPermissionsResult(int rq, @NonNull String[] p, @NonNull int[] g) {
@@ -199,7 +194,8 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         }
     }
 
-    @Override protected void onDestroy() {
+    @Override
+    protected void onDestroy() {
         super.onDestroy();
         if (mediaPlayer != null) mediaPlayer.release();
         if (recorder != null) recorder.release();

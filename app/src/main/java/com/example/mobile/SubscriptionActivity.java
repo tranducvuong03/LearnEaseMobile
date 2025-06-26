@@ -22,9 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-
-import com.example.mobile.api.ApiService;
 import com.example.mobile.model.CheckoutResponse;
 import com.example.mobile.model.SubscriptionInfo;
 import com.example.mobile.utils.ApiCaller;

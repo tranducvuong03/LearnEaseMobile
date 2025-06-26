@@ -1,6 +1,6 @@
 package com.example.mobile.api;
 
-import com.example.mobile.GoogleLoginRequest;
+import com.example.mobile.model.GoogleLoginRequest;
 import com.example.mobile.model.LessonModel;
 import com.example.mobile.model.CheckoutResponse;
 import com.example.mobile.model.LoginRequest;

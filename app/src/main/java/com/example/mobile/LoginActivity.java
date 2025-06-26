@@ -1,6 +1,5 @@
 package com.example.mobile;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,10 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +17,7 @@ import com.example.mobile.api.LoginAPI;
 import com.example.mobile.model.LoginRequest;
 import com.example.mobile.model.LoginResponse;
 import com.example.mobile.model.userData.UserResponse;
+import com.example.mobile.model.GoogleLoginRequest;
 import com.example.mobile.utils.RetrofitClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
@@ -40,54 +37,32 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map; // Cần thiết nếu bạn muốn thêm header tùy chỉnh
-
-// Loại bỏ các import SSL liên quan đến Volley HurlStack nếu bạn không dùng nữa
-// import javax.net.ssl.HostnameVerifier;
-// import javax.net.ssl.HttpsURLConnection;
-// import javax.net.ssl.SSLContext;
-// import javax.net.ssl.SSLSession;
-// import javax.net.ssl.SSLSocketFactory;
-// import javax.net.ssl.TrustManager;
-// import javax.net.ssl.X509TrustManager;
-// import java.security.cert.X509Certificate;
-
-
 public class LoginActivity extends AppCompatActivity {
     private TextInputEditText editTextUsername, editTextPassword;
-    private Button buttonLogin;
+    private View btnGoogle;
+    private ProgressBar loadingGoogle;
     private LoginAPI apiService;
     private static final int RC_SIGN_IN = 100;
     private GoogleSignInClient mGoogleSignInClient;
-    private SignInButton btnGoogleLogin;
-
+    private View textGoogle;
+    private View buttonLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        buttonLogin = findViewById(R.id.buttonLogin);
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
-
-        // Khởi tạo ApiService cho các API CÔNG KHAI (không cần token), ví dụ như API login.
-        apiService = RetrofitClient.getApiService(this);
-
-        //login bang google
-        buttonLogin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                login();
-            }
-        });
+        buttonLogin = findViewById(R.id.buttonLogin);
         btnGoogle = findViewById(R.id.buttonGoogleLogin);
         textGoogle = findViewById(R.id.textGoogle);
         loadingGoogle = findViewById(R.id.loadingGoogle);
 
-        btnGoogleLogin = findViewById(R.id.buttonGoogleLogin);
+        apiService = RetrofitClient.getApiService(this);
+
+        buttonLogin.setOnClickListener(v -> login());
+
         GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.server_client_id))
                 .requestEmail()
@@ -98,15 +73,13 @@ public class LoginActivity extends AppCompatActivity {
         btnGoogle.setOnClickListener(v -> {
             textGoogle.setVisibility(View.GONE);
             loadingGoogle.setVisibility(View.VISIBLE);
-
-            // Không reset UI ở đây
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
-            }, 1000); // thời gian nhỏ để tạo hiệu ứng loading
+            }, 1000);
         });
 
-        checkLoginStatus()
+        checkLoginStatus();
     }
 
     private void checkLoginStatus() {
@@ -114,18 +87,15 @@ public class LoginActivity extends AppCompatActivity {
         String jwtToken = sharedPref.getString("auth_token", null);
 
         if (jwtToken != null && !jwtToken.isEmpty()) {
-            LoginAPI protectedApi = RetrofitClient.getPublicApiService(); // hoặc getProtectedApiService nếu đã cấu hình interceptor
-
-            protectedApi.getMyProfile("Bearer " + jwtToken).enqueue(new Callback<UserResponse>() {
+            apiService.getMyProfile("Bearer " + jwtToken).enqueue(new Callback<UserResponse>() {
                 @Override
                 public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                        startActivity(intent);
+                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                         finish();
                     } else if (response.code() == 401) {
                         sharedPref.edit().remove("auth_token").apply();
-                        Toast.makeText(LoginActivity.this, "Phiên đăng nhập đã hết hạn, vui lòng đăng nhập lại.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, "Phiên đăng nhập đã hết hạn.", Toast.LENGTH_SHORT).show();
                     }
                 }
 
@@ -143,82 +113,50 @@ public class LoginActivity extends AppCompatActivity {
         String password = editTextPassword.getText().toString().trim();
 
         if (username.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please enter username and password", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Vui lòng nhập tài khoản và mật khẩu", Toast.LENGTH_SHORT).show();
             return;
         }
 
         LoginRequest loginRequest = new LoginRequest(username, password);
-        Call<LoginResponse> call = apiService.login(loginRequest);
-
-        call.enqueue(new Callback<LoginResponse>() {
+        apiService.login(loginRequest).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    LoginResponse loginResponse = response.body();
-                    String token = loginResponse.getToken();
-
+                    String token = response.body().getToken();
                     if (token != null && !token.isEmpty()) {
                         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                         prefs.edit().putString("auth_token", token).apply();
-
-                        Toast.makeText(LoginActivity.this, "Login successful!", Toast.LENGTH_SHORT).show();
-                        Log.d("LoginActivity", "Login successful. Token saved.");
-
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                        startActivity(intent);
+                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                         finish();
                     } else {
-                        Toast.makeText(LoginActivity.this, "Phản hồi token không hợp lệ từ server.", Toast.LENGTH_LONG).show();
-                        Log.e("LoginActivity", "Login successful but token is null or empty.");
+                        Toast.makeText(LoginActivity.this, "Token rỗng.", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    String errorMsg = "Login failed. Please try again.";
-                    if (response.errorBody() != null) {
-                        try {
-                            String errorBodyString = response.errorBody().string();
-                            Log.e("LoginActivity", "Raw Error Body: " + errorBodyString);
-                            if (response.code() == 401) {
-                                errorMsg = "Invalid username or password!";
-                            } else if (response.code() == 400) {
-                                try {
-                                    JSONObject errorJson = new JSONObject(errorBodyString);
-                                    if (errorJson.has("message")) {
-                                        errorMsg = errorJson.getString("message");
-                                    } else {
-                                        errorMsg = "Bad request. Details: " + errorBodyString;
-                                    }
-                                } catch (JSONException jsonE) {
-                                    errorMsg = "Bad request. Details: " + errorBodyString;
-                                }
-                            } else {
-                                errorMsg = "Server error: " + response.code() + " - " + errorBodyString;
-                            }
-                        } catch (IOException e) {
-                            Log.e("LoginActivity", "Error reading error body", e);
-                            errorMsg = "Server error: " + response.code();
-                        }
-                    } else {
-                        errorMsg = "Server error: " + response.code() + " " + response.message();
-                    }
-                    Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
-                    Log.e("LoginActivity", "Login failed: " + errorMsg);
+                    handleLoginError(response);
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                String errorMsg = "Network error: " + t.getMessage();
-                Log.e("LoginActivity", "Network error during login", t);
-                Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    private void handleLoginError(Response<LoginResponse> response) {
+        try {
+            String errorBody = response.errorBody() != null ? response.errorBody().string() : "";
+            JSONObject json = new JSONObject(errorBody);
+            String message = json.optString("message", "Đăng nhập thất bại.");
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+        } catch (IOException | JSONException e) {
+            Toast.makeText(this, "Đăng nhập thất bại: lỗi không xác định", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void sendGoogleTokenToBackend(String idToken) {
         GoogleLoginRequest request = new GoogleLoginRequest(idToken);
-        Call<LoginResponse> call = apiService.loginWithGoogle(request);
-
-        call.enqueue(new Callback<LoginResponse>() {
+        apiService.loginWithGoogle(request).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
                 textGoogle.setVisibility(View.VISIBLE);
@@ -236,18 +174,18 @@ public class LoginActivity extends AppCompatActivity {
                             .putString("user_avatar", userResponse.getAvatarUrl())
                             .apply();
 
-                    Toast.makeText(LoginActivity.this, "Google login successful!", Toast.LENGTH_SHORT).show();
                     startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                     finish();
                 } else {
-                    Toast.makeText(LoginActivity.this, "Google login failed", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "Google login thất bại", Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
-                Toast.makeText(LoginActivity.this, "Google login error: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                t.printStackTrace();
+                textGoogle.setVisibility(View.VISIBLE);
+                loadingGoogle.setVisibility(View.GONE);
+                Toast.makeText(LoginActivity.this, "Lỗi Google login: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -255,7 +193,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (requestCode == RC_SIGN_IN) {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
@@ -264,12 +201,10 @@ public class LoginActivity extends AppCompatActivity {
                     sendGoogleTokenToBackend(account.getIdToken());
                 }
             } catch (ApiException e) {
-                e.printStackTrace();
                 textGoogle.setVisibility(View.VISIBLE);
                 loadingGoogle.setVisibility(View.GONE);
-                Toast.makeText(this, "Google Sign-In failed", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Google Sign-In thất bại", Toast.LENGTH_SHORT).show();
             }
         }
     }
-}
 }

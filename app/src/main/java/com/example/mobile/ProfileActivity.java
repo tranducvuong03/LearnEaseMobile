@@ -28,7 +28,6 @@ import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.cloudinary.android.policy.TimeWindow;
-import com.example.mobile.api.ApiService;
 import com.example.mobile.model.userData.UpdateAvatarRequest;
 import com.example.mobile.model.userData.UpdateUsernameRequest;
 import com.example.mobile.model.userData.UserResponse;
@@ -59,7 +58,6 @@ public class ProfileActivity extends AppCompatActivity {
     private TextView tvUserName, tvNewbieTag;
     private ImageView ivProfilePic;
     private LoginAPI apiService;
-    private ApiService apiService;
     private String userId;
     private static final int PICK_IMAGE = 1;
 
@@ -193,7 +191,7 @@ public class ProfileActivity extends AppCompatActivity {
         tvNewbieTag = findViewById(R.id.tv_newbie_tag);
         ivProfilePic = findViewById(R.id.iv_profile_pic);
 
-        apiService = RetrofitClient.getProtectedApiService(this);
+        apiService = RetrofitClient.getApiService(this);
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String token = prefs.getString("auth_token", null);
         if (token != null) {
