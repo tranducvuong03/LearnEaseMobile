@@ -3,9 +3,11 @@ package com.example.mobile.api;
 import com.example.mobile.GoogleLoginRequest;
 import com.example.mobile.model.LoginRequest;
 import com.example.mobile.model.LoginResponse;
+import com.example.mobile.model.Message;
 import com.example.mobile.model.NextLessonModel;
 import com.example.mobile.model.VocabularyItem;
 import com.example.mobile.model.SpeakingExercise;
+import com.example.mobile.model.aiChat.AIChatBoxRequest;
 import com.example.mobile.model.userData.UpdateAvatarRequest;
 import com.example.mobile.model.userData.UpdateUsernameRequest;
 import com.example.mobile.model.userData.UserResponse;
@@ -15,6 +17,7 @@ import java.util.UUID;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.Body;
 import retrofit2.http.PUT;
@@ -33,6 +36,8 @@ public interface ApiService {
     @PUT("users/{id}/username")
     Call<Void> updateUserNameById(@Path("id") String userId,
                                   @Body UpdateUsernameRequest request);
+    @POST("ai/ask")
+    Call<String> askAI(@Body String userInput);
 
     @PUT("users/{id}/avatar")
     Call<Void> updateAvatarById(@Path("id") String userId,
