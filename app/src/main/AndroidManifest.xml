@@ -86,6 +86,10 @@
         <activity android:name=".VocabularyLessonActivity" />
         <activity android:name=".PlayTogetherActivity" />
         <activity android:name=".ShopActivity" />
+        <activity android:name=".SoloSkillActivity" />
+        <activity android:name=".ReviewResultActivity" />
+        <activity android:name=".SoloQuizActivity" />
+
     </application>
 
 </manifest>

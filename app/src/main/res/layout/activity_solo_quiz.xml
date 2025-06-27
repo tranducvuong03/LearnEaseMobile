@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:padding="16dp">
+
+    <!-- ScrollView chứa nội dung động -->
+    <ScrollView
+        android:id="@+id/scroll_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_navigation_bar_include"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:id="@+id/layout_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="16dp"
+            android:gravity="center_horizontal">
+
+            <TextView
+                android:id="@+id/text_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prompt"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:paddingBottom="12dp" />
+            <EditText
+                android:id="@+id/editTextWritingAnswer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Nhập câu trả lời của bạn tại đây..."
+                android:minHeight="150dp"
+                android:padding="12dp"
+                android:background="@drawable/edittext_background"
+                android:gravity="top|start"
+                android:textSize="16sp"
+                android:layout_marginTop="16dp"
+                />
+            <TextView
+                android:id="@+id/text_reference"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reference Text"
+                android:visibility="gone"
+                android:textSize="16sp"
+                android:paddingBottom="12dp" />
+
+            <Button
+                android:id="@+id/button_play_audio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Play Audio"
+                android:visibility="gone" />
+
+            <ImageButton
+                android:id="@+id/button_record_audio"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:backgroundTint="#FF6F00"
+                android:background="@drawable/circle_background"
+                android:src="@drawable/ic_mic"
+                android:contentDescription="Record"
+                android:visibility="gone"
+                android:layout_marginTop="16dp" />
+
+            <LinearLayout
+                android:id="@+id/multiple_choice_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="8dp" />
+
+            <!-- ✅ Nút Submit mới -->
+            <Button
+                android:id="@+id/button_submit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Submit"
+                android:layout_marginTop="16dp"
+                android:visibility="gone" />
+        </LinearLayout>
+    </ScrollView>
+
+    <include
+        android:id="@+id/bottom_navigation_bar_include"
+        layout="@layout/bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
