@@ -4,11 +4,27 @@
     android:layout_height="match_parent"
     android:padding="24dp">
 
+    <!-- ✅ Chỉ có 1 child duy nhất: LinearLayout -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:orientation="vertical"
-        android:gravity="center_horizontal">
+        android:paddingTop="32dp"
+        android:paddingBottom="32dp">
+
+        <!-- Đáp án gốc (reference text) -->
+        <TextView
+            android:id="@+id/textReference"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đáp án gốc sẽ hiển thị ở đây"
+            android:textSize="16sp"
+            android:padding="12dp"
+            android:textColor="#444"
+            android:visibility="gone"
+            android:layout_marginBottom="12dp"
+            />
 
         <!-- Kỹ năng -->
         <TextView
@@ -40,7 +56,7 @@
             android:textSize="16sp"
             android:layout_marginBottom="24dp" />
 
-        <!-- Nút xem chi tiết đáp án hoặc sửa lỗi -->
+        <!-- Nút xem chi tiết đáp án -->
         <Button
             android:id="@+id/buttonShowExplanation"
             android:layout_width="wrap_content"
@@ -48,7 +64,7 @@
             android:text="Xem chi tiết đáp án"
             android:layout_marginBottom="16dp" />
 
-        <!-- Khu vực hiển thị giải thích -->
+        <!-- Giải thích chi tiết -->
         <LinearLayout
             android:id="@+id/explanationContainer"
             android:layout_width="match_parent"

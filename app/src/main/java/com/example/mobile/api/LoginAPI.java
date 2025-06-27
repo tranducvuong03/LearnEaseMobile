@@ -12,6 +12,7 @@ import com.example.mobile.model.LoginRequest;
 import com.example.mobile.model.LoginResponse;
 import com.example.mobile.model.NextLessonModel;
 import com.example.mobile.model.SubscriptionInfo;
+import com.example.mobile.model.TranscriptionResponse;
 import com.example.mobile.model.VocabularyItem;
 import com.example.mobile.model.SpeakingExercise;
 import com.example.mobile.model.userData.UpdateAvatarRequest;
@@ -79,11 +80,11 @@ public interface LoginAPI {
     @GET("/api/subscription/me")
     Call<SubscriptionInfo> getMySubscription();
     // 🧠 AI Lesson - Weekly
-    @GET("ai-lesson/weekly")
+    @GET("/api/ai-lesson/weekly")
     Call<LessonResponse> getLessonOfTheWeek();
 
     // 📊 Review kết quả
-    @GET("ai-lesson/review")
+    @GET("/api/ai-lesson/review")
     Call<ReviewResponse> reviewLesson(
             @Query("userId") UUID userId,
             @Query("lessonId") UUID lessonId,
@@ -91,7 +92,7 @@ public interface LoginAPI {
     );
 
     // 📘 Giải thích kết quả
-    @GET("ai-lesson/explanation")
+    @GET("/api/ai-lesson/explanation")
     Call<ExplanationResponse> getExplanations(
             @Query("userId") UUID userId,
             @Query("lessonId") UUID lessonId,
@@ -99,19 +100,28 @@ public interface LoginAPI {
     );
 
     //  Gửi bài Reading/Listening
-    @POST("ai-lesson/evaluate")
+    @POST("/api/ai-lesson/evaluate")
     Call<ScoreResponse> evaluateLesson(@Body EvaluateLessonRequest request);
 
     // ✍ Gửi bài Writing
-    @POST("ai-lesson/evaluate-writing")
+    @POST("/api/ai-lesson/evaluate-writing")
     Call<ScoreResponse> evaluateWritingAnswer(@Body EvaluateLessonRequest request);
 
     //  Gửi bài Speaking (ghi âm)
     @Multipart
-    @POST("speech/evaluate")
+    @POST("/api/speech/evaluate")
     Call<ScoreResponse> evaluateSpeaking(
             @Part MultipartBody.Part AudioFile,
             @Part("Prompt") RequestBody prompt
+    );
+    //cham diem listen
+    @POST("/api/ai-lesson/evaluate-listening")
+    Call<ScoreResponse> evaluateListening(@Body EvaluateLessonRequest request);
+    //cham diem speaking
+    @Multipart
+    @POST("speech/transcribe")
+    Call<TranscriptionResponse> transcribeAudio(
+            @Part MultipartBody.Part audioFile
     );
 
 }

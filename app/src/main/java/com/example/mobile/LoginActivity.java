@@ -91,7 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(Call<UserResponse> call, Response<UserResponse> response) {
                     if (response.isSuccessful() && response.body() != null) {
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                        startActivity(new Intent(LoginActivity.this, SoloSkillActivity.class));
                         finish();
                     } else if (response.code() == 401) {
                         sharedPref.edit().remove("auth_token").apply();
@@ -126,7 +126,7 @@ public class LoginActivity extends AppCompatActivity {
                     if (token != null && !token.isEmpty()) {
                         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
                         prefs.edit().putString("auth_token", token).apply();
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                        startActivity(new Intent(LoginActivity.this, SoloSkillActivity.class));
                         finish();
                     } else {
                         Toast.makeText(LoginActivity.this, "Token rỗng.", Toast.LENGTH_SHORT).show();
@@ -174,7 +174,7 @@ public class LoginActivity extends AppCompatActivity {
                             .putString("user_avatar", userResponse.getAvatarUrl())
                             .apply();
 
-                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                    startActivity(new Intent(LoginActivity.this, SoloSkillActivity.class));
                     finish();
                 } else {
                     Toast.makeText(LoginActivity.this, "Google login thất bại", Toast.LENGTH_SHORT).show();
