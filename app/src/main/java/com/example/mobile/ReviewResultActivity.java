@@ -29,13 +29,15 @@ public class ReviewResultActivity extends AppCompatActivity {
     private TextView textSkill,  textScore, textFeedback, textTime;
     private LoginAPI apiService;
     Button buttonShowExplanation;
+    private TextView textReference;
+
     LinearLayout explanationContainer;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_result);
-
+        textReference = findViewById(R.id.textReference);
         textSkill = findViewById(R.id.textSkill);
 
         textScore = findViewById(R.id.textScore);
@@ -107,7 +109,10 @@ public class ReviewResultActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     ReviewResponse data = response.body();
                     textSkill.setText("Skill: " + data.getSkill());
-
+                    if (data.getReferenceText() != null && !data.getReferenceText().isEmpty()) {
+                        textReference.setText("Đáp án : " + data.getReferenceText());
+                        textReference.setVisibility(View.VISIBLE);
+                    }
                     textScore.setText("Score: " + data.getScore());
                     textFeedback.setText("Feedback:\n" + data.getFeedback());
 

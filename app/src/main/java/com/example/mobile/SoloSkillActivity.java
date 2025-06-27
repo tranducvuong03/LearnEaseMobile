@@ -29,6 +29,7 @@ public class SoloSkillActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        apiService = RetrofitClient.getApiService(this);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_solo_skill);
 

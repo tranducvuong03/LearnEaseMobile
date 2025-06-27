@@ -33,18 +33,25 @@
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:paddingBottom="12dp" />
+            <Button
+                android:id="@+id/button_play_audio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Play Audio"
+                android:visibility="gone" />
             <EditText
                 android:id="@+id/editTextWritingAnswer"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Nhập câu trả lời của bạn tại đây..."
-                android:minHeight="150dp"
+                android:hint="Nhập câu trả lời sau khi nghe"
+                android:minHeight="100dp"
                 android:padding="12dp"
                 android:background="@drawable/edittext_background"
                 android:gravity="top|start"
                 android:textSize="16sp"
-                android:layout_marginTop="16dp"
-                />
+                android:layout_marginTop="12dp"
+                android:visibility="gone" />
+
             <TextView
                 android:id="@+id/text_reference"
                 android:layout_width="wrap_content"
@@ -54,12 +61,13 @@
                 android:textSize="16sp"
                 android:paddingBottom="12dp" />
 
-            <Button
-                android:id="@+id/button_play_audio"
-                android:layout_width="wrap_content"
+
+            <VideoView
+                android:id="@+id/audio_player_view"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Play Audio"
-                android:visibility="gone" />
+                android:visibility="gone"
+                android:layout_marginTop="12dp" />
 
             <ImageButton
                 android:id="@+id/button_record_audio"
