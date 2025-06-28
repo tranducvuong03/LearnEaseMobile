@@ -70,8 +70,10 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
         }
 
         presenter = new QuizPresenter(this, items);
-    }
 
+        ImageView backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(v -> finish());
+    }
 
     private void mapViews() {
         questionText = findViewById(R.id.questionText);

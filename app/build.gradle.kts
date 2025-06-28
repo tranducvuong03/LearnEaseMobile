@@ -37,6 +37,8 @@ android {
 }
 
 dependencies {
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
+    implementation("androidx.media3:media3-ui:1.3.1")
     implementation("de.hdodenhof:circleimageview:3.1.0")
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("com.google.android.material:material:1.11.0")
@@ -47,12 +49,12 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
     implementation("com.squareup.okhttp3:logging-interceptor:4.9.0")
     implementation("com.google.android.gms:play-services-auth:20.1.0")
-    implementation ("com.github.bumptech.glide:glide:4.16.0")
-    implementation ("com.cloudinary:cloudinary-android:2.2.0")
-    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+    implementation("com.cloudinary:cloudinary-android:2.2.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
     implementation("androidx.cardview:cardview:1.0.0")
-    implementation ("com.google.android.flexbox:flexbox:3.0.0")
-    implementation ("com.github.lzyzsd:circleprogress:1.2.1")
+    implementation("com.google.android.flexbox:flexbox:3.0.0")
+    implementation("com.github.lzyzsd:circleprogress:1.2.1")
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)

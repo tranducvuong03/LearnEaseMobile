@@ -2,9 +2,7 @@ package com.example.mobile;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
-import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
@@ -21,11 +19,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import androidx.media3.common.MediaItem;
+import androidx.media3.common.util.UnstableApi;
+import androidx.media3.exoplayer.SimpleExoPlayer;
+
 import com.example.mobile.api.CompareSpeakingAPI;
+import com.example.mobile.model.SpeakingExercise;
 import com.example.mobile.utils.RetrofitClient;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 import java.util.Locale;
 
 import okhttp3.MediaType;
@@ -35,6 +41,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+@UnstableApi
 public class SpeakingLessonActivity extends AppCompatActivity {
 
     private static final int REQ_AUDIO_PERM = 200;
@@ -43,11 +50,12 @@ public class SpeakingLessonActivity extends AppCompatActivity {
     private ImageButton btnMic;
     private Button btnNext;
     private LinearLayout layoutAudio;
-    private MediaPlayer mediaPlayer;
+    private SimpleExoPlayer exoPlayer;
     private MediaRecorder recorder;
     private File userAudioFile;
-    private String sampleAudioUrl;
-    private String prompt;
+
+    private List<SpeakingExercise> exerciseList;
+    private int currentIndex = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,13 +68,16 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         btnMic      = findViewById(R.id.btnMic);
         btnNext     = findViewById(R.id.btnNext);
         layoutAudio = findViewById(R.id.layoutAudio);
-        mediaPlayer = new MediaPlayer();
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
-        prompt         = getIntent().getStringExtra("PROMPT");
-        sampleAudioUrl = getIntent().getStringExtra("SAMPLE_AUDIO_URL");
-        if (prompt != null) tvPhrase.setText("'" + prompt + "'");
+        String json = getIntent().getStringExtra("SPEAKING_LIST");
+        exerciseList = new Gson().fromJson(json, new TypeToken<List<SpeakingExercise>>() {}.getType());
 
-        layoutAudio.setOnClickListener(v -> playSampleAudio());
+        if (exerciseList == null || exerciseList.isEmpty()) {
+            showToast("Không có dữ liệu bài nói");
+            finish();
+            return;
+        }
 
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -87,18 +98,38 @@ public class SpeakingLessonActivity extends AppCompatActivity {
             return false;
         });
 
-        btnNext.setOnClickListener(v -> finish());
+        btnNext.setOnClickListener(v -> {
+            currentIndex++;
+            if (currentIndex < exerciseList.size()) {
+                showCurrentExercise();
+            } else {
+                setResult(RESULT_OK);
+                finish();
+            }
+        });
+
+        showCurrentExercise();
+    }
+
+    private void showCurrentExercise() {
+        tvScore.setVisibility(View.GONE);
+        btnNext.setVisibility(View.GONE);
+        tvHold.setText("Hold To Pronounce");
+
+        SpeakingExercise ex = exerciseList.get(currentIndex);
+        tvPhrase.setText("'" + ex.getPrompt() + "'");
+        layoutAudio.setOnClickListener(v -> playSampleAudio(ex.getSampleAudioUrl()));
     }
 
     private void startRecording() {
         try {
             File dir = getExternalFilesDir(Environment.DIRECTORY_MUSIC);
             if (dir != null && !dir.exists()) dir.mkdirs();
-            userAudioFile = new File(dir, "user_" + System.currentTimeMillis() + ".wav");
+            userAudioFile = new File(dir, "user_" + System.currentTimeMillis() + ".m4a");
 
             recorder = new MediaRecorder();
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-            recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4); // WAV không hỗ trợ tốt → dùng MPEG_4
+            recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
             recorder.setAudioSamplingRate(16000);
             recorder.setOutputFile(userAudioFile.getAbsolutePath());
@@ -117,7 +148,9 @@ public class SpeakingLessonActivity extends AppCompatActivity {
             recorder.release();
             recorder = null;
             tvHold.setText("Đang chấm điểm…");
-            uploadAndCompare(userAudioFile, sampleAudioUrl);
+
+            String sampleUrl = exerciseList.get(currentIndex).getSampleAudioUrl();
+            uploadAndCompare(userAudioFile, sampleUrl);
         } catch (Exception ex) {
             Log.e("Recorder", "stopRecording", ex);
         }
@@ -126,7 +159,7 @@ public class SpeakingLessonActivity extends AppCompatActivity {
     private void uploadAndCompare(File userFile, String sampleUrl) {
         CompareSpeakingAPI api = RetrofitClient.getCompareApiService(this);
 
-        RequestBody audioBody = RequestBody.create(userFile, MediaType.parse("audio/mp4")); // tương ứng với MPEG_4
+        RequestBody audioBody = RequestBody.create(userFile, MediaType.parse("audio/mp4"));
         MultipartBody.Part userPart = MultipartBody.Part.createFormData("user_audio",
                 userFile.getName(), audioBody);
         RequestBody urlBody = RequestBody.create(sampleUrl, MediaType.parse("text/plain"));
@@ -140,8 +173,7 @@ public class SpeakingLessonActivity extends AppCompatActivity {
                     tvHold.setText("Hold To Pronounce");
                     return;
                 }
-                float sim = resp.body().similarity;
-                showResult(sim);
+                showResult(resp.body().similarity);
             }
 
             @Override
@@ -165,19 +197,26 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         }
     }
 
-    private void playSampleAudio() {
+    private void playSampleAudio(String sampleAudioUrl) {
         if (sampleAudioUrl == null || sampleAudioUrl.isEmpty()) {
             showToast("Không có audio mẫu");
             return;
         }
+
         try {
-            if (mediaPlayer.isPlaying()) mediaPlayer.stop();
-            mediaPlayer.reset();
-            mediaPlayer.setDataSource(this, Uri.parse(sampleAudioUrl));
-            mediaPlayer.prepare();
-            mediaPlayer.start();
-        } catch (IOException ex) {
+            if (exoPlayer != null) {
+                exoPlayer.release();
+            }
+
+            exoPlayer = new SimpleExoPlayer.Builder(this).build();
+            MediaItem mediaItem = MediaItem.fromUri(sampleAudioUrl);
+            exoPlayer.setMediaItem(mediaItem);
+            exoPlayer.prepare();
+            exoPlayer.play();
+
+        } catch (Exception ex) {
             showToast("Không thể phát audio: " + ex.getMessage());
+            Log.e("ExoPlayer", "playSampleAudio", ex);
         }
     }
 
@@ -197,7 +236,7 @@ public class SpeakingLessonActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mediaPlayer != null) mediaPlayer.release();
+        if (exoPlayer != null) exoPlayer.release();
         if (recorder != null) recorder.release();
     }
 }
