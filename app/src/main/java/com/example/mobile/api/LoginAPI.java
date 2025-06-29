@@ -49,7 +49,8 @@ public interface LoginAPI {
     @PUT("users/{id}/username")
     Call<Void> updateUserNameById(@Path("id") String userId,
                                   @Body UpdateUsernameRequest request);
-
+    @POST("ai/ask")
+    Call<String> askAI(@Body String userInput);
     @PUT("users/{id}/avatar")
     Call<Void> updateAvatarById(@Path("id") String userId,
                                   @Body UpdateAvatarRequest request);

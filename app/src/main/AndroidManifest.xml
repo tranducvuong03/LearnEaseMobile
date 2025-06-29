@@ -81,6 +81,9 @@
         <activity
             android:name=".AchievementsActivity"
             android:exported="false" />
+        <activity
+            android:name=".ChatActivity"
+            android:exported="false" />
         <activity android:name=".SpeakingLessonActivity" />
         <activity android:name=".TheoryLessonActivity" />
         <activity android:name=".VocabularyLessonActivity" />
