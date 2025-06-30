@@ -1,5 +1,6 @@
 package com.example.mobile;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
@@ -13,9 +14,13 @@ import com.example.mobile.adapter.ChatAdapter;
 import com.example.mobile.api.LoginAPI;
 import com.example.mobile.model.Message;
 import com.example.mobile.utils.RetrofitClient;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import okhttp3.MediaType;
@@ -25,6 +30,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ChatActivity extends AppCompatActivity {
+
     private RecyclerView recyclerView;
     private ChatAdapter adapter;
     private EditText editMessage;
@@ -32,36 +38,9 @@ public class ChatActivity extends AppCompatActivity {
 
     private LoginAPI apiService;
 
-    private void askAiApi(String message) {
-        // Gọi API
-        RequestBody body = RequestBody.create(
-                message, MediaType.parse("text/plain")
-        );
-        Map<String, String> data = new HashMap<>();
-        data.put("userInput", message);
-        apiService.askAI(data).enqueue(new Callback<String>() {
-            @Override
-            public void onResponse(Call<String> call, Response<String> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    String aiText = response.body();
-                    Message aiMessage = new Message(aiText, false);
+    private static final String PREF_NAME = "chat_prefs";
+    private static final String CHAT_HISTORY_KEY = "chat_history";
 
-                    // Chuyển về UI thread
-                    runOnUiThread(() -> {
-                        adapter.addMessage(aiMessage);
-                        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
-                    });
-                }
-            }
-
-
-            @Override
-            public void onFailure(Call<String> call, Throwable t) {
-                Message errorMessage = new Message("Lỗi phản hồi từ AI", false);
-                adapter.addMessage(errorMessage);
-            }
-        });
-    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +51,8 @@ public class ChatActivity extends AppCompatActivity {
         btnSend = findViewById(R.id.btnSend);
 
         apiService = RetrofitClient.getApiService(this);
-        adapter = new ChatAdapter(new ArrayList<>());
+
+        adapter = new ChatAdapter(loadMessagesFromStorage());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
 
@@ -80,16 +60,65 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String messageText = editMessage.getText().toString().trim();
-                askAiApi(messageText);
                 if (!messageText.isEmpty()) {
                     Message userMessage = new Message(messageText, true);
                     adapter.addMessage(userMessage);
                     recyclerView.scrollToPosition(adapter.getItemCount() - 1);
                     editMessage.setText("");
+                    saveMessagesToStorage(adapter.getMessages());
 
+                    askAiApi(messageText);
                 }
             }
         });
+    }
 
+    private void askAiApi(String message) {
+        RequestBody body = RequestBody.create(
+                "\"" + message + "\"",  // phải thêm dấu ngoặc kép xung quanh
+                MediaType.parse("application/json; charset=utf-8")
+        );
+
+        apiService.askAI(body).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    String aiText = response.body();
+                    Message aiMessage = new Message(aiText, false);
+
+                    runOnUiThread(() -> {
+                        adapter.addMessage(aiMessage);
+                        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                        saveMessagesToStorage(adapter.getMessages());
+                    });
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Message errorMessage = new Message("Lỗi phản hồi từ AI", false);
+                adapter.addMessage(errorMessage);
+                saveMessagesToStorage(adapter.getMessages());
+            }
+        });
+    }
+
+
+    private void saveMessagesToStorage(List<Message> messages) {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        String json = new Gson().toJson(messages);
+        editor.putString(CHAT_HISTORY_KEY, json);
+        editor.apply();
+    }
+
+    private List<Message> loadMessagesFromStorage() {
+        SharedPreferences prefs = getSharedPreferences(PREF_NAME, MODE_PRIVATE);
+        String json = prefs.getString(CHAT_HISTORY_KEY, null);
+        if (json != null) {
+            Type type = new TypeToken<ArrayList<Message>>(){}.getType();
+            return new Gson().fromJson(json, type);
+        }
+        return new ArrayList<>();
     }
 }

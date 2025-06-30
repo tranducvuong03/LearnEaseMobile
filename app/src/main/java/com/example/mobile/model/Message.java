@@ -16,4 +16,12 @@ public class Message {
     public boolean isUser() {
         return isUser;
     }
+
+    public void setText(String text) {
+        this.text = text;
+    }
+
+    public void setUser(boolean user) {
+        isUser = user;
+    }
 }
