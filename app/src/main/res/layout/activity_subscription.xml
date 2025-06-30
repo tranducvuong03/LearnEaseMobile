@@ -80,7 +80,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="66.000 ₫ / tháng"
+                android:text="39.000 ₫ / tháng"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="#FF5722"
@@ -98,7 +98,7 @@
                 android:id="@+id/btn_subscribe_monthly"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🚀 Bắt đầu với 66.000 ₫"
+                android:text="🚀 Bắt đầu với 39.000 ₫"
                 android:textAllCaps="false"
                 android:textStyle="bold"
                 android:textColor="@color/btn_orange_text_selector"
@@ -148,7 +148,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="673.200 ₫ / năm"
+                android:text="397.800 ₫ / năm"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="#388E3C"
@@ -157,7 +157,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="• Tất cả tính năng của gói tháng\n• Tiết kiệm hơn 120.000 ₫"
+                android:text="• Tất cả tính năng của gói tháng\n• Tiết kiệm hơn 70.000 ₫"
                 android:textSize="14sp"
                 android:textColor="#333333"
                 android:lineSpacingExtra="4dp"/>

@@ -38,7 +38,7 @@ import retrofit2.http.Query;
 
 public interface LoginAPI {
     String BASE_URL = "https://10.0.2.2:7083/api/";
-
+    //    String BASE_URL = "http://14.225.218.235/api/";
     @POST("auth/login")
     Call<LoginResponse> login(@Body LoginRequest request);
     @POST("auth/google-login")
