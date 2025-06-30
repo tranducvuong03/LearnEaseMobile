@@ -22,6 +22,8 @@ import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
+
 import java.io.IOException;
 
 /**
@@ -94,6 +96,7 @@ public class RetrofitClient {
                 retrofit = new Retrofit.Builder()
                         .baseUrl(LoginAPI.BASE_URL) // hoặc LoginAPI.BASE_URL nếu LoginAPI chứa URL
                         .client(client)
+                        .addConverterFactory(ScalarsConverterFactory.create())
                         .addConverterFactory(GsonConverterFactory.create())
                         .build();
 

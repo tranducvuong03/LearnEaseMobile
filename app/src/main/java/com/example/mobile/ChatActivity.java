@@ -15,7 +15,11 @@ import com.example.mobile.model.Message;
 import com.example.mobile.utils.RetrofitClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -30,15 +34,26 @@ public class ChatActivity extends AppCompatActivity {
 
     private void askAiApi(String message) {
         // Gọi API
-        apiService.askAI(message).enqueue(new Callback<String>() {
+        RequestBody body = RequestBody.create(
+                message, MediaType.parse("text/plain")
+        );
+        Map<String, String> data = new HashMap<>();
+        data.put("userInput", message);
+        apiService.askAI(data).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    Message aiMessage = new Message(response.body(), false);
-                    adapter.addMessage(aiMessage);
-                    recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                    String aiText = response.body();
+                    Message aiMessage = new Message(aiText, false);
+
+                    // Chuyển về UI thread
+                    runOnUiThread(() -> {
+                        adapter.addMessage(aiMessage);
+                        recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+                    });
                 }
             }
+
 
             @Override
             public void onFailure(Call<String> call, Throwable t) {
