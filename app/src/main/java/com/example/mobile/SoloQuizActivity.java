@@ -3,6 +3,7 @@ package com.example.mobile;
 
 import android.Manifest;
 import android.content.Intent;
+import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.net.Uri;
@@ -113,9 +114,28 @@ public class SoloQuizActivity extends AppCompatActivity {
         if (part.getAudioUrl() != null) {
             playAudioBtn.setVisibility(View.VISIBLE);
             playAudioBtn.setOnClickListener(v -> {
-                MediaPlayer player = MediaPlayer.create(this, Uri.parse(part.getAudioUrl()));
-                player.start();
+                MediaPlayer player = new MediaPlayer();
+                player.setAudioAttributes(
+                        new AudioAttributes.Builder()
+                                .setUsage(AudioAttributes.USAGE_MEDIA)
+                                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                                .build()
+                );
+
+                try {
+                    player.setDataSource(part.getAudioUrl()); // Đây là dòng gây IOException
+                    player.setOnPreparedListener(MediaPlayer::start);
+                    player.setOnErrorListener((mp, what, extra) -> {
+                        Toast.makeText(this, "Không thể phát audio", Toast.LENGTH_SHORT).show();
+                        return true;
+                    });
+                    player.prepareAsync();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    Toast.makeText(this, "Lỗi khi tải audio", Toast.LENGTH_SHORT).show();
+                }
             });
+
         }
 
         if (part.getChoicesJson() != null) {
