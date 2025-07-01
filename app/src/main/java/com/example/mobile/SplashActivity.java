@@ -1,7 +1,9 @@
 package com.example.mobile;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -32,10 +34,18 @@ public class SplashActivity extends Activity {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
+            SharedPreferences prefs = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+            String token = prefs.getString("auth_token", null);
 
             // Sau khi tải xong, chuyển Activity
             runOnUiThread(() -> {
-                startActivity(new Intent(SplashActivity.this, StarterActivity.class));
+                if (token != null && !token.isEmpty()) {
+                    // ✅ Đã có token → vào Home
+                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
+                } else {
+                    // ❌ Chưa có token → vào Starter
+                    startActivity(new Intent(SplashActivity.this, StarterActivity.class));
+                }
                 finish();
             });
         }).start();
