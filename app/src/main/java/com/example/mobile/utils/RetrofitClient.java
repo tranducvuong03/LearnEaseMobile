@@ -76,12 +76,18 @@ public class RetrofitClient {
 
                 Interceptor authInterceptor = chain -> {
                     Request original = chain.request();
+                    String url = original.url().toString();
+
                     Request.Builder builder = original.newBuilder();
-                    if (authToken != null) {
+
+                    // ⚠️ KHÔNG thêm token nếu là login
+                    if (authToken != null && !url.contains("auth/google-login") && !url.contains("auth/login") && !url.contains("auth/register")) {
                         builder.header("Authorization", "Bearer " + authToken);
                     }
+
                     return chain.proceed(builder.build());
                 };
+
 
                 OkHttpClient client = new OkHttpClient.Builder()
                         .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
@@ -134,9 +140,9 @@ public class RetrofitClient {
                         .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
                         .hostnameVerifier((hostname, session) -> true)
                         .addInterceptor(loggingInterceptor)
-                        .connectTimeout(30, TimeUnit.SECONDS)
-                        .readTimeout(30, TimeUnit.SECONDS)
-                        .writeTimeout(30, TimeUnit.SECONDS)
+                        .connectTimeout(300, TimeUnit.SECONDS)
+                        .readTimeout(300, TimeUnit.SECONDS)
+                        .writeTimeout(300, TimeUnit.SECONDS)
                         .build();
 
                 Retrofit retrofit = new Retrofit.Builder()
