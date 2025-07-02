@@ -1,10 +1,12 @@
 package com.example.mobile;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -50,6 +52,8 @@ public class ChatActivity extends AppCompatActivity {
         editMessage = findViewById(R.id.editMessage);
         btnSend = findViewById(R.id.btnSend);
 
+        ImageView backButton = findViewById(R.id.backButton);
+
         apiService = RetrofitClient.getApiService(this);
 
         adapter = new ChatAdapter(loadMessagesFromStorage());
@@ -71,6 +75,15 @@ public class ChatActivity extends AppCompatActivity {
                 }
             }
         });
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ChatActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish(); // Đóng ChatActivity để không quay lại khi nhấn nút back hệ thống
+            }
+        });
+
     }
 
     private void askAiApi(String message) {

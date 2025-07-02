@@ -26,7 +26,7 @@ public class HomeActivity extends AppCompatActivity {
                     // Already on Home
                     return true;
                 } else if (id == R.id.menu_practice) {
-                    startActivity(new Intent(HomeActivity.this, LearningActivity.class));
+                    startActivity(new Intent(HomeActivity.this, RankingActivity.class));
                     return true;
                 } else if (id == R.id.menu_explore) {
                     startActivity(new Intent(HomeActivity.this, ExploreActivity.class));

@@ -3,6 +3,7 @@ package com.example.mobile.api;
 import com.example.mobile.model.EvaluateLessonRequest;
 import com.example.mobile.model.ExplanationResponse;
 import com.example.mobile.model.LessonResponse;
+import com.example.mobile.model.RankingItem;
 import com.example.mobile.model.ReviewResponse;
 import com.example.mobile.model.ScoreResponse;
 import com.example.mobile.model.GoogleLoginRequest;
@@ -55,6 +56,18 @@ public interface LoginAPI {
     @PUT("users/{id}/avatar")
     Call<Void> updateAvatarById(@Path("id") String userId,
                                   @Body UpdateAvatarRequest request);
+
+    @GET("Leaderboards/leaderboard/top/week")
+    Call<List<RankingItem>> getTopWeekly(
+            @Query("period") String period,
+            @Query("top") int top
+    );
+
+    @GET("Leaderboards/leaderboard/top/month")
+    Call<List<RankingItem>> getTopMonthly(
+            @Query("period") String period,
+            @Query("top") int top
+    );
     @GET("VocabularyItems")
     Call<List<VocabularyItem>> getAllVocabularyItems();
 
