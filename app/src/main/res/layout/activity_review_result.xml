@@ -1,77 +1,190 @@
-<?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="24dp">
+    android:orientation="vertical"
+    android:background="@color/white"
+    >
 
-    <!-- ✅ Chỉ có 1 child duy nhất: LinearLayout -->
+    <!-- Nội dung cuộn được -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- Header -->
+            <RelativeLayout
+                android:id="@+id/header"
+                android:layout_width="match_parent"
+                android:layout_height="80dp"
+                android:background="@drawable/bg_header_rounded_orange">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Challenge results"
+                    android:textColor="@color/white"
+                    android:textSize="24sp"
+                    android:textStyle="bold"
+                    android:layout_centerInParent="true" />
+            </RelativeLayout>
+
+            <!-- Image -->
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:layout_marginHorizontal="16dp"
+                android:src="@drawable/review_result_image"
+                android:scaleType="fitCenter"
+                android:layout_marginTop="16dp" />
+
+            <!-- Skill & Score -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp">
+
+                <!-- Skill -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Skill"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorTextPrimary"
+                        android:layout_marginTop="4dp" />
+                    <TextView
+                        android:id="@+id/textSkill"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Reading"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+
+                <!-- Score -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:gravity="center_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Score"
+                        android:textSize="13sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorTextPrimary"
+                        android:layout_marginTop="4dp" />
+
+                    <TextView
+                        android:id="@+id/textScore"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="100 points"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginTop="4dp" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- Feedback Label -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="16dp"
+                android:gravity="center_horizontal"
+                android:text="Feedback"
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <!-- Feedback Content -->
+            <TextView
+                android:id="@+id/textFeedback"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
+                android:text="You did a great job! Here's some feedback..."
+                android:textSize="14sp"
+                android:maxWidth="100dp"
+                android:singleLine="false"
+                android:textColor="@color/colorTextPrimary"
+
+                android:gravity="center_horizontal" />
+
+            <!-- View Answer Button -->
+            <Button
+                android:id="@+id/buttonShowExplanation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="View detailed results"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="16dp"
+                android:drawableEnd="@drawable/ic_arrowdropdown_white"
+                android:drawablePadding="8dp"
+                />
+            <!-- Giải thích chi tiết -->
+            <LinearLayout
+                android:id="@+id/explanationContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_marginHorizontal="16dp"
+                android:background="@drawable/bg_review_result_explanation_border"
+                android:visibility="gone"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- Nút đáy cố định -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
         android:gravity="center"
-        android:orientation="vertical"
-        android:paddingTop="32dp"
-        android:paddingBottom="32dp">
+        android:paddingHorizontal="16dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="16dp">
 
-        <!-- Đáp án gốc (reference text) -->
-        <TextView
-            android:id="@+id/textReference"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Đáp án gốc sẽ hiển thị ở đây"
-            android:textSize="16sp"
-            android:padding="12dp"
-            android:textColor="#444"
-            android:visibility="gone"
-            android:layout_marginBottom="12dp"
-            />
-
-        <!-- Kỹ năng -->
-        <TextView
-            android:id="@+id/textSkill"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Skill: "
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:layout_marginBottom="8dp" />
-
-        <!-- Điểm -->
-        <TextView
-            android:id="@+id/textScore"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Score: "
-            android:textColor="#008000"
-            android:textSize="20sp"
-            android:layout_marginBottom="16dp"
-            android:textStyle="bold" />
-
-        <!-- Feedback -->
-        <TextView
-            android:id="@+id/textFeedback"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Feedback:"
-            android:textSize="16sp"
-            android:layout_marginBottom="24dp" />
-
-        <!-- Nút xem chi tiết đáp án -->
         <Button
-            android:id="@+id/buttonShowExplanation"
-            android:layout_width="wrap_content"
+            android:id="@+id/btnOtherLessons"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Xem chi tiết đáp án"
-            android:layout_marginBottom="16dp" />
+            android:text="Other Lessons"
+            android:layout_marginEnd="8dp" />
 
-        <!-- Giải thích chi tiết -->
-        <LinearLayout
-            android:id="@+id/explanationContainer"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btnBackHome"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:visibility="gone"
-            android:paddingTop="16dp" />
-
+            android:text="Back to Home"
+            android:layout_marginStart="8dp" />
     </LinearLayout>
-</ScrollView>
+
+</LinearLayout>
