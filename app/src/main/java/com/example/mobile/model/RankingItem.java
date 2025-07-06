@@ -1,31 +1,39 @@
 package com.example.mobile.model;
 
 public class RankingItem {
-    private String name;
-    private int points;
-    private int rank;
-    private int avatarResId;
+    private String leaderboardId;
+    private String userId;
+    private String username;
+    private String avatarUrl;
+    private String period;         // "weekly" hoặc "monthly"
+    private int score;
+    private String recordedAt;
 
-    public RankingItem(String name, int points, int rank, int avatarResId) {
-        this.name = name;
-        this.points = points;
-        this.rank = rank;
-        this.avatarResId = avatarResId;
+    public RankingItem(String leaderboardId, String userId, String username, String avatarUrl, String period, int score, String recordedAt) {
+        this.leaderboardId = leaderboardId;
+        this.userId = userId;
+        this.username = username;
+        this.avatarUrl = avatarUrl;
+        this.period = period;
+        this.score = score;
+        this.recordedAt = recordedAt;
     }
 
-    public String getName() {
-        return name;
-    }
+    // Getters
+    public String getLeaderboardId() { return leaderboardId; }
+    public String getUserId() { return userId; }
+    public String getName() { return username; }
+    public String getAvatarUrl() { return avatarUrl; }
+    public String getPeriod() { return period; }
+    public int getScore() { return score; }
+    public String getRecordedAt() { return recordedAt; }
 
-    public int getPoints() {
-        return points;
-    }
-
-    public int getRank() {
-        return rank;
-    }
-
-    public int getAvatarResId() {
-        return avatarResId;
-    }
+    // Setters
+    public void setLeaderboardId(String leaderboardId) { this.leaderboardId = leaderboardId; }
+    public void setUserId(String userId) { this.userId = userId; }
+    public void setName(String name) { this.username = username; }
+    public void setAvatarUrl(String avatarUrl) { this.avatarUrl = avatarUrl; }
+    public void setPeriod(String period) { this.period = period; }
+    public void setScore(int score) { this.score = score; }
+    public void setRecordedAt(String recordedAt) { this.recordedAt = recordedAt; }
 }

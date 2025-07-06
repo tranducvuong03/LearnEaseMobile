@@ -1,0 +1,83 @@
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="20dp"
+    android:layout_marginTop="20dp"
+    android:background="@drawable/bg_ranking_top4_after"
+    android:padding="8dp">
+
+    <!-- Rank -->
+    <TextView
+        android:id="@+id/tvRankMonthly"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/bg_ranking_number_circle"
+        android:gravity="center"
+        android:textColor="#999999"
+        android:textSize="14sp"
+        android:text="1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- Avatar -->
+    <ImageView
+        android:id="@+id/imgAvatarMonthly"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="12dp"
+        android:padding="8dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/user1"
+        app:layout_constraintStart_toEndOf="@id/tvRankMonthly"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/infoContainerMonthly"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginStart="12dp"
+        app:layout_constraintStart_toEndOf="@id/imgAvatarMonthly"
+        app:layout_constraintEnd_toStartOf="@id/imgCrownMonthly"
+        app:layout_constraintTop_toTopOf="@id/imgAvatarMonthly"
+        app:layout_constraintBottom_toBottomOf="@id/imgAvatarMonthly"
+        app:layout_constraintHorizontal_bias="0">
+
+        <!-- Name -->
+        <TextView
+            android:id="@+id/tvNameMonthly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nguyen Van A"
+            android:maxWidth="200dp"
+            android:textSize="16sp"
+            android:singleLine="false"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextPrimary" />
+
+        <!-- Points -->
+        <TextView
+            android:id="@+id/tvPointsMonthly"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1600 points"
+            android:textSize="14sp"
+            android:textColor="@color/colorRankScore" />
+    </LinearLayout>
+
+
+    <!-- Crown -->
+    <ImageView
+        android:id="@+id/imgCrownMonthly"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="8dp"
+        android:src="@drawable/ranking_top1_crown_1"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+</androidx.constraintlayout.widget.ConstraintLayout>
