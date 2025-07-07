@@ -305,7 +305,7 @@ public class ProfileActivity extends AppCompatActivity {
                         .setMessage("Bạn có chắc chắn muốn đăng xuất không?")
                         .setPositiveButton("Đăng xuất", (dialog, which) -> {
                             // 1. Xóa token
-                            prefs.edit().clear().apply();
+                            prefs.edit().remove("auth_token").apply();
 
                             // 2. Đăng xuất Google nếu dùng
                             GoogleSignIn.getClient(ProfileActivity.this,

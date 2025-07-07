@@ -37,7 +37,7 @@ public class ReviewResultActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review_result);
-        textReference = findViewById(R.id.textReference);
+
         textSkill = findViewById(R.id.textSkill);
 
         textScore = findViewById(R.id.textScore);
@@ -88,13 +88,19 @@ public class ReviewResultActivity extends AppCompatActivity {
 
     private void addExplanationToUI(ExplanationItem item) {
         TextView text = new TextView(this);
+        String number = item.getQuestionNumber() != null ? item.getQuestionNumber() : "";
+        String question = item.getQuestion() != null ? item.getQuestion() : "";
+        String correct = item.getCorrect() != null ? item.getCorrect() : "?";
+        String userAnswer = item.getUserAnswer() != null ? item.getUserAnswer() : "?";
+        String explanation = item.getExplanation() != null ? item.getExplanation() : "Không có giải thích.";
+
         text.setText(
-                item.getQuestionNumber() + "\n\n" +
-                        "❓ " + item.getQuestion() + "\n" +
-                        "✔ Đáp án đúng: " + item.getCorrect() +
-                        " | ❌ Bạn chọn: " + item.getUserAnswer() + "\n\n" +
-                        "📘 " + item.getExplanation()
+                number + "\n\n" +
+                        "❓ " + question + "\n" +
+                        "✔ Đáp án đúng: " + correct + " | ❌ Bạn chọn: " + userAnswer + "\n\n" +
+                        "📘 " + explanation
         );
+
         text.setPadding(0, 12, 0, 12);
         text.setTextColor(Color.parseColor("#444444"));
         text.setTextSize(15f);
@@ -108,11 +114,8 @@ public class ReviewResultActivity extends AppCompatActivity {
             public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     ReviewResponse data = response.body();
-                    textSkill.setText("Skill: " + data.getSkill());
-                    if (data.getReferenceText() != null && !data.getReferenceText().isEmpty()) {
-                        textReference.setText("Đáp án : " + data.getReferenceText());
-                        textReference.setVisibility(View.VISIBLE);
-                    }
+                    textSkill.setText(  data.getSkill());
+
                     textScore.setText("Score: " + data.getScore());
                     textFeedback.setText("Feedback:\n" + data.getFeedback());
 

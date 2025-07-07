@@ -1,21 +1,45 @@
 package com.example.mobile;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.example.mobile.api.LoginAPI;
+import com.example.mobile.model.StreakResponse;
+import com.example.mobile.utils.RetrofitClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
+import retrofit2.Call;
 
 public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_new);
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String userId = prefs.getString("user_id", null); // 👈 bạn cần lưu userId sau khi login hoặc fetch từ API /me
+
+        if (userId != null) {
+            fetchStreak(userId);
+        } else {
+            Log.e("Streak", "userId is null. Can't fetch streak");
+        }
+        LinearLayout challengeCard = findViewById(R.id.card_challenge);
+        challengeCard.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, SoloSkillActivity.class);
+            startActivity(intent);
+        });
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -76,4 +100,29 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
-} 
+    private void fetchStreak(String userId) {
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String token = prefs.getString("auth_token", null);
+        LoginAPI api = RetrofitClient.getApiService(this);
+
+        api.getUserStreak(userId).enqueue(new retrofit2.Callback<StreakResponse>() {
+            @Override
+            public void onResponse(Call<StreakResponse> call, retrofit2.Response<StreakResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    int streak = response.body().getStreak();
+                    runOnUiThread(() -> {
+                        TextView tvStreak = findViewById(R.id.tv_streak_value);
+                        tvStreak.setText(streak + " days 🔥");
+                    });
+                } else {
+                    Log.e("Streak", "Failed to load: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StreakResponse> call, Throwable t) {
+                Log.e("Streak", "Network error: " + t.getMessage());
+            }
+        });
+}
+}

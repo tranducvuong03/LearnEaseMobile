@@ -56,13 +56,25 @@ public class SoloSkillActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call<LessonResponse> call, Response<LessonResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
+                    if (response.body().getLessonId() == null) {
+                        Toast.makeText(SoloSkillActivity.this, "Không có bài học tuần này!", Toast.LENGTH_LONG).show();
+                        return;
+                    }
+
                     lesson = response.body();
                     skillGrid.setVisibility(View.VISIBLE);
                     setupListeners(lesson);
                 } else {
-                    Toast.makeText(SoloSkillActivity.this, "Failed to load lesson", Toast.LENGTH_SHORT).show();
+                    try {
+                        String errorBody = response.errorBody() != null ? response.errorBody().string() : null;
+                        Log.w("SOLO_DEBUG", "Error body: " + errorBody);
+                        Toast.makeText(SoloSkillActivity.this, "Server response error: " + errorBody, Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        Toast.makeText(SoloSkillActivity.this, "Failed to load lesson", Toast.LENGTH_SHORT).show();
+                    }
                 }
             }
+
 
             @Override
             public void onFailure(Call<LessonResponse> call, Throwable t) {

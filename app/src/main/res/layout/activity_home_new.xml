@@ -138,6 +138,7 @@
                     android:padding="20dp">
 
                     <TextView
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Streak"
@@ -152,10 +153,11 @@
                         android:src="@drawable/fire" />
 
                     <TextView
+                        android:id="@+id/tv_streak_value"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="7 days"
+                        android:text="0 days"
                         android:textColor="@color/white"
                         android:textSize="20sp"
                         android:textStyle="bold" />
@@ -163,6 +165,7 @@
 
                 <!-- Lessons Card -->
                 <LinearLayout
+                    android:id="@+id/card_challenge"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
@@ -171,27 +174,31 @@
                     android:elevation="4dp"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="20dp">
+                    android:padding="20dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    >
 
                     <TextView
+
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Lessons"
+                        android:text="Challenge"
                         android:textColor="@color/white"
                         android:textSize="24sp"
                         android:textStyle="bold" />
 
                     <ImageView
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
+                        android:layout_width="39dp"
+                        android:layout_height="48dp"
                         android:layout_marginTop="10dp"
-                        android:src="@drawable/stack_of_books" />
+                        android:src="@drawable/fight_icon" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:text="20 / 25"
+
                         android:textColor="@color/white"
                         android:textSize="20sp"
                         android:textStyle="bold" />
