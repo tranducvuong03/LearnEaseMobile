@@ -12,6 +12,7 @@ import com.example.mobile.model.CheckoutResponse;
 import com.example.mobile.model.LoginRequest;
 import com.example.mobile.model.LoginResponse;
 import com.example.mobile.model.NextLessonModel;
+import com.example.mobile.model.StreakResponse;
 import com.example.mobile.model.SubscriptionInfo;
 import com.example.mobile.model.TranscriptionResponse;
 import com.example.mobile.model.VocabularyItem;
@@ -52,6 +53,9 @@ public interface LoginAPI {
                                   @Body UpdateUsernameRequest request);
     @POST("ai/ask")
     Call<String> askAI(@Body RequestBody body);
+    //lay streak user
+    @GET("users/{id}/streak")
+    Call<StreakResponse> getUserStreak(@Path("id") String userId);
 
     @PUT("users/{id}/avatar")
     Call<Void> updateAvatarById(@Path("id") String userId,

@@ -41,7 +41,7 @@ public class SplashActivity extends Activity {
             runOnUiThread(() -> {
                 if (token != null && !token.isEmpty()) {
                     // ✅ Đã có token → vào Home
-                    startActivity(new Intent(SplashActivity.this, SoloSkillActivity.class));
+                    startActivity(new Intent(SplashActivity.this, HomeActivity.class));
                 } else {
                     // ❌ Chưa có token → vào Starter
                     startActivity(new Intent(SplashActivity.this, StarterActivity.class));
