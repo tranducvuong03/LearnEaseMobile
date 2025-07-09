@@ -7,7 +7,7 @@ import retrofit2.http.*;
 
 public interface CompareSpeakingAPI {
     String BASE_URL = "https://10.0.2.2:7083/api/";
-
+//    String BASE_URL = "https://learnease.id.vn/api/";
     @Multipart
     @POST("/compare")
     Call<SimilarityRes> compareWithUrl(
