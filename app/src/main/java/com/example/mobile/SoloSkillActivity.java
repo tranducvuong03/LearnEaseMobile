@@ -50,7 +50,7 @@ public class SoloSkillActivity extends AppCompatActivity {
 
     private void fetchInitialData() {
         // Ví dụ: lấy bài học tuần hoặc setting người dùng
-        Call<LessonResponse> call = apiService.getLessonOfTheWeek(); // bạn cần định nghĩa API này
+        Call<LessonResponse> call = apiService.getTodayLesson();
 
         ApiCaller.callWithLoading(this, call, new Callback<LessonResponse>() {
             @Override

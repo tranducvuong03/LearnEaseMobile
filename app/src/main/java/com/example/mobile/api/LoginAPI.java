@@ -40,7 +40,7 @@ import retrofit2.http.Query;
 
 public interface LoginAPI {
     String BASE_URL = "https://10.0.2.2:7083/api/";
-    //    String BASE_URL = "https://learnease.id.vn/api/";
+     //  String BASE_URL = "https://learnease.id.vn/api/";
     @POST("auth/login")
     Call<LoginResponse> login(@Body LoginRequest request);
     @POST("auth/google-login")
@@ -101,6 +101,9 @@ public interface LoginAPI {
     // 🧠 AI Lesson - Weekly
     @GET("/api/ai-lesson/weekly")
     Call<LessonResponse> getLessonOfTheWeek();
+    // hoc trong ngya
+    @GET("/api/ai-lesson/lesson-today")
+    Call<LessonResponse> getTodayLesson();
 
     // 📊 Review kết quả
     @GET("/api/ai-lesson/review")
