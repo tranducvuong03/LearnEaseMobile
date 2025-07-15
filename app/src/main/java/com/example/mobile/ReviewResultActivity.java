@@ -114,10 +114,10 @@ public class ReviewResultActivity extends AppCompatActivity {
             public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     ReviewResponse data = response.body();
-                    textSkill.setText(  data.getSkill());
+                    textSkill.setText(data.getSkill());
 
-                    textScore.setText("Score: " + data.getScore());
-                    textFeedback.setText("Feedback:\n" + data.getFeedback());
+                    textScore.setText("" + data.getScore());
+                    textFeedback.setText(data.getFeedback());
 
                 }
             }
