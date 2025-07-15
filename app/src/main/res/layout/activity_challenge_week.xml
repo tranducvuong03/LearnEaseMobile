@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/streakLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/white">
+
+    <!-- ✅ Header cố định trên cùng -->
+    <RelativeLayout
+        android:id="@+id/header"
+        android:layout_width="0dp"
+        android:layout_height="120dp"
+        android:background="@drawable/bg_header_rounded_orange"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:layout_marginTop="28dp"
+            android:paddingEnd="66dp"
+            android:elevation="2dp">
+
+            <FrameLayout
+                android:id="@+id/btn_back"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/back_button_background">
+
+                <ImageView
+                    android:id="@+id/backButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:contentDescription="Back"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_arrow_back" />
+            </FrameLayout>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Challenge"
+                android:textColor="@color/white"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:gravity="center" />
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- ✅ Scrollable content ở giữa -->
+    <ScrollView
+        android:id="@+id/scrollContent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:padding="24dp"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintBottom_toTopOf="@id/commitButton"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal|center_vertical">
+
+            <!-- Flame Icon -->
+            <ImageView
+                android:id="@+id/flameIcon"
+                android:layout_width="160dp"
+                android:layout_height="160dp"
+                android:src="@drawable/ic_challenge_week_image_fire"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Streak number -->
+            <TextView
+                android:id="@+id/streakNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="8"
+                android:textSize="64sp"
+                android:textStyle="bold"
+                android:textColor="#FFA500"
+                android:layout_marginBottom="4dp" />
+
+            <!-- Streak text -->
+            <TextView
+                android:id="@+id/streakText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="day streak"
+                android:textSize="20sp"
+                android:textColor="#FFA500"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Weekly progress row -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:gravity="center_horizontal">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerWeek"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:overScrollMode="never"
+                    android:clipToPadding="false"
+                    android:scrollbars="none" />
+            </LinearLayout>
+
+            <!-- Message -->
+            <TextView
+                android:id="@+id/streakMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Good job sticking with a healthy habit!"
+                android:textSize="16sp"
+                android:textColor="#555555"
+                android:layout_marginBottom="40dp"
+                android:gravity="center"
+                android:textAlignment="center" />
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ✅ Button luôn ở đáy màn hình -->
+    <Button
+        android:id="@+id/commitButton"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="START TODAY'S CHALLENGE"
+        android:backgroundTint="@color/colorButton"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:padding="12dp"
+        android:layout_marginVertical="24dp"
+        android:layout_marginHorizontal="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

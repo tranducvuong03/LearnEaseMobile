@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -40,6 +41,16 @@ public class SoloSkillActivity extends AppCompatActivity {
         cardReading = findViewById(R.id.card_reading);
         cardWriting = findViewById(R.id.card_writing);
 
+        ImageView backButton = findViewById(R.id.backButton);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(SoloSkillActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish(); // Đóng ChatActivity để không quay lại khi nhấn nút back hệ thống
+            }
+        });
         // Ẩn giao diện kỹ năng trong lúc loading
         skillGrid.setVisibility(View.GONE);
 
