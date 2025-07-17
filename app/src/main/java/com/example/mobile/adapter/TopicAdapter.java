@@ -1,21 +1,22 @@
 package com.example.mobile.adapter;
-import com.example.mobile.R;
 
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.mobile.R;
 import com.example.mobile.model.Topic;
 
 import java.util.List;
 
-public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHolder>{
+public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHolder> {
     private List<Topic> topicList;
 
     public TopicAdapter(List<Topic> topicList) {
@@ -23,17 +24,17 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
     }
 
     public static class TopicViewHolder extends RecyclerView.ViewHolder {
-        TextView titleText;
+        TextView titleText, statusText, totalText;
         ProgressBar progressBar;
-        TextView statusText;
-        TextView totalText;
+        ImageView iconChevron;
 
         public TopicViewHolder(@NonNull View itemView) {
             super(itemView);
-            titleText = itemView.findViewById(R.id.speakingTitle);
-            progressBar = itemView.findViewById(R.id.progressBarGreen);
+            titleText = itemView.findViewById(R.id.topicTitle);
             statusText = itemView.findViewById(R.id.progressTextSpeaking);
             totalText = itemView.findViewById(R.id.totalOfTopic);
+            progressBar = itemView.findViewById(R.id.progressBarGreen);
+            iconChevron = itemView.findViewById(R.id.iconChevron);
         }
     }
 
@@ -48,14 +49,14 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
     @Override
     public void onBindViewHolder(@NonNull TopicViewHolder holder, int position) {
         Topic topic = topicList.get(position);
-        holder.titleText.setText(topic.getTitle());
-        holder.progressBar.setProgress(topic.getProgress());
-        holder.statusText.setText(topic.getStatusText());
-        holder.totalText.setText(topic.getTotal() + " lessons");
 
-        // Màu theo trạng thái
-        if ("Completed".equalsIgnoreCase(topic.getStatusText())) {
-            holder.statusText.setTextColor(Color.parseColor("#F57C00")); //cam
+        holder.titleText.setText(topic.getTitle());
+        holder.totalText.setText(topic.getCompletedLessons() + "/" + topic.getTotalLessons() + " lessons");
+        holder.statusText.setText(topic.getStatus());
+        holder.progressBar.setProgress(topic.getProgressPercent());
+
+        if ("Completed".equalsIgnoreCase(topic.getStatus())) {
+            holder.statusText.setTextColor(Color.parseColor("#F57C00"));
         } else {
             holder.statusText.setTextColor(Color.GRAY);
         }

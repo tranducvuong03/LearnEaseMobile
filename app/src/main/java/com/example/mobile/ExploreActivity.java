@@ -40,8 +40,11 @@ public class ExploreActivity extends AppCompatActivity {
             if (id == R.id.menu_home) {
                 startActivity(new Intent(this, HomeActivity.class));
                 return true;
-            } else if (id == R.id.menu_practice) {
+            } else if (id == R.id.menu_lesson) {
                 startActivity(new Intent(this, LearningActivity.class));
+                return true;
+            } else if (id == R.id.menu_rank) {
+                startActivity(new Intent(this, RankingActivity.class));
                 return true;
             } else if (id == R.id.menu_explore) {
                 return true;

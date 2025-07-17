@@ -247,12 +247,12 @@ public class ProfileActivity extends AppCompatActivity {
                         startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
                         overridePendingTransition(0, 0);
                         return true;
-                    } else if (id == R.id.menu_lesson) { // Đã sửa từ menu_practice sang menu_lesson để khớp với bottom_nav_menu.xml
+                    } else if (id == R.id.menu_lesson) {
                         startActivity(new Intent(ProfileActivity.this, LearningActivity.class));
                         overridePendingTransition(0, 0);
                         return true;
-                    } else if (id == R.id.menu_practice) { // Giữ nguyên nếu bạn có ý định dùng nó
-                        Toast.makeText(ProfileActivity.this, "Practice clicked (functionality not implemented)", Toast.LENGTH_SHORT).show();
+                    } else if (id == R.id.menu_rank) {
+                        startActivity(new Intent(ProfileActivity.this, RankingActivity.class));
                         return true;
                     } else if (id == R.id.menu_explore) {
                         startActivity(new Intent(ProfileActivity.this, ExploreActivity.class));

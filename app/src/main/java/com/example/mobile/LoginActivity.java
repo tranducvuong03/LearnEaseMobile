@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.auth0.android.jwt.JWT;
 import com.example.mobile.api.LoginAPI;
 import com.example.mobile.model.LoginRequest;
 import com.example.mobile.model.LoginResponse;
@@ -124,10 +125,25 @@ public class LoginActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     String token = response.body().getToken();
                     if (token != null && !token.isEmpty()) {
-                        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-                        prefs.edit().putString("auth_token", token).apply();
-                        startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                        finish();
+                        try {
+                            JWT jwt = new JWT(token);
+
+                            String userId = jwt.getClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier").asString();
+                            String username = jwt.getClaim("http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name").asString();
+
+                            SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+                            prefs.edit()
+                                    .putString("auth_token", token)
+                                    .putString("user_id", userId)
+                                    .putString("user_name", username)
+                                    .apply();
+
+                            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                            finish();
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     } else {
                         Toast.makeText(LoginActivity.this, "Token rỗng.", Toast.LENGTH_SHORT).show();
                     }

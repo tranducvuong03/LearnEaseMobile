@@ -3,6 +3,7 @@ package com.example.mobile;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -49,7 +50,10 @@ public class HomeActivity extends AppCompatActivity {
                 if (id == R.id.menu_home) {
                     // Already on Home
                     return true;
-                } else if (id == R.id.menu_practice) {
+                } else if (id == R.id.menu_lesson) {
+                    startActivity(new Intent(HomeActivity.this, LearningActivity.class));
+                    return true;
+                } else if (id == R.id.menu_rank) {
                     startActivity(new Intent(HomeActivity.this, ChallengeWeekActivity.class));
                     return true;
                 } else if (id == R.id.menu_explore) {
@@ -100,6 +104,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+
     private void fetchStreak(String userId) {
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String token = prefs.getString("auth_token", null);
@@ -124,5 +129,5 @@ public class HomeActivity extends AppCompatActivity {
                 Log.e("Streak", "Network error: " + t.getMessage());
             }
         });
-}
+    }
 }

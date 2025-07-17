@@ -37,8 +37,50 @@ public class RetrofitClient {
 
     private static LoginAPI apiService;
     private static CompareSpeakingAPI compareSpeakingAPI;
-
     private static Retrofit retrofit;
+
+    public static synchronized Retrofit getRetrofit() {
+        if (retrofit == null) {
+            try {
+                final TrustManager[] trustAllCerts = new TrustManager[]{
+                        new X509TrustManager() {
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) {}
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+                            public X509Certificate[] getAcceptedIssuers() {
+                                return new X509Certificate[0];
+                            }
+                        }
+                };
+
+                final SSLContext sslContext = SSLContext.getInstance("SSL");
+                sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+                final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+                HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+                OkHttpClient client = new OkHttpClient.Builder()
+                        .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
+                        .hostnameVerifier((hostname, session) -> true)
+                        .addInterceptor(loggingInterceptor)
+                        .connectTimeout(30, TimeUnit.SECONDS)
+                        .readTimeout(30, TimeUnit.SECONDS)
+                        .writeTimeout(30, TimeUnit.SECONDS)
+                        .build();
+
+                retrofit = new Retrofit.Builder()
+                        .baseUrl(LoginAPI.BASE_URL)
+                        .client(client)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to create base Retrofit: " + e.getMessage(), e);
+            }
+        }
+        return retrofit;
+    }
 
     /**
      * Trả về một instance của LoginAPI đã được cấu hình sẵn.
