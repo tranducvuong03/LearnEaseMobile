@@ -5,36 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorBackground">
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <LinearLayout
             android:id="@+id/topBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center_vertical"
             android:layout_marginTop="32dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:padding="10dp">
 
             <!-- Left: Back Button -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_margin="6dp"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="10dp"
-                app:strokeColor="@android:color/transparent"
-                android:layout_margin="6dp">
-
-                <ImageView
-                    android:id="@+id/backButton"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_arrow_back"
-                    android:contentDescription="Back" />
+                app:strokeColor="@android:color/transparent">
             </com.google.android.material.card.MaterialCardView>
 
             <!-- Middle: Learning Text -->
@@ -43,39 +36,39 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:gravity="center"
-                android:text="Learning"
+                android:text="Topics"
+                android:textColor="#000000"
                 android:textSize="20sp"
-                android:textStyle="bold"
-                android:textColor="#000000" />
+                android:textStyle="bold" />
 
             <!-- Right: Stats (heart, diamond...) -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:text="4"
-                    android:textSize="16sp"
                     android:textColor="#333333"
-                    android:layout_marginEnd="4dp" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
-                    android:src="@drawable/heart"
-                    android:layout_marginEnd="16dp" />
+                    android:layout_marginEnd="16dp"
+                    android:src="@drawable/heart" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="4dp"
                     android:text="40"
-                    android:textSize="16sp"
                     android:textColor="#333333"
-                    android:layout_marginEnd="4dp" />
+                    android:textSize="16sp" />
 
                 <ImageView
                     android:layout_width="20dp"
@@ -93,13 +86,11 @@
             android:padding="16dp"
             tools:listitem="@layout/learning_card_topic" />
 
+        <include
+            layout="@layout/bottom_nav"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom" />
+
     </LinearLayout>
-    <include
-        android:id="@+id/bottomNav"
-        layout="@layout/bottom_nav"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -248,7 +248,7 @@ public class ProfileActivity extends AppCompatActivity {
                         overridePendingTransition(0, 0);
                         return true;
                     } else if (id == R.id.menu_lesson) {
-                        startActivity(new Intent(ProfileActivity.this, LearningActivity.class));
+                        startActivity(new Intent(ProfileActivity.this, TopicActivity.class));
                         overridePendingTransition(0, 0);
                         return true;
                     } else if (id == R.id.menu_rank) {

@@ -6,7 +6,10 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
     app:cardCornerRadius="12dp"
-    app:cardElevation="2dp">
+    app:cardElevation="2dp"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:clickable="true"
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -53,8 +56,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:gravity="start|bottom"
-            android:layout_marginEnd="15dp"
-            >
+            android:layout_marginEnd="15dp">
 
             <TextView
                 android:id="@+id/totalOfTopic"
@@ -73,6 +75,7 @@
                 android:textSize="14sp"
                 android:textColor="@color/colorButtonAnswerRightVocab" />
         </LinearLayout>
+
         <ImageView
             android:id="@+id/iconChevron"
             android:layout_width="32dp"

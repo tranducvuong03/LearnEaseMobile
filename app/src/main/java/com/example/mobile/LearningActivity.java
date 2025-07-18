@@ -1,24 +1,21 @@
 package com.example.mobile;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.auth0.android.jwt.JWT;
-import com.example.mobile.adapter.TopicAdapter;
-import com.example.mobile.api.TopicAPI;
-import com.example.mobile.model.Topic;
+import com.example.mobile.api.LessonAPI;
+import com.example.mobile.model.Lesson;
 import com.example.mobile.utils.RetrofitClient;
+import com.google.android.material.button.MaterialButton;
 
-import java.util.ArrayList;
-import java.util.List;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.UUID;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,83 +23,63 @@ import retrofit2.Response;
 
 public class LearningActivity extends AppCompatActivity {
 
-    private RecyclerView recyclerView;
-    private TopicAdapter topicAdapter;
-    private List<Topic> topicList;
+    private String lessonId, topicId;
+    private TextView titleText;
+    private ImageView backButton;
+    private MaterialButton learnNowButton;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_learning_new);
+        setContentView(R.layout.activity_learning);
 
-        recyclerView = findViewById(R.id.recyclerViewTopics);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        topicList = new ArrayList<>();
-        topicAdapter = new TopicAdapter(topicList);
-        recyclerView.setAdapter(topicAdapter);
+        // Lấy dữ liệu từ Intent
+        lessonId = getIntent().getStringExtra("lesson_id");
+        topicId = getIntent().getStringExtra("topic_id");
 
-        fetchTopicProgressFromAPI();
-    }
-
-    private void fetchTopicProgressFromAPI() {
-        SharedPreferences sp = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-        String userId = sp.getString("user_id", null);
-        String token = sp.getString("auth_token", null);
-
-        // Nếu user_id bị thiếu thì decode từ token
-        if ((userId == null || userId.isEmpty()) && token != null) {
-            try {
-                JWT jwt = new JWT(token);
-                userId = jwt.getClaim("nameid").asString();
-                // Lưu lại để lần sau dùng
-                sp.edit().putString("user_id", userId).apply();
-            } catch (Exception e) {
-                e.printStackTrace();
-                Toast.makeText(this, "Không giải mã được token!", Toast.LENGTH_LONG).show();
-                relogin();
-                return;
-            }
-        }
-
-        if (userId == null || userId.isEmpty()) {
-            Toast.makeText(this, "Không tìm thấy userId, vui lòng đăng nhập lại!", Toast.LENGTH_LONG).show();
-            relogin();
+        if (lessonId == null || topicId == null) {
+            Toast.makeText(this, "Thiếu dữ liệu bài học", Toast.LENGTH_SHORT).show();
+            finish();
             return;
         }
 
-        TopicAPI topicAPI = RetrofitClient.getRetrofit().create(TopicAPI.class);
-        topicAPI.getTopicsWithProgress(userId).enqueue(new Callback<List<Topic>>() {
-            @Override
-            public void onResponse(Call<List<Topic>> call, Response<List<Topic>> response) {
-                if (response.isSuccessful() && response.body() != null) {
-                    topicList.clear();
-                    topicList.addAll(response.body());
-                    topicAdapter.notifyDataSetChanged();
-                } else {
-                    // In thêm thông tin lỗi
-                    Log.e("LearningActivity", "Lỗi tải topic: code=" + response.code());
-                    try {
-                        String errorBody = response.errorBody() != null ? response.errorBody().string() : "null";
-                        Log.e("LearningActivity", "errorBody = " + errorBody);
-                    } catch (Exception e) {
-                        Log.e("LearningActivity", "errorBody parse lỗi: " + e.getMessage());
-                    }
+        // Ánh xạ view
+        titleText = findViewById(R.id.titleText);
+        backButton = findViewById(R.id.backButton);
+        learnNowButton = findViewById(R.id.learnNowButton);
 
-                    Toast.makeText(LearningActivity.this, "Lỗi tải danh sách topic!", Toast.LENGTH_SHORT).show();
-                }
-            }
+        // Gọi API lấy nội dung bài học
+        loadLessonInfo();
 
-            @Override
-            public void onFailure(Call<List<Topic>> call, Throwable t) {
-                Log.e("LearningActivity", "API Error: " + t.getMessage());
-                Toast.makeText(LearningActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
+        // Sự kiện nút back
+        backButton.setOnClickListener(v -> {
+            finish();
+        });
+
+        // Sự kiện "Learn Now"
+        learnNowButton.setOnClickListener(v -> {
+
         });
     }
 
-    private void relogin() {
-        startActivity(new Intent(this, LoginActivity.class)
-                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
-        finish();
+    private void loadLessonInfo() {
+        LessonAPI api = RetrofitClient.getRetrofit().create(LessonAPI.class);
+//        api.getLessonById(UUID.fromString(lessonId)).enqueue(new Callback<Lesson>() {
+//            @Override
+//            public void onResponse(Call<Lesson> call, Response<Lesson> response) {
+//                if (response.isSuccessful() && response.body() != null) {
+//                    Lesson lesson = response.body();
+//                    titleText.setText(lesson.getTitle());
+//                    // bạn có thể bind thêm các thông tin khác nếu cần
+//                } else {
+//                    Toast.makeText(LearningActivity.this, "Không tải được bài học", Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//
+//            @Override
+//            public void onFailure(Call<Lesson> call, Throwable t) {
+//                Toast.makeText(LearningActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_LONG).show();
+//            }
+//        });
     }
 }

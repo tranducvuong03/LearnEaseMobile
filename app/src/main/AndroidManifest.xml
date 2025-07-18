@@ -98,6 +98,8 @@
         <activity android:name=".SoloSkillActivity" />
         <activity android:name=".ReviewResultActivity" />
         <activity android:name=".SoloQuizActivity" />
+        <activity android:name=".TopicLessonsActivity" />
+        <activity android:name=".TopicActivity" />
 
     </application>
 
