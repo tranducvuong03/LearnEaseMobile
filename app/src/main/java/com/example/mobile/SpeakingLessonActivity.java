@@ -35,7 +35,9 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -82,7 +84,7 @@ public class SpeakingLessonActivity extends AppCompatActivity {
             return;
         }
 
-        btnMic.setOnTouchListener((v, e) -> {
+        /*btnMic.setOnTouchListener((v, e) -> {
             if (e.getAction() == MotionEvent.ACTION_DOWN) {
                 startRecording();
                 return true;
@@ -92,7 +94,8 @@ public class SpeakingLessonActivity extends AppCompatActivity {
                 return true;
             }
             return false;
-        });
+        });*/
+        btnMic.setOnClickListener(v -> testEvaluate());
 
         btnNext.setOnClickListener(v -> nextExercise());
         loadExercise();
@@ -174,6 +177,13 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         evaluateSpeaking();
     }
 
+    // Test file sẵn
+    private void testEvaluate() {
+        userAudioFile = getTestAudioFile();
+        tvHold.setText("Testing audio…");
+        evaluateSpeaking();
+    }
+
     private void evaluateSpeaking() {
         SpeakingExercise ex = exerciseList.get(currentIndex);
         RequestBody audioPart = RequestBody.create(userAudioFile,
@@ -200,6 +210,21 @@ public class SpeakingLessonActivity extends AppCompatActivity {
                         showError();
                     }
                 });
+    }
+
+    private File getTestAudioFile() {
+        File out = new File(getCacheDir(), "test_audio.mp3");
+        try (InputStream in = getResources().openRawResource(R.raw.economic__us_2_rr);
+             FileOutputStream fos = new FileOutputStream(out)) {
+            byte[] buf = new byte[4096];
+            int len;
+            while ((len = in.read(buf)) > 0) {
+                fos.write(buf, 0, len);
+            }
+        } catch (IOException e) {
+            Log.e("TestAudio", "copy failed", e);
+        }
+        return out;
     }
 
     private void submitProgress(boolean isCorrect) {
