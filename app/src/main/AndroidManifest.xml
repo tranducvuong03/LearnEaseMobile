@@ -49,6 +49,9 @@
             android:name=".LearningActivity"
             android:exported="false" />
         <activity
+            android:name=".AccentPracticeActivity"
+            android:exported="false" />
+        <activity
             android:name=".ExploreActivity"
             android:exported="false" />
         <activity

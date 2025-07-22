@@ -1,5 +1,7 @@
 package com.example.mobile.api;
 
+import com.example.mobile.model.Dialect;
+import com.example.mobile.model.EvaluateAccentResponse;
 import com.example.mobile.model.EvaluateLessonRequest;
 import com.example.mobile.model.ExplanationResponse;
 import com.example.mobile.model.LessonResponse;
@@ -18,6 +20,7 @@ import com.example.mobile.model.SubscriptionInfo;
 import com.example.mobile.model.TranscriptionResponse;
 import com.example.mobile.model.VocabularyItem;
 import com.example.mobile.model.SpeakingExercise;
+import com.example.mobile.model.SpeakingDialect;
 import com.example.mobile.model.userData.UpdateAvatarRequest;
 import com.example.mobile.model.userData.UpdateUsernameRequest;
 import com.example.mobile.model.userData.UserResponse;
@@ -41,7 +44,7 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface LoginAPI {
-    String BASE_URL = "https://10.0.2.2:7083/api/";
+ String BASE_URL = "https://10.0.2.2:7083/api/";
      //  String BASE_URL = "https://learnease.id.vn/api/";
     @POST("auth/login")
     Call<LoginResponse> login(@Body LoginRequest request);
@@ -149,4 +152,17 @@ public interface LoginAPI {
             @Part MultipartBody.Part audioFile
     );
 
+    // dialect
+    @GET("dialects")
+    Call<List<Dialect>> getDialects();
+
+    @GET("speaking-ai/drills")
+    Call<List<SpeakingDialect>> getSpeakingDrills(@Query("dialectId") String dialectId);
+    //cham diem accent
+    @Multipart
+    @POST("speaking-ai/accent-score")
+    Call<EvaluateAccentResponse> evaluateAccent(
+            @Part MultipartBody.Part audioFile,
+            @Part("DialectId") RequestBody dialectId
+    );
 }

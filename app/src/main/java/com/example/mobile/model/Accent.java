@@ -1,14 +1,15 @@
 package com.example.mobile.model;
 
 public class Accent {
-    private String name;
-    private String country;
-
-    public Accent(String name, String country) {
+    public String dialectId;
+    public String name;
+    public String region;
+    public String voiceSampleUrl;
+    public Accent(String name, String region) {
         this.name = name;
-        this.country = country;
+        this.region = region;
     }
 
     public String getName() { return name; }
-    public String getCountry() { return country; }
+    public String getRegion() { return region; }
 }
