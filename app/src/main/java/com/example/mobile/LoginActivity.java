@@ -8,6 +8,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -59,6 +60,16 @@ public class LoginActivity extends AppCompatActivity {
         btnGoogle = findViewById(R.id.buttonGoogleLogin);
         textGoogle = findViewById(R.id.textGoogle);
         loadingGoogle = findViewById(R.id.loadingGoogle);
+
+        ImageView backButton = findViewById(R.id.backButton);
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(LoginActivity.this, StarterActivity.class);
+                startActivity(intent);
+                finish(); // Đóng ChatActivity để không quay lại khi nhấn nút back hệ thống
+            }
+        });
 
         apiService = RetrofitClient.getApiService(this);
 

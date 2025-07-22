@@ -66,9 +66,9 @@
         android:layout_marginTop="24dp"
         android:orientation="vertical">
 
-        <!-- Email -->
+        <!--Username-->
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textInputLayoutEmail"
+            android:id="@+id/textInputLayoutUsername"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -80,6 +80,24 @@
                 android:layout_height="wrap_content"
                 android:background="#E0E0E0"
                 android:hint="Username"
+                android:inputType="textEmailAddress"
+                android:minHeight="48dp"
+                android:padding="12dp" />
+        </com.google.android.material.textfield.TextInputLayout>
+        <!-- Email -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:minHeight="48dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextEmail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#E0E0E0"
+                android:hint="Email"
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
                 android:padding="12dp" />
@@ -103,6 +121,24 @@
                 android:minHeight="48dp"
                 android:padding="12dp" />
         </com.google.android.material.textfield.TextInputLayout>
+        <!-- Password -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayoutReenterPassword"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:minHeight="48dp">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/editTextConfirmPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#E0E0E0"
+                android:hint="Confirm Password"
+                android:inputType="textPassword"
+                android:minHeight="48dp"
+                android:padding="12dp" />
+        </com.google.android.material.textfield.TextInputLayout>
     </LinearLayout>
 
     <!-- Phần 5: Nút Login -->
@@ -113,93 +149,16 @@
         android:orientation="vertical">
 
         <Button
-            android:id="@+id/buttonLogin"
+            android:id="@+id/buttonRegister"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:background="@drawable/rounded_button_orange"
             android:elevation="0dp"
-            android:text="Login"
+            android:text="Register"
             android:textAllCaps="false"
             android:textSize="16sp"
             android:textColor="#FFFFFF"
             android:textStyle="bold" />
     </LinearLayout>
-    <!-- Phần 3: Phân cách 'or' -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"
-            android:background="#E0E0E0" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:text="OR"
-            android:textColor="#BDBDBD"
-            android:textSize="16sp" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1"
-            android:background="#E0E0E0" />
-    </LinearLayout>
-
-
-    <!-- Phần 2: Nút Login With Google -->
-    <FrameLayout
-        android:id="@+id/buttonGoogleLogin"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/rounded_button_white"
-        android:clickable="true"
-        android:focusable="true">
-
-        <LinearLayout
-            android:id="@+id/googleContentLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_gravity="center"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp">
-
-            <ImageView
-                android:id="@+id/iconGoogle"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/ic_google"
-                android:contentDescription="Google icon" />
-
-            <TextView
-                android:id="@+id/textGoogle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:text="Sign in with Google"
-                android:textColor="#222222"
-                android:textStyle="bold"
-                android:textSize="16sp" />
-
-            <ProgressBar
-                android:id="@+id/loadingGoogle"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:layout_marginStart="12dp"
-                android:visibility="gone"
-                android:indeterminate="true" />
-        </LinearLayout>
-    </FrameLayout>
 
 </LinearLayout>

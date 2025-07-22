@@ -228,7 +228,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
-
+                            android:ellipsize="end"
+                            android:gravity="center_horizontal"
+                            android:maxWidth="100dp"
+                            android:maxLines="1"
                             android:textColor="@color/colorTextPrimary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -300,7 +303,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:maxWidth="100dp"
+                            android:gravity="center_horizontal"
                             android:textColor="@color/colorTextPrimary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -335,8 +341,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@id/center_podium"
-                        android:layout_marginLeft="-1dp"
-                        android:layout_marginBottom="0dp"
+                        android:layout_marginBottom="-9dp"
                         android:layout_toRightOf="@id/center_podium"
                         android:gravity="center"
                         android:orientation="vertical">
@@ -351,8 +356,7 @@
                                 android:layout_width="64dp"
                                 android:layout_height="64dp"
                                 android:layout_gravity="center"
-                                android:padding="8dp"
-                                 />
+                                android:padding="8dp" />
 
                             <!--                            &lt;!&ndash; Country Flag Icon (góc dưới phải, tràn ra ngoài một chút) &ndash;&gt;-->
                             <!--                            <ImageView-->
@@ -370,7 +374,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="20dp"
-
+                            android:maxLines="1"
+                            android:ellipsize="end"
+                            android:maxWidth="100dp"
+                            android:gravity="center_horizontal"
                             android:textColor="@color/colorTextPrimary"
                             android:textSize="16sp"
                             android:textStyle="bold" />

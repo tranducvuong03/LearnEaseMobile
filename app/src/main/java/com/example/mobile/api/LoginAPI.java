@@ -4,6 +4,7 @@ import com.example.mobile.model.EvaluateLessonRequest;
 import com.example.mobile.model.ExplanationResponse;
 import com.example.mobile.model.LessonResponse;
 import com.example.mobile.model.RankingItem;
+import com.example.mobile.model.RegisterRequest;
 import com.example.mobile.model.ReviewResponse;
 import com.example.mobile.model.ScoreResponse;
 import com.example.mobile.model.GoogleLoginRequest;
@@ -27,6 +28,7 @@ import java.util.UUID;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
@@ -47,7 +49,8 @@ public interface LoginAPI {
     Call<LoginResponse> loginWithGoogle(@Body GoogleLoginRequest request);
     @GET("users/me")
     Call<UserResponse> getMyProfile(@Header("Authorization") String token);
-
+    @POST("auth/register")
+    Call<ResponseBody> register(@Body RegisterRequest request);
     @PUT("users/{id}/username")
     Call<Void> updateUserNameById(@Path("id") String userId,
                                   @Body UpdateUsernameRequest request);
