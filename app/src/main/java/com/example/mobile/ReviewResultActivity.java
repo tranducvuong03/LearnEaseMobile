@@ -1,10 +1,12 @@
 package com.example.mobile;
 
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,7 +47,25 @@ public class ReviewResultActivity extends AppCompatActivity {
         buttonShowExplanation = findViewById(R.id.buttonShowExplanation);
         explanationContainer = findViewById(R.id.explanationContainer);
 
+        Button btnBackHome = findViewById(R.id.btnBackHome);
+        Button btnOtherChallenges = findViewById(R.id.btnOtherChallenges);
 
+        btnBackHome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ReviewResultActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+        btnOtherChallenges.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ReviewResultActivity.this, SoloSkillActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
 
         UUID userId = UUID.fromString(getIntent().getStringExtra("userId"));
         UUID lessonId = UUID.fromString(getIntent().getStringExtra("lessonId"));
@@ -115,8 +135,8 @@ public class ReviewResultActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     ReviewResponse data = response.body();
                     textSkill.setText(data.getSkill());
-
-                    textScore.setText("" + data.getScore());
+                    int scoreInt = (int) Math.floor(data.getScore());  // chỉ lấy phần nguyên (không làm tròn)
+                    textScore.setText(scoreInt);
                     textFeedback.setText(data.getFeedback());
 
                 }

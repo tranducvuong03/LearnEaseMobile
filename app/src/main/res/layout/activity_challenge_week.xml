@@ -77,29 +77,8 @@
                 android:id="@+id/flameIcon"
                 android:layout_width="160dp"
                 android:layout_height="160dp"
-                android:src="@drawable/ic_challenge_week_image_fire"
+                android:src="@drawable/ic_challenge_week_image"
                 android:layout_marginBottom="16dp" />
-
-            <!-- Streak number -->
-            <TextView
-                android:id="@+id/streakNumber"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="8"
-                android:textSize="64sp"
-                android:textStyle="bold"
-                android:textColor="#FFA500"
-                android:layout_marginBottom="4dp" />
-
-            <!-- Streak text -->
-            <TextView
-                android:id="@+id/streakText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="day streak"
-                android:textSize="20sp"
-                android:textColor="#FFA500"
-                android:layout_marginBottom="24dp" />
 
             <!-- Weekly progress row -->
             <LinearLayout

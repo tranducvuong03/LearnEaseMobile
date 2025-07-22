@@ -1,5 +1,6 @@
 package com.example.mobile;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
@@ -45,6 +46,7 @@ public class RankingActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ranking);
+        ImageView backButton = findViewById(R.id.backButton);
 
         apiService = RetrofitClient.getApiService(this);
 
@@ -77,6 +79,15 @@ public class RankingActivity extends AppCompatActivity {
         toggleGroup.check(R.id.btnWeekly);
         ScrollView layoutWeekly = findViewById(R.id.layoutWeekly);
         LinearLayout layoutMonthly = findViewById(R.id.layoutMonthly);
+
+        backButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(RankingActivity.this, HomeActivity.class);
+                startActivity(intent);
+                finish(); // Đóng ChatActivity để không quay lại khi nhấn nút back hệ thống
+            }
+        });
 
         toggleGroup.addOnButtonCheckedListener((group, checkedId, isChecked) -> {
             if (!isChecked) return;
