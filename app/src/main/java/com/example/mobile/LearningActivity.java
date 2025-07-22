@@ -4,10 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mobile.api.LessonAPI;
+import com.example.mobile.model.LearningResponse;
 import com.example.mobile.model.Lesson;
 import com.example.mobile.utils.RetrofitClient;
 import com.google.android.material.button.MaterialButton;
@@ -63,23 +65,54 @@ public class LearningActivity extends AppCompatActivity {
     }
 
     private void loadLessonInfo() {
+        String userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                .getString("user_id", null);
+
+        if (userId == null) {
+            Toast.makeText(this, "Chưa đăng nhập", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         LessonAPI api = RetrofitClient.getRetrofit().create(LessonAPI.class);
-//        api.getLessonById(UUID.fromString(lessonId)).enqueue(new Callback<Lesson>() {
-//            @Override
-//            public void onResponse(Call<Lesson> call, Response<Lesson> response) {
-//                if (response.isSuccessful() && response.body() != null) {
-//                    Lesson lesson = response.body();
-//                    titleText.setText(lesson.getTitle());
-//                    // bạn có thể bind thêm các thông tin khác nếu cần
-//                } else {
-//                    Toast.makeText(LearningActivity.this, "Không tải được bài học", Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//
-//            @Override
-//            public void onFailure(Call<Lesson> call, Throwable t) {
-//                Toast.makeText(LearningActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_LONG).show();
-//            }
-//        });
+        api.getLessonBlock(userId, lessonId).enqueue(new Callback<LearningResponse>() {
+            @Override
+            public void onResponse(Call<LearningResponse> call, Response<LearningResponse> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    LearningResponse lesson = response.body();
+
+                    // Set tiêu đề
+                    titleText.setText(lesson.getTitle());
+
+                    // Gán lại lessonId nếu cần
+                    lessonId = lesson.getLessonId().toString();
+
+                    // Hiển thị progress Vocabulary
+                    ProgressBar progressBar = findViewById(R.id.progressBar);
+                    TextView progressText = findViewById(R.id.progressText);
+                    int vocabCorrect = lesson.getVocabCorrectCount();
+                    int vocabTotal = lesson.getVocabularies().size();
+                    int vocabPercent = (vocabTotal > 0) ? (vocabCorrect * 100 / vocabTotal) : 0;
+                    progressBar.setProgress(vocabPercent);
+                    progressText.setText(vocabCorrect + "/" + vocabTotal);
+
+                    // Hiển thị progress Speaking
+                    ProgressBar progressBarGreen = findViewById(R.id.progressBarGreen);
+                    TextView progressTextSpeaking = findViewById(R.id.progressTextSpeaking);
+                    int speakingCorrect = lesson.getSpeakingCorrectCount();
+                    int speakingTotal = lesson.getSpeakingExercises().size();
+                    int speakingPercent = (speakingTotal > 0) ? (speakingCorrect * 100 / speakingTotal) : 0;
+                    progressBarGreen.setProgress(speakingPercent);
+                    progressTextSpeaking.setText(speakingCorrect + "/" + speakingTotal);
+
+                } else {
+                    Toast.makeText(LearningActivity.this, "Không tìm thấy bài học", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<LearningResponse> call, Throwable t) {
+                Toast.makeText(LearningActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
     }
 }

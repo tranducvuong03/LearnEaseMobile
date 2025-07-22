@@ -9,9 +9,7 @@ import com.example.mobile.api.LoginAPI;
 import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -24,13 +22,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-import java.io.IOException;
-
 /**
  * Lớp tiện ích để cấu hình Retrofit và OkHttpClient.
  * Cung cấp các instance ApiService cho cả API công khai (không cần token)
  * và API được bảo vệ (cần JWT token).
- *
+ * <p>
  * KHÔNG NÊN DÙNG CẤU HÌNH SSL BỎ QUA TRONG MÔI TRƯỜNG PRODUCTION!
  */
 public class RetrofitClient {
@@ -39,13 +35,18 @@ public class RetrofitClient {
     private static CompareSpeakingAPI compareSpeakingAPI;
     private static Retrofit retrofit;
 
+
     public static synchronized Retrofit getRetrofit() {
         if (retrofit == null) {
             try {
                 final TrustManager[] trustAllCerts = new TrustManager[]{
                         new X509TrustManager() {
-                            public void checkClientTrusted(X509Certificate[] chain, String authType) {}
-                            public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                            }
+
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                            }
+
                             public X509Certificate[] getAcceptedIssuers() {
                                 return new X509Certificate[0];
                             }
@@ -99,9 +100,13 @@ public class RetrofitClient {
                 final TrustManager[] trustAllCerts = new TrustManager[]{
                         new X509TrustManager() {
                             @Override
-                            public void checkClientTrusted(X509Certificate[] chain, String authType) {}
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                            }
+
                             @Override
-                            public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                            }
+
                             @Override
                             public X509Certificate[] getAcceptedIssuers() {
                                 return new X509Certificate[0];
@@ -163,8 +168,12 @@ public class RetrofitClient {
             try {
                 final TrustManager[] trustAllCerts = new TrustManager[]{
                         new X509TrustManager() {
-                            public void checkClientTrusted(X509Certificate[] chain, String authType) {}
-                            public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                            }
+
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                            }
+
                             public X509Certificate[] getAcceptedIssuers() {
                                 return new X509Certificate[0];
                             }
