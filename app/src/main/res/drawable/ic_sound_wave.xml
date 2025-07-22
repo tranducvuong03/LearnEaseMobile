@@ -1,0 +1,36 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+
+    <group
+        android:name="soundWave"
+        android:pivotX="32"
+        android:pivotY="32">
+
+        <path
+            android:fillColor="#1976D2"
+            android:pathData="M28,16 L28,48"
+            android:strokeWidth="4"
+            android:strokeColor="#1976D2"/>
+
+        <path
+            android:fillColor="#1976D2"
+            android:pathData="M36,16 L36,48"
+            android:strokeWidth="4"
+            android:strokeColor="#1976D2"/>
+
+        <path
+            android:fillColor="#1976D2"
+            android:pathData="M20,24 L20,40"
+            android:strokeWidth="4"
+            android:strokeColor="#1976D2"/>
+
+        <path
+            android:fillColor="#1976D2"
+            android:pathData="M44,24 L44,40"
+            android:strokeWidth="4"
+            android:strokeColor="#1976D2"/>
+    </group>
+</vector>

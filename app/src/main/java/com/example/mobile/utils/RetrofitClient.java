@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.mobile.api.CompareSpeakingAPI;
+import com.example.mobile.api.LearningAPI;
 import com.example.mobile.api.LoginAPI;
 
 import java.security.cert.X509Certificate;
@@ -33,8 +34,57 @@ public class RetrofitClient {
 
     private static LoginAPI apiService;
     private static CompareSpeakingAPI compareSpeakingAPI;
+    private static LearningAPI learningAPI;
     private static Retrofit retrofit;
 
+    public static synchronized LearningAPI getLearningApi(Context context) {
+        if (learningAPI == null) {
+            try {
+                final TrustManager[] trustAllCerts = new TrustManager[]{
+                        new X509TrustManager() {
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                            }
+
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                            }
+
+                            public X509Certificate[] getAcceptedIssuers() {
+                                return new X509Certificate[0];
+                            }
+                        }
+                };
+
+                final SSLContext sslContext = SSLContext.getInstance("SSL");
+                sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+                final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+                HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+                OkHttpClient client = new OkHttpClient.Builder()
+                        .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
+                        .hostnameVerifier((hostname, session) -> true)
+                        .addInterceptor(loggingInterceptor)
+                        .connectTimeout(300, TimeUnit.SECONDS)
+                        .readTimeout(300, TimeUnit.SECONDS)
+                        .writeTimeout(300, TimeUnit.SECONDS)
+                        .build();
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(LearningAPI.BASE_URL)
+                        .client(client)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                learningAPI = retrofit.create(LearningAPI.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to create CompareSpeakingAPI: " + e.getMessage(), e);
+            }
+        }
+
+        return learningAPI;
+    }
 
     public static synchronized Retrofit getRetrofit() {
         if (retrofit == null) {
@@ -127,7 +177,6 @@ public class RetrofitClient {
 
                     Request.Builder builder = original.newBuilder();
 
-                    // ⚠️ KHÔNG thêm token nếu là login
                     if (authToken != null && !url.contains("auth/google-login") && !url.contains("auth/login") && !url.contains("auth/register")) {
                         builder.header("Authorization", "Bearer " + authToken);
                     }

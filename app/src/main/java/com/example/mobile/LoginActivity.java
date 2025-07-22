@@ -11,9 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 import com.auth0.android.jwt.JWT;
 import com.example.mobile.api.LoginAPI;
 import com.example.mobile.model.LoginRequest;

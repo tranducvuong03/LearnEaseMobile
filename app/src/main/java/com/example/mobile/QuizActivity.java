@@ -1,6 +1,8 @@
 package com.example.mobile;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -9,31 +11,47 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mobile.api.LearningAPI;
+import com.example.mobile.model.LessonProgress;
+import com.example.mobile.model.SubmitProgressRequest;
 import com.example.mobile.model.VocabularyItem;
-import com.example.mobile.presenter.QuizPresenter;
-import com.example.mobile.presenter.QuizPresenter.Item;
-import com.example.mobile.view.QuizView;
+import com.example.mobile.utils.RetrofitClient;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
-public class QuizActivity extends AppCompatActivity implements QuizView {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
-    private QuizPresenter presenter;
+public class QuizActivity extends AppCompatActivity {
+
+    private List<VocabularyItem> questions;
+    private int currentIndex = 0;
+    private int correctAnswers = 0;
 
     private TextView questionText;
     private ImageView questionImage;
 
     private LinearLayout initialAnswerLayout;
-    private LinearLayout feedbackLayout;
-    private TextView feedbackTitle;
-    private TextView feedbackAnswer;
-    private Button nextQuestionButton;
+    private LinearLayout correctFeedbackLayout;
+    private LinearLayout wrongFeedbackLayout;
+    private TextView correctFeedbackAnswer;
+    private TextView wrongFeedbackTitle;
+    private TextView wrongFeedbackAnswer;
+    private Button correctNextQuestionButton;
+    private Button wrongNextQuestionButton;
 
     private Button[] answerBtns;
     private View[] progressDots;
+
+    private String correctAnswer = "";
+    private LessonProgress lessonProgress;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,33 +61,21 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
         mapViews();
         mapProgressDots();
 
-        List<Item> items = new ArrayList<>();
+        String json = getIntent().getStringExtra("vocab_list");
+        String lessonId = getIntent().getStringExtra("lesson_id");
+        userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                .getString("user_id", null);
 
-        // Nhận danh sách vocab (có distractorsJson dạng String)
-        String questionsJson = getIntent().getStringExtra("QUESTIONS_JSON");
-        if (questionsJson != null) {
-            List<VocabularyItem> vocabList = new Gson().fromJson(
-                    questionsJson,
-                    new TypeToken<List<VocabularyItem>>() {}.getType()
-            );
-
-            for (VocabularyItem v : vocabList) {
-                Item item = new Item();
-                item.word = v.getWord();
-
-                // Parse distractorsJson → List<String>
-                List<String> distractors = new Gson().fromJson(
-                        v.getDistractorsJson(),
-                        new TypeToken<List<String>>() {}.getType()
-                );
-                item.distractors = distractors;
-
-                item.imageResId = -1;
-                items.add(item);
-            }
+        if (json != null) {
+            questions = new Gson().fromJson(json, new TypeToken<List<VocabularyItem>>() {
+            }.getType());
+        } else {
+            questions = new ArrayList<>();
         }
 
-        presenter = new QuizPresenter(this, items);
+        lessonProgress = new LessonProgress(lessonId);
+
+        showQuestion();
 
         ImageView backButton = findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> finish());
@@ -79,10 +85,14 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
         questionText = findViewById(R.id.questionText);
         questionImage = findViewById(R.id.questionImage);
         initialAnswerLayout = findViewById(R.id.initialAnswerLayout);
-        feedbackLayout = findViewById(R.id.feedbackLayout);
-        feedbackTitle = findViewById(R.id.feedbackTitle);
-        feedbackAnswer = findViewById(R.id.feedbackAnswer);
-        nextQuestionButton = findViewById(R.id.nextQuestionButton);
+
+        correctFeedbackLayout = findViewById(R.id.correctFeedbackLayout);
+        wrongFeedbackLayout = findViewById(R.id.wrongFeedbackLayout);
+        correctFeedbackAnswer = findViewById(R.id.correctFeedbackAnswer);
+        correctNextQuestionButton = findViewById(R.id.correctNextQuestionButton);
+        wrongFeedbackTitle = findViewById(R.id.feedbackTitle);
+        wrongFeedbackAnswer = findViewById(R.id.feedbackAnswer);
+        wrongNextQuestionButton = findViewById(R.id.nextQuestionButton);
 
         answerBtns = new Button[]{
                 findViewById(R.id.buttonMouth),
@@ -93,10 +103,11 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
 
         for (int i = 0; i < 4; i++) {
             final int idx = i;
-            answerBtns[i].setOnClickListener(v -> presenter.handleAnswer(idx));
+            answerBtns[i].setOnClickListener(v -> checkAnswer(idx));
         }
 
-        nextQuestionButton.setOnClickListener(v -> presenter.nextQuestion());
+        correctNextQuestionButton.setOnClickListener(v -> goToNextQuestion());
+        wrongNextQuestionButton.setOnClickListener(v -> goToNextQuestion());
     }
 
     private void mapProgressDots() {
@@ -114,50 +125,96 @@ public class QuizActivity extends AppCompatActivity implements QuizView {
         }
     }
 
-    @Override
-    public void showQuestion(String text, int imageResId, String[] options, int curIndex) {
-        questionText.setText(text);
+    private void showQuestion() {
+        resetView();
 
-        if (imageResId != -1) {
-            questionImage.setVisibility(View.VISIBLE);
-            questionImage.setImageResource(imageResId);
-        } else {
-            questionImage.setVisibility(View.GONE);
+        VocabularyItem item = questions.get(currentIndex);
+        correctAnswer = item.getWord();
+        questionText.setText("Từ n\u00e0o mang nghĩa: " + correctAnswer);
+
+        questionImage.setVisibility(View.GONE);
+
+        List<String> options = parseDistractors(item.getDistractorsJson());
+        options.add(correctAnswer);
+        Collections.shuffle(options);
+
+        for (int i = 0; i < 4 && i < options.size(); i++) {
+            answerBtns[i].setText(options.get(i));
         }
 
-        for (int i = 0; i < 4; i++) {
-            answerBtns[i].setText(options[i]);
-        }
-
-        updateProgress(curIndex);
+        updateProgress(currentIndex);
     }
 
-    @Override
-    public void showFeedback(boolean isCorrect, String correctAnswer) {
+    private List<String> parseDistractors(String json) {
+        if (json == null || json.isEmpty()) return new ArrayList<>();
+        return new Gson().fromJson(json, new TypeToken<List<String>>() {
+        }.getType());
+    }
+
+    private void checkAnswer(int selectedIndex) {
+        String selected = answerBtns[selectedIndex].getText().toString();
+        boolean isCorrect = selected.equals(correctAnswer);
+
         initialAnswerLayout.setVisibility(View.GONE);
-        feedbackLayout.setVisibility(View.VISIBLE);
 
-        feedbackLayout.setBackgroundResource(
-                isCorrect ? R.drawable.feedback_correct_background
-                        : R.drawable.feedback_wrong_background);
-
-        feedbackTitle.setText(isCorrect ? "Great job!" : "Oops… that's wrong");
-        feedbackAnswer.setText("Answer: " + correctAnswer);
-
+        VocabularyItem item = questions.get(currentIndex);
         if (isCorrect) {
-            questionImage.postDelayed(() -> presenter.nextQuestion(), 800);
+            correctAnswers++;
+            correctFeedbackLayout.setVisibility(View.VISIBLE);
+            correctFeedbackAnswer.setText("Answer: " + correctAnswer);
+
+            // Gọi API submit-progress
+            submitProgressToServer(userId, lessonProgress.getLessonId(), item.getVocabId(), true);
+        } else {
+            wrongFeedbackLayout.setVisibility(View.VISIBLE);
+            wrongFeedbackTitle.setText("Oops… that's wrong");
+            wrongFeedbackAnswer.setText("Answer: " + correctAnswer);
+        }
+
+        updateProgress(currentIndex);
+    }
+
+    private void submitProgressToServer(String userId, String lessonId, UUID vocabId, boolean isCorrect) {
+        SubmitProgressRequest request = new SubmitProgressRequest(lessonId, vocabId, null, isCorrect);
+
+        LearningAPI api = RetrofitClient.getLearningApi(getApplicationContext());
+        api.submitProgress(userId, request).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                if (!response.isSuccessful()) {
+                    Log.e("SubmitProgress", "Fail: " + response.code());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+                Log.e("SubmitProgress", "Network error: " + t.getMessage());
+            }
+        });
+    }
+
+    private void goToNextQuestion() {
+        currentIndex++;
+        if (currentIndex < questions.size()) {
+            showQuestion();
+        } else {
+            lessonProgress.setVocabCorrect(correctAnswers);
+            finishQuiz();
         }
     }
 
-    @Override
-    public void resetView() {
+    private void resetView() {
         initialAnswerLayout.setVisibility(View.VISIBLE);
-        feedbackLayout.setVisibility(View.GONE);
+        correctFeedbackLayout.setVisibility(View.GONE);
+        wrongFeedbackLayout.setVisibility(View.GONE);
     }
 
-    @Override
-    public void finishQuiz() {
-        setResult(RESULT_OK);
+    private void finishQuiz() {
+        Intent intent = new Intent(QuizActivity.this, SpeakingLessonActivity.class);
+        String speakingJson = getIntent().getStringExtra("speaking_list");
+        intent.putExtra("speaking_list", speakingJson);
+        intent.putExtra("lesson_progress", new Gson().toJson(lessonProgress));
+        startActivity(intent);
         finish();
     }
 }
