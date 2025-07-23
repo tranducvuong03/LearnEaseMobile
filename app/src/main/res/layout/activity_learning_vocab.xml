@@ -110,6 +110,13 @@
                 android:layout_height="6dp"
                 android:layout_margin="2dp"
                 android:background="@drawable/gray_dot" />
+
+            <View
+                android:id="@+id/dot9"
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/gray_dot" />
         </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
