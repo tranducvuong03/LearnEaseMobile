@@ -7,7 +7,7 @@
     android:background="@color/colorBackground"
     android:padding="24dp">
 
-    <!-- Hình chúc mừng -->
+    <!-- Celebration Image -->
     <ImageView
         android:id="@+id/imgCongrats"
         android:layout_width="200dp"
@@ -19,12 +19,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="64dp" />
 
-    <!-- Tiêu đề -->
+    <!-- Title -->
     <TextView
         android:id="@+id/tvCompletionTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Chúc mừng!"
+        android:text="Congratulations!"
         android:textSize="28sp"
         android:textStyle="bold"
         android:textColor="@color/colorPrimary"
@@ -34,12 +34,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="24dp" />
 
-    <!-- Thông báo hoàn thành -->
+    <!-- Completion Message -->
     <TextView
         android:id="@+id/tvCompletionMessage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Bạn đã hoàn thành toàn bộ bài Speaking!"
+        android:text="You have completed the entire speaking exercise!"
         android:textSize="18sp"
         android:textColor="@color/black"
         android:textAlignment="center"
@@ -48,12 +48,12 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="12dp" />
 
-    <!-- Nút trở về trang chủ -->
+    <!-- Home Button -->
     <Button
         android:id="@+id/btnHome"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Về Trang Chủ"
+        android:text="Go to Home"
         android:textAllCaps="false"
         android:paddingHorizontal="32dp"
         android:paddingVertical="12dp"

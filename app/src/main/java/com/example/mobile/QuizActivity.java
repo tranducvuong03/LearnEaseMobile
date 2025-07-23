@@ -29,7 +29,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 @UnstableApi
 public class QuizActivity extends AppCompatActivity {
 
@@ -69,8 +68,7 @@ public class QuizActivity extends AppCompatActivity {
                 .getString("user_id", null);
 
         if (json != null) {
-            questions = new Gson().fromJson(json, new TypeToken<List<VocabularyItem>>() {
-            }.getType());
+            questions = new Gson().fromJson(json, new TypeToken<List<VocabularyItem>>() {}.getType());
         } else {
             questions = new ArrayList<>();
         }
@@ -131,7 +129,8 @@ public class QuizActivity extends AppCompatActivity {
 
         VocabularyItem item = questions.get(currentIndex);
         correctAnswer = item.getWord();
-        questionText.setText("Từ n\u00e0o mang nghĩa: " + correctAnswer);
+        // Translated to English:
+        questionText.setText("Which word means: " + correctAnswer);
 
         questionImage.setVisibility(View.GONE);
 
@@ -148,8 +147,7 @@ public class QuizActivity extends AppCompatActivity {
 
     private List<String> parseDistractors(String json) {
         if (json == null || json.isEmpty()) return new ArrayList<>();
-        return new Gson().fromJson(json, new TypeToken<List<String>>() {
-        }.getType());
+        return new Gson().fromJson(json, new TypeToken<List<String>>() {}.getType());
     }
 
     private void checkAnswer(int selectedIndex) {
@@ -166,11 +164,10 @@ public class QuizActivity extends AppCompatActivity {
             submitProgressToServer(userId, lessonProgress.getLessonId(), item.getVocabId(), true);
         } else {
             wrongFeedbackLayout.setVisibility(View.VISIBLE);
-            // Hiển thị tiêu đề & nút Next
             wrongFeedbackTitle.setText("Oops… that's wrong");
             wrongNextQuestionButton.setVisibility(View.VISIBLE);
 
-            // Gửi kết quả sai
+            // Send incorrect result
             submitProgressToServer(userId, lessonProgress.getLessonId(), item.getVocabId(), false);
         }
 
@@ -217,7 +214,7 @@ public class QuizActivity extends AppCompatActivity {
         String speakingJson = getIntent().getStringExtra("speaking_list");
         intent.putExtra("speaking_list", speakingJson);
         intent.putExtra("lesson_progress", new Gson().toJson(lessonProgress));
-        // thêm offset = số câu quiz đã đi qua 5
+        // offset passed = number of quiz questions answered
         intent.putExtra("dotOffset", currentIndex);
         startActivity(intent);
         finish();

@@ -88,7 +88,7 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         dotOffset = getIntent().getIntExtra("dotOffset", 0);
 
         if (exerciseList == null || exerciseList.isEmpty()) {
-            showToast("Không có dữ liệu bài nói");
+            showToast("No speaking exercises available");
             finish();
             return;
         }
@@ -138,8 +138,7 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         compareApi = RetrofitClient.getCompareApiService(this);
         learningApi = RetrofitClient.getLearningApi(this);
         SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-        userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
-                .getString("user_id", null);
+        userId = prefs.getString("userId", null);
     }
 
     private void loadIntentData() {
@@ -190,7 +189,7 @@ public class SpeakingLessonActivity extends AppCompatActivity {
             tvHold.setText("Recording…");
         } catch (IOException ex) {
             Log.e("Recorder", "startRecording", ex);
-            showToast("Không thể ghi âm: " + ex.getMessage());
+            showToast("Unable to record audio: " + ex.getMessage());
         }
     }
 
@@ -212,14 +211,13 @@ public class SpeakingLessonActivity extends AppCompatActivity {
                 isRecording = false;
             }
         }
-        tvHold.setText("Đang chấm điểm…");
+        tvHold.setText("Scoring...");
         evaluateSpeaking();
     }
 
-
     private void testEvaluate() {
         userAudioFile = getTestAudioFile();
-        tvHold.setText("Testing audio…");
+        tvHold.setText("Testing audio...");
         evaluateSpeaking();
     }
 
@@ -292,7 +290,7 @@ public class SpeakingLessonActivity extends AppCompatActivity {
 
     private void showError() {
         tvHold.setText("Hold To Pronounce");
-        showToast("API lỗi, vui lòng thử lại");
+        showToast("API error, please try again");
     }
 
     private void nextExercise() {
@@ -302,7 +300,7 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         } else {
             lessonProgress.checkCompletion();
             showToast(lessonProgress.isCompleted() ?
-                    "Bạn đã hoàn thành bài học!" : "Bạn cần luyện thêm để hoàn thành.");
+                    "You’ve completed the lesson!" : "You need more practice to complete the lesson.");
 
             // Khởi động màn hình hoàn thành
             Intent intent = new Intent(SpeakingLessonActivity.this, CompletionActivity.class);
@@ -339,7 +337,7 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQ_AUDIO_PERM &&
                 (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
-            showToast("Từ chối quyền ghiâm");
+            showToast("Recording permission denied");
             btnMic.setEnabled(false);
         }
     }

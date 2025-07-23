@@ -77,7 +77,6 @@ public class ProfileActivity extends AppCompatActivity {
         dialog.show();
     }
 
-
     private void updateUserNameAPI(String userId, String newName) {
         UpdateUsernameRequest request = new UpdateUsernameRequest(newName);
         apiService.updateUserNameById(userId, request).enqueue(new Callback<Void>() {
@@ -246,17 +245,20 @@ public class ProfileActivity extends AppCompatActivity {
                     if (id == R.id.menu_home) {
                         startActivity(new Intent(ProfileActivity.this, HomeActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     } else if (id == R.id.menu_lesson) {
                         startActivity(new Intent(ProfileActivity.this, TopicActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
-                    } else if (id == R.id.menu_rank) {
+                    } else if (id == R.id.menu_challenge) {
                         startActivity(new Intent(ProfileActivity.this, RankingActivity.class));
                         return true;
                     } else if (id == R.id.menu_explore) {
                         startActivity(new Intent(ProfileActivity.this, ExploreActivity.class));
                         overridePendingTransition(0, 0);
+                        finish();
                         return true;
                     } else if (id == R.id.menu_profile) {
                         return true;
