@@ -94,7 +94,7 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         }
 
         // record on touch
-        /*btnMic.setOnTouchListener((v, e) -> {
+        btnMic.setOnTouchListener((v, e) -> {
             switch (e.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     startRecording();
@@ -105,8 +105,8 @@ public class SpeakingLessonActivity extends AppCompatActivity {
                     return true;
             }
             return false;
-        });*/
-        btnMic.setOnClickListener(v -> testEvaluate());
+        });
+        // btnMic.setOnClickListener(v -> testEvaluate());
 
         btnNext.setOnClickListener(v -> nextExercise());
         loadExercise();

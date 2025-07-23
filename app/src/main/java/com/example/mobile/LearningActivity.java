@@ -15,6 +15,7 @@ import com.google.gson.Gson;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.media3.common.util.UnstableApi;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -28,6 +29,7 @@ public class LearningActivity extends AppCompatActivity {
     private MaterialButton learnNowButton;
     private LearningResponse lessonData;
 
+    @UnstableApi
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

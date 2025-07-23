@@ -129,7 +129,6 @@ public class QuizActivity extends AppCompatActivity {
 
         VocabularyItem item = questions.get(currentIndex);
         correctAnswer = item.getWord();
-        // Translated to English:
         questionText.setText("Which word means: " + correctAnswer);
 
         questionImage.setVisibility(View.GONE);
@@ -219,5 +218,4 @@ public class QuizActivity extends AppCompatActivity {
         startActivity(intent);
         finish();
     }
-
 }
