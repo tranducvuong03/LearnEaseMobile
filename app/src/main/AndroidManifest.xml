@@ -103,6 +103,7 @@
         <activity android:name=".SoloQuizActivity" />
         <activity android:name=".TopicLessonsActivity" />
         <activity android:name=".TopicActivity" />
+        <activity android:name=".CompletionActivity" />
 
     </application>
 

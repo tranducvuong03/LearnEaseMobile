@@ -1,6 +1,7 @@
 package com.example.mobile;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
@@ -10,6 +11,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -29,7 +31,6 @@ import com.example.mobile.model.EvaluateSpeakingResponse;
 import com.example.mobile.model.LessonProgress;
 import com.example.mobile.model.SpeakingExercise;
 import com.example.mobile.model.SubmitProgressRequest;
-import com.example.mobile.model.SubmitProgressResponse;
 import com.example.mobile.utils.RetrofitClient;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -40,7 +41,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -57,9 +57,12 @@ public class SpeakingLessonActivity extends AppCompatActivity {
     private ImageButton btnMic;
     private Button btnNext;
     private LinearLayout layoutAudio;
+    private FrameLayout backButtonCard;
+    private LinearLayout progressDots;
     private MediaRecorder recorder;
     private File userAudioFile;
     private SimpleExoPlayer exoPlayer;
+    private boolean isRecording = false;
 
     private List<SpeakingExercise> exerciseList;
     private int currentIndex = 0;
@@ -67,6 +70,9 @@ public class SpeakingLessonActivity extends AppCompatActivity {
     private CompareSpeakingAPI compareApi;
     private LearningAPI learningApi;
     private String userId;
+
+    // offset passed from QuizActivity to continue progress dots
+    private int dotOffset = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,20 +84,25 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         initApis();
         loadIntentData();
 
+        // read offset for progress dots from quiz
+        dotOffset = getIntent().getIntExtra("dotOffset", 0);
+
         if (exerciseList == null || exerciseList.isEmpty()) {
             showToast("Không có dữ liệu bài nói");
             finish();
             return;
         }
 
+        // record on touch
         /*btnMic.setOnTouchListener((v, e) -> {
-            if (e.getAction() == MotionEvent.ACTION_DOWN) {
-                startRecording();
-                return true;
-            } else if (e.getAction() == MotionEvent.ACTION_UP
-                    || e.getAction() == MotionEvent.ACTION_CANCEL) {
-                stopRecordingAndEvaluate();
-                return true;
+            switch (e.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    startRecording();
+                    return true;
+                case MotionEvent.ACTION_UP:
+                case MotionEvent.ACTION_CANCEL:
+                    stopRecordingAndEvaluate();
+                    return true;
             }
             return false;
         });*/
@@ -101,22 +112,6 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         loadExercise();
     }
 
-    private void initApis() {
-        compareApi = RetrofitClient.getCompareApiService(this);
-        learningApi = RetrofitClient.getLearningApi(this);
-        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
-        userId = prefs.getString("userId", null);
-    }
-
-    private void loadIntentData() {
-        String json = getIntent().getStringExtra("speaking_list");
-        exerciseList = new Gson().fromJson(json,
-                new TypeToken<List<SpeakingExercise>>() {
-                }.getType());
-        String progressJson = getIntent().getStringExtra("lesson_progress");
-        lessonProgress = new Gson().fromJson(progressJson, LessonProgress.class);
-    }
-
     private void mapViews() {
         tvPhrase = findViewById(R.id.tvPhrase);
         tvHold = findViewById(R.id.tvHold);
@@ -124,7 +119,10 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         btnMic = findViewById(R.id.btnMic);
         btnNext = findViewById(R.id.btnNext);
         layoutAudio = findViewById(R.id.layoutAudio);
-        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        backButtonCard = findViewById(R.id.backButtonCard);
+        progressDots = findViewById(R.id.progressDots);
+
+        backButtonCard.setOnClickListener(v -> finish());
     }
 
     private void setupPermissions() {
@@ -136,14 +134,42 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         }
     }
 
+    private void initApis() {
+        compareApi = RetrofitClient.getCompareApiService(this);
+        learningApi = RetrofitClient.getLearningApi(this);
+        SharedPreferences prefs = getSharedPreferences("prefs", MODE_PRIVATE);
+        userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
+                .getString("user_id", null);
+    }
+
+    private void loadIntentData() {
+        String json = getIntent().getStringExtra("speaking_list");
+        exerciseList = new Gson().fromJson(json,
+                new TypeToken<List<SpeakingExercise>>() {}.getType());
+        String progressJson = getIntent().getStringExtra("lesson_progress");
+        lessonProgress = new Gson().fromJson(progressJson, LessonProgress.class);
+    }
+
     private void loadExercise() {
         tvScore.setVisibility(View.GONE);
         btnNext.setVisibility(View.GONE);
         tvHold.setText("Hold To Pronounce");
 
+        updateProgressDots();
+
         SpeakingExercise ex = exerciseList.get(currentIndex);
         tvPhrase.setText("'" + ex.getPrompt() + "'");
         layoutAudio.setOnClickListener(v -> playSampleAudio(ex.getSampleAudioUrl()));
+    }
+
+    private void updateProgressDots() {
+        int total = progressDots.getChildCount();
+        int completed = dotOffset + currentIndex;
+        for (int i = 0; i < total; i++) {
+            View dot = progressDots.getChildAt(i);
+            int res = (i <= completed) ? R.drawable.blue_dot : R.drawable.gray_dot;
+            dot.setBackgroundResource(res);
+        }
     }
 
     private void startRecording() {
@@ -160,6 +186,7 @@ public class SpeakingLessonActivity extends AppCompatActivity {
             recorder.setOutputFile(userAudioFile.getAbsolutePath());
             recorder.prepare();
             recorder.start();
+            isRecording = true;
             tvHold.setText("Recording…");
         } catch (IOException ex) {
             Log.e("Recorder", "startRecording", ex);
@@ -169,15 +196,27 @@ public class SpeakingLessonActivity extends AppCompatActivity {
 
     private void stopRecordingAndEvaluate() {
         if (recorder != null) {
-            recorder.stop();
-            recorder.release();
-            recorder = null;
+            try {
+                if (isRecording) {
+                    recorder.stop();
+                }
+            } catch (RuntimeException e) {
+                Log.e("Recorder", "stop failed", e);
+                if (userAudioFile != null && userAudioFile.exists()) {
+                    userAudioFile.delete();
+                }
+            } finally {
+                recorder.reset();
+                recorder.release();
+                recorder = null;
+                isRecording = false;
+            }
         }
         tvHold.setText("Đang chấm điểm…");
         evaluateSpeaking();
     }
 
-    // Test file sẵn
+
     private void testEvaluate() {
         userAudioFile = getTestAudioFile();
         tvHold.setText("Testing audio…");
@@ -229,14 +268,13 @@ public class SpeakingLessonActivity extends AppCompatActivity {
 
     private void submitProgress(boolean isCorrect) {
         SpeakingExercise ex = exerciseList.get(currentIndex);
-        SubmitProgressRequest req = new SubmitProgressRequest(lessonProgress.getLessonId(), null, ex.getExerciseId(), isCorrect);
+        SubmitProgressRequest req = new SubmitProgressRequest(
+                lessonProgress.getLessonId(), null, ex.getExerciseId(), isCorrect);
 
         learningApi.submitProgress(userId, req)
                 .enqueue(new Callback<Void>() {
                     @Override
-                    public void onResponse(Call<Void> call,
-                                           Response<Void> response) {
-                    }
+                    public void onResponse(Call<Void> call, Response<Void> response) {}
 
                     @Override
                     public void onFailure(Call<Void> call, Throwable t) {
@@ -259,11 +297,17 @@ public class SpeakingLessonActivity extends AppCompatActivity {
 
     private void nextExercise() {
         currentIndex++;
-        if (currentIndex < exerciseList.size()) loadExercise();
-        else {
+        if (currentIndex < exerciseList.size()) {
+            loadExercise();
+        } else {
             lessonProgress.checkCompletion();
             showToast(lessonProgress.isCompleted() ?
                     "Bạn đã hoàn thành bài học!" : "Bạn cần luyện thêm để hoàn thành.");
+
+            // Khởi động màn hình hoàn thành
+            Intent intent = new Intent(SpeakingLessonActivity.this, CompletionActivity.class);
+            startActivity(intent);
+
             finish();
         }
     }
@@ -295,7 +339,7 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == REQ_AUDIO_PERM &&
                 (grantResults.length == 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED)) {
-            showToast("Từ chối quyền ghi âm");
+            showToast("Từ chối quyền ghiâm");
             btnMic.setEnabled(false);
         }
     }

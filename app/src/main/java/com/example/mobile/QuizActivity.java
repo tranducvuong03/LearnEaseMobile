@@ -10,6 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.media3.common.util.UnstableApi;
 
 import com.example.mobile.api.LearningAPI;
 import com.example.mobile.model.LessonProgress;
@@ -28,6 +29,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+@UnstableApi
 public class QuizActivity extends AppCompatActivity {
 
     private List<VocabularyItem> questions;
@@ -42,7 +45,6 @@ public class QuizActivity extends AppCompatActivity {
     private LinearLayout wrongFeedbackLayout;
     private TextView correctFeedbackAnswer;
     private TextView wrongFeedbackTitle;
-    private TextView wrongFeedbackAnswer;
     private Button correctNextQuestionButton;
     private Button wrongNextQuestionButton;
 
@@ -90,9 +92,8 @@ public class QuizActivity extends AppCompatActivity {
         wrongFeedbackLayout = findViewById(R.id.wrongFeedbackLayout);
         correctFeedbackAnswer = findViewById(R.id.correctFeedbackAnswer);
         correctNextQuestionButton = findViewById(R.id.correctNextQuestionButton);
-        wrongFeedbackTitle = findViewById(R.id.feedbackTitle);
-        wrongFeedbackAnswer = findViewById(R.id.feedbackAnswer);
-        wrongNextQuestionButton = findViewById(R.id.nextQuestionButton);
+        wrongFeedbackTitle = findViewById(R.id.wrongFeedbackTitle);
+        wrongNextQuestionButton = findViewById(R.id.wrongNextQuestionButton);
 
         answerBtns = new Button[]{
                 findViewById(R.id.buttonMouth),
@@ -162,13 +163,15 @@ public class QuizActivity extends AppCompatActivity {
             correctAnswers++;
             correctFeedbackLayout.setVisibility(View.VISIBLE);
             correctFeedbackAnswer.setText("Answer: " + correctAnswer);
-
-            // Gọi API submit-progress
             submitProgressToServer(userId, lessonProgress.getLessonId(), item.getVocabId(), true);
         } else {
             wrongFeedbackLayout.setVisibility(View.VISIBLE);
+            // Hiển thị tiêu đề & nút Next
             wrongFeedbackTitle.setText("Oops… that's wrong");
-            wrongFeedbackAnswer.setText("Answer: " + correctAnswer);
+            wrongNextQuestionButton.setVisibility(View.VISIBLE);
+
+            // Gửi kết quả sai
+            submitProgressToServer(userId, lessonProgress.getLessonId(), item.getVocabId(), false);
         }
 
         updateProgress(currentIndex);
@@ -214,7 +217,10 @@ public class QuizActivity extends AppCompatActivity {
         String speakingJson = getIntent().getStringExtra("speaking_list");
         intent.putExtra("speaking_list", speakingJson);
         intent.putExtra("lesson_progress", new Gson().toJson(lessonProgress));
+        // thêm offset = số câu quiz đã đi qua 5
+        intent.putExtra("dotOffset", currentIndex);
         startActivity(intent);
         finish();
     }
+
 }
