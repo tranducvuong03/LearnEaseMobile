@@ -1,6 +1,7 @@
 package com.example.mobile;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -8,7 +9,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.mobile.api.LessonAPI;
+import com.example.mobile.api.LoginAPI;
 import com.example.mobile.model.LearningResponse;
+import com.example.mobile.service.HeartService;
 import com.example.mobile.utils.RetrofitClient;
 import com.google.android.material.button.MaterialButton;
 import com.google.gson.Gson;
@@ -27,6 +30,7 @@ public class LearningActivity extends AppCompatActivity {
     private TextView titleText;
     private ImageView backButton;
     private MaterialButton learnNowButton;
+    private TextView textHeartCount;
     private LearningResponse lessonData;
 
     @UnstableApi
@@ -34,7 +38,21 @@ public class LearningActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learning);
+        textHeartCount = findViewById(R.id.heartCount);
+        textHeartCount = findViewById(R.id.heartCount);
+        SharedPreferences sp = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String userId = sp.getString("user_id", null);
+        HeartService.getCurrentHearts(this, userId, new HeartService.HeartCallback() {
+            @Override
+            public void onSuccess(int heartCount) {
+                textHeartCount.setText(String.valueOf(heartCount));
+            }
 
+            @Override
+            public void onFailure(String errorMessage) {
+                Toast.makeText(LearningActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
         // 1. Lấy dữ liệu từ Intent
         lessonId = getIntent().getStringExtra("lesson_id");
         topicId = getIntent().getStringExtra("topic_id");

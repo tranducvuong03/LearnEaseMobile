@@ -1,6 +1,7 @@
 package com.example.mobile;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -8,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.media3.common.util.UnstableApi;
@@ -16,6 +18,7 @@ import com.example.mobile.api.LearningAPI;
 import com.example.mobile.model.LessonProgress;
 import com.example.mobile.model.SubmitProgressRequest;
 import com.example.mobile.model.VocabularyItem;
+import com.example.mobile.service.HeartService;
 import com.example.mobile.utils.RetrofitClient;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -53,19 +56,31 @@ public class QuizActivity extends AppCompatActivity {
     private String correctAnswer = "";
     private LessonProgress lessonProgress;
     private String userId;
+    private TextView textHeartCount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learning_vocab);
+        textHeartCount = findViewById(R.id.heartCount);
+        SharedPreferences sp = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        userId = sp.getString("user_id", null);
+        HeartService.getCurrentHearts(this, userId, new HeartService.HeartCallback() {
+            @Override
+            public void onSuccess(int heartCount) {
+                textHeartCount.setText(String.valueOf(heartCount));
+            }
 
+            @Override
+            public void onFailure(String errorMessage) {
+                Toast.makeText(QuizActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
         mapViews();
         mapProgressDots();
 
         String json = getIntent().getStringExtra("vocab_list");
         String lessonId = getIntent().getStringExtra("lesson_id");
-        userId = getSharedPreferences("MyAppPrefs", MODE_PRIVATE)
-                .getString("user_id", null);
 
         if (json != null) {
             questions = new Gson().fromJson(json, new TypeToken<List<VocabularyItem>>() {}.getType());
@@ -162,6 +177,31 @@ public class QuizActivity extends AppCompatActivity {
             correctFeedbackAnswer.setText("Answer: " + correctAnswer);
             submitProgressToServer(userId, lessonProgress.getLessonId(), item.getVocabId(), true);
         } else {
+            HeartService.useHearts(this, userId, new HeartService.HeartCallback() {
+                @Override
+                public void onSuccess(int heartCount) {
+                    Toast.makeText(QuizActivity.this, "Lose 1 heart!", Toast.LENGTH_SHORT).show();
+
+                    // Reload timmm
+                    HeartService.getCurrentHearts(QuizActivity.this, userId, new HeartService.HeartCallback() {
+                        @Override
+                        public void onSuccess(int currentHearts) {
+                            textHeartCount.setText(String.valueOf(currentHearts));
+                        }
+
+                        @Override
+                        public void onFailure(String errorMessage) {
+                            // Tùy chọn: xử lý nếu không lấy được tim
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(String errorMessage) {
+                    Toast.makeText(QuizActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                }
+            });
+
             wrongFeedbackLayout.setVisibility(View.VISIBLE);
             wrongFeedbackTitle.setText("Oops… that's wrong");
             wrongNextQuestionButton.setVisibility(View.VISIBLE);

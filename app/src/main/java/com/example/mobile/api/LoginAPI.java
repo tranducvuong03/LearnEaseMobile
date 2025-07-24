@@ -57,6 +57,8 @@ public interface LoginAPI {
     Call<ResponseBody> register(@Body RegisterRequest request);
     @GET("users/current-heart")
     Call<HeartResponse> getCurrentHearts(@Query("userId") String userId);
+    @POST("users/use-heart")
+    Call<Void> useHearts(@Query("userId") String userId);
     @PUT("users/{id}/username")
     Call<Void> updateUserNameById(@Path("id") String userId,
                                   @Body UpdateUsernameRequest request);

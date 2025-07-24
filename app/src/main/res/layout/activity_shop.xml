@@ -139,7 +139,7 @@
                 android:id="@+id/tv_diamonds_count_shop"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="250"
+                android:text="0"
                 android:textColor="@color/colorTextPrimary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
