@@ -90,11 +90,13 @@
         <activity
             android:name=".ChallengeWeekActivity"
             android:exported="false" />
+        <activity
+            android:name=".ShopActivity"
+            android:exported="false" />
         <activity android:name=".SpeakingLessonActivity" />
         <activity android:name=".TheoryLessonActivity" />
         <activity android:name=".VocabularyLessonActivity" />
         <activity android:name=".PlayTogetherActivity" />
-        <activity android:name=".ShopActivity" />
         <activity android:name=".SoloSkillActivity" />
         <activity android:name=".ReviewResultActivity" />
         <activity android:name=".SoloQuizActivity" />
