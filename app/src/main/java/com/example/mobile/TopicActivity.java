@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,8 +16,11 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.auth0.android.jwt.JWT;
 import com.example.mobile.adapter.TopicAdapter;
+import com.example.mobile.api.LoginAPI;
 import com.example.mobile.api.TopicAPI;
+import com.example.mobile.model.HeartResponse;
 import com.example.mobile.model.Topic;
+import com.example.mobile.service.HeartService;
 import com.example.mobile.utils.RetrofitClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -30,6 +34,7 @@ import retrofit2.Response;
 public class TopicActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TopicAdapter topicAdapter;
+    private TextView textHeartCount;
     private List<Topic> topicList;
 
     @Override
@@ -43,6 +48,20 @@ public class TopicActivity extends AppCompatActivity {
         topicAdapter = new TopicAdapter(this, topicList);
         recyclerView.setAdapter(topicAdapter);
 
+        textHeartCount = findViewById(R.id.heartCount);
+        SharedPreferences sp = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String userId = sp.getString("user_id", null);
+        HeartService.getCurrentHearts(this, userId, new HeartService.HeartCallback() {
+            @Override
+            public void onSuccess(int heartCount) {
+                textHeartCount.setText(String.valueOf(heartCount));
+            }
+
+            @Override
+            public void onFailure(String errorMessage) {
+                Toast.makeText(TopicActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+            }
+        });
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -71,10 +90,11 @@ public class TopicActivity extends AppCompatActivity {
         });
         bottomNavigationView.setSelectedItemId(R.id.menu_lesson);
 
-        fetchTopicProgressFromAPI();
+
+        fetchTopicProgressAndHeartFromAPI();
     }
 
-    private void fetchTopicProgressFromAPI() {
+    private void fetchTopicProgressAndHeartFromAPI() {
         SharedPreferences sp = getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
         String userId = sp.getString("user_id", null);
 
@@ -118,6 +138,7 @@ public class TopicActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void relogin() {
         startActivity(new Intent(this, LoginActivity.class)

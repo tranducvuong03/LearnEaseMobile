@@ -71,7 +71,7 @@ public class HomeActivity extends AppCompatActivity {
                     finish();
                     return true;
                 } else if (id == R.id.menu_challenge) {
-                    startActivity(new Intent(HomeActivity.this, RankingActivity.class));
+                    startActivity(new Intent(HomeActivity.this, ShopActivity.class));
                     return true;
                 } else if (id == R.id.menu_explore) {
                     startActivity(new Intent(HomeActivity.this, ExploreActivity.class));
