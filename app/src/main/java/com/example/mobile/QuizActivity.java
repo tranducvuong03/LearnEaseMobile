@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.media3.common.util.UnstableApi;
 
 import com.example.mobile.api.LearningAPI;
+import com.example.mobile.dialog.NoHeartDialogFragment;
 import com.example.mobile.model.LessonProgress;
 import com.example.mobile.model.SubmitProgressRequest;
 import com.example.mobile.model.VocabularyItem;
@@ -62,6 +63,7 @@ public class QuizActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learning_vocab);
+
         textHeartCount = findViewById(R.id.heartCount);
         SharedPreferences sp = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         userId = sp.getString("user_id", null);
@@ -187,6 +189,9 @@ public class QuizActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(int currentHearts) {
                             textHeartCount.setText(String.valueOf(currentHearts));
+                            if(currentHearts == 0) {
+                                NoHeartDialogFragment.show(getSupportFragmentManager());
+                            }
                         }
 
                         @Override
