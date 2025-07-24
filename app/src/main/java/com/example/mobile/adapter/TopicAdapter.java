@@ -27,7 +27,14 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
         this.context = context;  // Lưu lại context
         this.topicList = topicList;
     }
+    public interface OnTopicClickListener {
+        void onTopicClick(Topic topic);
+    }
+    private OnTopicClickListener onTopicClickListener;
 
+    public void setOnTopicClickListener(OnTopicClickListener onTopicClickListener) {
+        this.onTopicClickListener = onTopicClickListener;
+    }
     public static class TopicViewHolder extends RecyclerView.ViewHolder {
         TextView titleText, statusText, totalText;
         ProgressBar progressBar;
@@ -70,10 +77,9 @@ public class TopicAdapter extends RecyclerView.Adapter<TopicAdapter.TopicViewHol
         // Bắt sự kiện click vào mỗi item
         holder.itemView.setOnClickListener(v -> {
             // Tạo Intent chuyển đến ActivityTopicLessons
-            Intent intent = new Intent(context, TopicLessonsActivity.class);
-            intent.putExtra("topic_id", topic.getTopicId());  // Truyền thông tin về topic
-            intent.putExtra("topic_name", topic.getTitle());  // Truyền tên của topic
-            context.startActivity(intent);  // Mở ActivityTopicLessons
+            if (onTopicClickListener != null) {
+                onTopicClickListener.onTopicClick(topicList.get(position));
+            }
         });
     }
 

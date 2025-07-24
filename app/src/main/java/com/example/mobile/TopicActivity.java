@@ -1,11 +1,14 @@
 package com.example.mobile;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +21,7 @@ import com.auth0.android.jwt.JWT;
 import com.example.mobile.adapter.TopicAdapter;
 import com.example.mobile.api.LoginAPI;
 import com.example.mobile.api.TopicAPI;
+import com.example.mobile.dialog.NoHeartDialogFragment;
 import com.example.mobile.model.HeartResponse;
 import com.example.mobile.model.Topic;
 import com.example.mobile.service.HeartService;
@@ -35,6 +39,7 @@ public class TopicActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TopicAdapter topicAdapter;
     private TextView textHeartCount;
+    private int heart;
     private List<Topic> topicList;
 
     @Override
@@ -55,6 +60,7 @@ public class TopicActivity extends AppCompatActivity {
             @Override
             public void onSuccess(int heartCount) {
                 textHeartCount.setText(String.valueOf(heartCount));
+                heart = heartCount;
             }
 
             @Override
@@ -62,6 +68,22 @@ public class TopicActivity extends AppCompatActivity {
                 Toast.makeText(TopicActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+        topicAdapter.setOnTopicClickListener(topic -> {
+            if (userId == null) {
+                relogin();
+                return;
+            }
+            if (heart <= 0) {
+                NoHeartDialogFragment.show(getSupportFragmentManager());
+            } else {
+                // Vào lesson nếu còn tim
+                Intent intent = new Intent(TopicActivity.this, TopicLessonsActivity.class);
+                intent.putExtra("topic_id", topic.getTopicId());
+                intent.putExtra("topic_name", topic.getTitle());
+                startActivity(intent);
+            }
+        });
+
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
