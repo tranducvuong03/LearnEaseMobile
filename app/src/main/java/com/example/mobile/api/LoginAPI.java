@@ -4,6 +4,7 @@ import com.example.mobile.model.Dialect;
 import com.example.mobile.model.EvaluateAccentResponse;
 import com.example.mobile.model.EvaluateLessonRequest;
 import com.example.mobile.model.ExplanationResponse;
+import com.example.mobile.model.HeartResponse;
 import com.example.mobile.model.LessonResponse;
 import com.example.mobile.model.RankingItem;
 import com.example.mobile.model.RegisterRequest;
@@ -54,6 +55,8 @@ public interface LoginAPI {
     Call<UserResponse> getMyProfile(@Header("Authorization") String token);
     @POST("auth/register")
     Call<ResponseBody> register(@Body RegisterRequest request);
+    @GET("users/current-heart")
+    Call<HeartResponse> getCurrentHearts(@Query("userId") String userId);
     @PUT("users/{id}/username")
     Call<Void> updateUserNameById(@Path("id") String userId,
                                   @Body UpdateUsernameRequest request);
