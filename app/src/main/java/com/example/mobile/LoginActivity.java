@@ -86,6 +86,10 @@ public class LoginActivity extends AppCompatActivity {
             textGoogle.setVisibility(View.GONE);
             loadingGoogle.setVisibility(View.VISIBLE);
             new Handler(Looper.getMainLooper()).postDelayed(() -> {
+                mGoogleSignInClient.signOut().addOnCompleteListener(task -> {
+                    Intent signInIntent = mGoogleSignInClient.getSignInIntent();
+                    startActivityForResult(signInIntent, RC_SIGN_IN);
+                });
                 Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                 startActivityForResult(signInIntent, RC_SIGN_IN);
             }, 1000);
