@@ -85,15 +85,42 @@
             android:orientation="horizontal"
             android:paddingTop="8dp"
             android:overScrollMode="never"
-            android:scrollbars="none" />
+            android:scrollbars="none"
+            android:visibility="visible"
+            />
+        <LinearLayout
+            android:id="@+id/heartPremium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            android:visibility="visible"
+            android:layout_marginEnd="40dp"
+            android:padding="16dp">
+            <!-- Icon infinity -->
+            <ImageView
+                android:layout_width="144dp"
+                android:layout_height="100dp"
 
+                android:src="@drawable/ic_shop_infinity" />
+            <!-- Icon trái tim -->
+            <ImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/active_heart_image"
+                android:layout_marginEnd="8dp" />
+
+        </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/regenHeartAlert"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:orientation="horizontal"
-            android:paddingTop="4dp">
+            android:paddingTop="4dp"
+            android:visibility="visible"
+            >
 
             <TextView
                 android:layout_width="wrap_content"
@@ -108,6 +135,32 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="3h 50m"
+                android:textColor="@color/colorSecondary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/regenHeartAlertWhenPremium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="horizontal"
+            android:paddingTop="4dp"
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="You have "
+                android:textColor="@color/colorTextPrimary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Unlimited Heart"
                 android:textColor="@color/colorSecondary"
                 android:textSize="16sp"
                 android:textStyle="bold" />

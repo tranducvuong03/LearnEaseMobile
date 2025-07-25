@@ -53,4 +53,14 @@ public class HeartAdapter extends RecyclerView.Adapter<HeartAdapter.HeartViewHol
         heartCount = Math.max(0, Math.min(count, 5)); // giới hạn từ 0 đến 5
         notifyDataSetChanged();
     }
+    public static String formatMinutesToTimeText(int totalMinutes) {
+        int hours = totalMinutes / 60;
+        int minutes = totalMinutes % 60;
+
+        if (hours > 0) {
+            return hours + "h " + minutes + "m";
+        } else {
+            return minutes + "m";
+        }
+    }
 }
