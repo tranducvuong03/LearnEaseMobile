@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -39,6 +40,8 @@ public class TopicActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private TopicAdapter topicAdapter;
     private TextView textHeartCount;
+    private ImageView heartInfinity;
+    private boolean isPremiumToDialog;
     private int heart;
     private List<Topic> topicList;
 
@@ -54,13 +57,24 @@ public class TopicActivity extends AppCompatActivity {
         recyclerView.setAdapter(topicAdapter);
 
         textHeartCount = findViewById(R.id.heartCount);
+        heartInfinity = findViewById(R.id.heartInfinity);
+
         SharedPreferences sp = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String userId = sp.getString("user_id", null);
-        HeartService.getCurrentHearts(this, userId, new HeartService.HeartCallback() {
+
+        HeartService.getCurrentHearts(this, userId, new HeartService.FullHeartCallback() {
             @Override
-            public void onSuccess(int heartCount) {
-                textHeartCount.setText(String.valueOf(heartCount));
-                heart = heartCount;
+            public void onSuccess(int heartCount, boolean isPremium, int minutesUntilNextHeart) {
+                if (isPremium) {
+                    textHeartCount.setVisibility(View.GONE);
+                    heartInfinity.setVisibility(View.VISIBLE);
+                    isPremiumToDialog = true;
+                } else {
+                    textHeartCount.setVisibility(View.VISIBLE);
+                    heartInfinity.setVisibility(View.GONE);
+                    textHeartCount.setText(String.valueOf(heartCount));
+                    isPremiumToDialog = false;
+                }
             }
 
             @Override
@@ -68,21 +82,31 @@ public class TopicActivity extends AppCompatActivity {
                 Toast.makeText(TopicActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+
         topicAdapter.setOnTopicClickListener(topic -> {
             if (userId == null) {
                 relogin();
                 return;
             }
-            if (heart <= 0) {
-                NoHeartDialogFragment.show(getSupportFragmentManager());
-            } else {
-                // Vào lesson nếu còn tim
+
+            if (isPremiumToDialog) {
                 Intent intent = new Intent(TopicActivity.this, TopicLessonsActivity.class);
                 intent.putExtra("topic_id", topic.getTopicId());
                 intent.putExtra("topic_name", topic.getTitle());
                 startActivity(intent);
+            } else {
+                if (heart <= 0) {
+                    NoHeartDialogFragment.show(getSupportFragmentManager());
+                } else {
+                    // Có tim → cho vào
+                    Intent intent = new Intent(TopicActivity.this, TopicLessonsActivity.class);
+                    intent.putExtra("topic_id", topic.getTopicId());
+                    intent.putExtra("topic_name", topic.getTitle());
+                    startActivity(intent);
+                }
             }
         });
+
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

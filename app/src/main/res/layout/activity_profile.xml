@@ -84,7 +84,7 @@
                         android:layout_height="80dp"
                         android:layout_marginStart="16dp"
                         android:layout_marginTop="16dp"
-                        android:src="@drawable/ic_profile_placeholder"
+                        android:src="@drawable/ic_profile"
                         app:civ_border_color="@android:color/white"
                         app:civ_border_width="2dp"
                         app:layout_constraintStart_toStartOf="parent"
@@ -252,7 +252,7 @@
                     android:padding="16dp">
 
                     <LinearLayout
-                        android:id="@+id/item_settings"
+                        android:id="@+id/item_shopping"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
@@ -262,9 +262,9 @@
 
                         <ImageView
                             android:layout_width="32dp"
-                            android:layout_height="32dp"
-                            android:src="@drawable/ic_settings"
-                            android:contentDescription="Settings Icon"
+                            android:layout_height="wrap_content"
+                            android:contentDescription="Shopping Icon"
+                            android:src="@drawable/ic_profile_shopping_bag"
                             app:tint="#03A9F4" />
 
                         <TextView
@@ -272,7 +272,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="16dp"
                             android:layout_weight="1"
-                            android:text="Settings"
+                            android:text="Shopping"
                             android:textColor="@android:color/black"
                             android:textSize="16sp" />
 

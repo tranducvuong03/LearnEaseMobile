@@ -41,6 +41,12 @@ public class ShopActivity extends AppCompatActivity {
     private static final String TAG = "ShopActivity";
     private String userId;
     private ImageView backButton;
+    private TextView nextHeartTimer;
+    private LinearLayout regenHeartAlert;
+    private LinearLayout regenHeartAlertWhenPremium;
+    private LinearLayout heartPremium;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +60,12 @@ public class ShopActivity extends AppCompatActivity {
 
         apiService = RetrofitClient.getApiService(this);
         backButton = findViewById(R.id.backButton);
+        nextHeartTimer = findViewById(R.id.tv_next_heart_timer);
+        regenHeartAlert = findViewById(R.id.regenHeartAlert);
+        regenHeartAlertWhenPremium = findViewById(R.id.regenHeartAlertWhenPremium);
+        heartPremium = findViewById(R.id.heartPremium);
+
+
         // Nút quay lại
         backButton.setOnClickListener(v -> {
             Intent intent = new Intent(ShopActivity.this, HomeActivity.class);
@@ -102,8 +114,22 @@ public class ShopActivity extends AppCompatActivity {
             @Override
             public void onResponse(@NonNull Call<HeartResponse> call, @NonNull Response<HeartResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
-                    int heartCount = response.body().getHearts();
+                    HeartResponse data = response.body();
+
+                    int heartCount = data.getCurrentHearts();
                     updateHeartUI(heartCount);
+
+                    // Gán thời gian hồi tim vào TextView
+                    int minutes = data.getMinutesUntilNextHeart();
+                    String formatted = HeartAdapter.formatMinutesToTimeText(minutes);
+                    nextHeartTimer.setText(formatted);
+                    boolean isPremium = data.isPremium();
+                    if (isPremium){
+                        regenHeartAlert.setVisibility(View.GONE);
+                        regenHeartAlertWhenPremium.setVisibility(View.VISIBLE);
+                        recyclerHearts.setVisibility(View.GONE);
+                        heartPremium.setVisibility(View.VISIBLE);
+                    }
                 } else {
                     Log.e("HEART", "Lỗi khi lấy tim: " + response.code());
                 }
@@ -115,6 +141,7 @@ public class ShopActivity extends AppCompatActivity {
             }
         });
     }
+
 
     private void updateHeartUI(int heartCount) {
         heartAdapter.updateHeartCount(heartCount);

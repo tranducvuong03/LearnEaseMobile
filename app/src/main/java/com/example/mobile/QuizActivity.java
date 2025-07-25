@@ -58,6 +58,8 @@ public class QuizActivity extends AppCompatActivity {
     private LessonProgress lessonProgress;
     private String userId;
     private TextView textHeartCount;
+    private ImageView heartInfinity;
+    private boolean isPremiumToDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,12 +67,24 @@ public class QuizActivity extends AppCompatActivity {
         setContentView(R.layout.activity_learning_vocab);
 
         textHeartCount = findViewById(R.id.heartCount);
+        heartInfinity = findViewById(R.id.heartInfinity);
+
         SharedPreferences sp = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-        userId = sp.getString("user_id", null);
-        HeartService.getCurrentHearts(this, userId, new HeartService.HeartCallback() {
+        String userId = sp.getString("user_id", null);
+
+        HeartService.getCurrentHearts(this, userId, new HeartService.FullHeartCallback() {
             @Override
-            public void onSuccess(int heartCount) {
-                textHeartCount.setText(String.valueOf(heartCount));
+            public void onSuccess(int heartCount, boolean isPremium, int minutesUntilNextHeart) {
+                if (isPremium) {
+                    textHeartCount.setVisibility(View.GONE);
+                    heartInfinity.setVisibility(View.VISIBLE);
+                    isPremiumToDialog = true;
+                } else {
+                    textHeartCount.setVisibility(View.VISIBLE);
+                    heartInfinity.setVisibility(View.GONE);
+                    textHeartCount.setText(String.valueOf(heartCount));
+                    isPremiumToDialog = false;
+                }
             }
 
             @Override
@@ -179,40 +193,37 @@ public class QuizActivity extends AppCompatActivity {
             correctFeedbackAnswer.setText("Answer: " + correctAnswer);
             submitProgressToServer(userId, lessonProgress.getLessonId(), item.getVocabId(), true);
         } else {
-            HeartService.useHearts(this, userId, new HeartService.HeartCallback() {
-                @Override
-                public void onSuccess(int heartCount) {
-                    Toast.makeText(QuizActivity.this, "Lose 1 heart!", Toast.LENGTH_SHORT).show();
-
-                    // Reload timmm
-                    HeartService.getCurrentHearts(QuizActivity.this, userId, new HeartService.HeartCallback() {
-                        @Override
-                        public void onSuccess(int currentHearts) {
-                            textHeartCount.setText(String.valueOf(currentHearts));
-                            if(currentHearts == 0) {
-                                NoHeartDialogFragment.show(getSupportFragmentManager());
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(String errorMessage) {
-                            // Tùy chọn: xử lý nếu không lấy được tim
-                        }
-                    });
-                }
-
-                @Override
-                public void onFailure(String errorMessage) {
-                    Toast.makeText(QuizActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
-                }
-            });
-
+            // ✅ Luôn hiện feedback và gửi kết quả sai
             wrongFeedbackLayout.setVisibility(View.VISIBLE);
             wrongFeedbackTitle.setText("Oops… that's wrong");
             wrongNextQuestionButton.setVisibility(View.VISIBLE);
 
-            // Send incorrect result
             submitProgressToServer(userId, lessonProgress.getLessonId(), item.getVocabId(), false);
+
+            if (isPremiumToDialog) {
+                textHeartCount.setVisibility(View.GONE);
+                heartInfinity.setVisibility(View.VISIBLE);
+            } else {
+                HeartService.useHearts(this, userId, new HeartService.FullHeartCallback() {
+                    @Override
+                    public void onSuccess(int heartCount, boolean isPremium, int minutesUntilNextHeart) {
+                        Toast.makeText(QuizActivity.this, "Lose 1 heart!", Toast.LENGTH_SHORT).show();
+
+                        if (heartCount <= 0) {
+                            NoHeartDialogFragment.show(getSupportFragmentManager());
+                        }
+
+                        textHeartCount.setText(String.valueOf(heartCount));
+                        textHeartCount.setVisibility(View.VISIBLE);
+                        heartInfinity.setVisibility(View.GONE);
+                    }
+
+                    @Override
+                    public void onFailure(String errorMessage) {
+                        Toast.makeText(QuizActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+                });
+            }
         }
 
         updateProgress(currentIndex);
