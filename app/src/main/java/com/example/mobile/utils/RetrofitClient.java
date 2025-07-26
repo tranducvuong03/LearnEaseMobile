@@ -143,8 +143,6 @@ public class RetrofitClient {
      */
     public static synchronized LoginAPI getApiService(Context context) {
         if (apiService == null) {
-            SharedPreferences prefs = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-            String authToken = prefs.getString("auth_token", null);
 
             try {
                 final TrustManager[] trustAllCerts = new TrustManager[]{
@@ -172,12 +170,18 @@ public class RetrofitClient {
                 loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
                 Interceptor authInterceptor = chain -> {
-                    Request original = chain.request();
-                    String url = original.url().toString();
+                    //  Luôn lấy token mới nhất từ SharedPreferences mỗi lần gọi
+                    SharedPreferences prefs = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+                    String authToken = prefs.getString("auth_token", null);
 
+                    Request original = chain.request();
                     Request.Builder builder = original.newBuilder();
 
-                    if (authToken != null && !url.contains("auth/google-login") && !url.contains("auth/login") && !url.contains("auth/register")) {
+                    String url = original.url().toString();
+                    if (authToken != null &&
+                            !url.contains("auth/google-login") &&
+                            !url.contains("auth/login") &&
+                            !url.contains("auth/register")) {
                         builder.header("Authorization", "Bearer " + authToken);
                     }
 
