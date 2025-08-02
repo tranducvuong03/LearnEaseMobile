@@ -33,4 +33,5 @@
     <color name="bluePrimary">#208DFF</color>
     <color name="textPrimary">#222222</color>
     <color name="textSecondary">#888888</color>
+    <color name="red">#D32F2F</color>
 </resources>

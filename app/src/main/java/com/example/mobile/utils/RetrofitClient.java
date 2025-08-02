@@ -4,14 +4,13 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.example.mobile.api.CompareSpeakingAPI;
+import com.example.mobile.api.LearningAPI;
 import com.example.mobile.api.LoginAPI;
 
 import java.security.cert.X509Certificate;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
@@ -24,28 +23,80 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-import java.io.IOException;
-
 /**
  * Lớp tiện ích để cấu hình Retrofit và OkHttpClient.
  * Cung cấp các instance ApiService cho cả API công khai (không cần token)
  * và API được bảo vệ (cần JWT token).
- *
+ * <p>
  * KHÔNG NÊN DÙNG CẤU HÌNH SSL BỎ QUA TRONG MÔI TRƯỜNG PRODUCTION!
  */
 public class RetrofitClient {
 
     private static LoginAPI apiService;
     private static CompareSpeakingAPI compareSpeakingAPI;
+    private static LearningAPI learningAPI;
     private static Retrofit retrofit;
+
+    public static synchronized LearningAPI getLearningApi(Context context) {
+        if (learningAPI == null) {
+            try {
+                final TrustManager[] trustAllCerts = new TrustManager[]{
+                        new X509TrustManager() {
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                            }
+
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                            }
+
+                            public X509Certificate[] getAcceptedIssuers() {
+                                return new X509Certificate[0];
+                            }
+                        }
+                };
+
+                final SSLContext sslContext = SSLContext.getInstance("SSL");
+                sslContext.init(null, trustAllCerts, new java.security.SecureRandom());
+                final SSLSocketFactory sslSocketFactory = sslContext.getSocketFactory();
+
+                HttpLoggingInterceptor loggingInterceptor = new HttpLoggingInterceptor();
+                loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+                OkHttpClient client = new OkHttpClient.Builder()
+                        .sslSocketFactory(sslSocketFactory, (X509TrustManager) trustAllCerts[0])
+                        .hostnameVerifier((hostname, session) -> true)
+                        .addInterceptor(loggingInterceptor)
+                        .connectTimeout(300, TimeUnit.SECONDS)
+                        .readTimeout(300, TimeUnit.SECONDS)
+                        .writeTimeout(300, TimeUnit.SECONDS)
+                        .build();
+
+                Retrofit retrofit = new Retrofit.Builder()
+                        .baseUrl(LearningAPI.BASE_URL)
+                        .client(client)
+                        .addConverterFactory(GsonConverterFactory.create())
+                        .build();
+
+                learningAPI = retrofit.create(LearningAPI.class);
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RuntimeException("Failed to create CompareSpeakingAPI: " + e.getMessage(), e);
+            }
+        }
+
+        return learningAPI;
+    }
 
     public static synchronized Retrofit getRetrofit() {
         if (retrofit == null) {
             try {
                 final TrustManager[] trustAllCerts = new TrustManager[]{
                         new X509TrustManager() {
-                            public void checkClientTrusted(X509Certificate[] chain, String authType) {}
-                            public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                            }
+
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                            }
+
                             public X509Certificate[] getAcceptedIssuers() {
                                 return new X509Certificate[0];
                             }
@@ -92,16 +143,18 @@ public class RetrofitClient {
      */
     public static synchronized LoginAPI getApiService(Context context) {
         if (apiService == null) {
-            SharedPreferences prefs = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
-            String authToken = prefs.getString("auth_token", null);
 
             try {
                 final TrustManager[] trustAllCerts = new TrustManager[]{
                         new X509TrustManager() {
                             @Override
-                            public void checkClientTrusted(X509Certificate[] chain, String authType) {}
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                            }
+
                             @Override
-                            public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                            }
+
                             @Override
                             public X509Certificate[] getAcceptedIssuers() {
                                 return new X509Certificate[0];
@@ -117,13 +170,18 @@ public class RetrofitClient {
                 loggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
                 Interceptor authInterceptor = chain -> {
-                    Request original = chain.request();
-                    String url = original.url().toString();
+                    //  Luôn lấy token mới nhất từ SharedPreferences mỗi lần gọi
+                    SharedPreferences prefs = context.getSharedPreferences("MyAppPrefs", Context.MODE_PRIVATE);
+                    String authToken = prefs.getString("auth_token", null);
 
+                    Request original = chain.request();
                     Request.Builder builder = original.newBuilder();
 
-                    // ⚠️ KHÔNG thêm token nếu là login
-                    if (authToken != null && !url.contains("auth/google-login") && !url.contains("auth/login") && !url.contains("auth/register")) {
+                    String url = original.url().toString();
+                    if (authToken != null &&
+                            !url.contains("auth/google-login") &&
+                            !url.contains("auth/login") &&
+                            !url.contains("auth/register")) {
                         builder.header("Authorization", "Bearer " + authToken);
                     }
 
@@ -163,8 +221,12 @@ public class RetrofitClient {
             try {
                 final TrustManager[] trustAllCerts = new TrustManager[]{
                         new X509TrustManager() {
-                            public void checkClientTrusted(X509Certificate[] chain, String authType) {}
-                            public void checkServerTrusted(X509Certificate[] chain, String authType) {}
+                            public void checkClientTrusted(X509Certificate[] chain, String authType) {
+                            }
+
+                            public void checkServerTrusted(X509Certificate[] chain, String authType) {
+                            }
+
                             public X509Certificate[] getAcceptedIssuers() {
                                 return new X509Certificate[0];
                             }

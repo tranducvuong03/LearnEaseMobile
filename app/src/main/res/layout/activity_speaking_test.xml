@@ -5,34 +5,130 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F3F3F3">
+    android:background="#F3F3F3"
+    tools:context=".SpeakingLessonActivity">
 
-    <ImageButton
-        android:id="@+id/btnBack"
-        android:layout_width="51dp"
-        android:layout_height="48dp"
-        android:layout_marginStart="16dp"
+    <!-- Top Bar: Back + Progress Dots -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/topBar"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
-        android:contentDescription="Back"
-        android:elevation="4dp"
-        android:scaleType="center"
-        android:src="@drawable/ic_arrow_back"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent">
 
+        <!-- Back Button Card -->
+        <FrameLayout
+            android:id="@+id/backButtonCard"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="16dp"
+            android:background="@drawable/back_button_background"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent">
+
+            <ImageView
+                android:id="@+id/backButton"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="12dp"
+                android:src="@drawable/ic_arrow_back"
+                android:contentDescription="Back" />
+        </FrameLayout>
+
+        <!-- Progress Dots -->
+        <LinearLayout
+            android:id="@+id/progressDots"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <View
+                android:id="@+id/dot0"
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/blue_dot" />
+
+            <View
+                android:id="@+id/dot1"
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/blue_dot" />
+
+            <View
+                android:id="@+id/dot2"
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/blue_dot" />
+
+            <View
+                android:id="@+id/dot3"
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/gray_dot" />
+
+            <View
+                android:id="@+id/dot4"
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/gray_dot" />
+
+            <View
+                android:id="@+id/dot5"
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/gray_dot" />
+
+            <View
+                android:id="@+id/dot6"
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/gray_dot" />
+
+            <View
+                android:id="@+id/dot7"
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/gray_dot" />
+
+            <View
+                android:id="@+id/dot8"
+                android:layout_width="24dp"
+                android:layout_height="6dp"
+                android:layout_margin="2dp"
+                android:background="@drawable/gray_dot" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Prompt -->
     <TextView
         android:id="@+id/tvPrompt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="148dp"
+        android:layout_marginTop="32dp"
         android:text="Say the Phrase"
         android:textColor="#222222"
         android:textSize="18sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topBar"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Phrase -->
     <TextView
         android:id="@+id/tvPhrase"
         android:layout_width="wrap_content"
@@ -41,10 +137,12 @@
         android:textColor="#1976D2"
         android:textSize="18sp"
         android:textStyle="bold"
+        android:layout_marginTop="8dp"
         app:layout_constraintTop_toBottomOf="@id/tvPrompt"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- Mascot Image -->
     <ImageView
         android:id="@+id/imgMascot"
         android:layout_width="180dp"
@@ -55,6 +153,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- Audio Layout -->
     <LinearLayout
         android:id="@+id/layoutAudio"
         android:layout_width="265dp"
@@ -68,10 +167,11 @@
         android:paddingTop="6.5dp"
         android:paddingEnd="16dp"
         android:paddingBottom="6.5dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/imgMascot"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/imgMascot" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- Mic Button -->
     <ImageButton
         android:id="@+id/btnMic"
         android:layout_width="64dp"
@@ -83,6 +183,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <!-- Hold Instruction -->
     <TextView
         android:id="@+id/tvHold"
         android:layout_width="wrap_content"
@@ -95,7 +196,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- NEW: Kết quả đánh giá -->
+    <!-- Score (hidden lúc đầu) -->
     <TextView
         android:id="@+id/tvScore"
         android:layout_width="wrap_content"
@@ -110,7 +211,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <!-- NEW: Nút Next -->
+    <!-- Next Button (hidden lúc đầu) -->
     <Button
         android:id="@+id/btnNext"
         android:layout_width="wrap_content"
@@ -121,4 +222,5 @@
         app:layout_constraintTop_toBottomOf="@id/tvScore"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

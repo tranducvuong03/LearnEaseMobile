@@ -32,7 +32,9 @@
             android:name=".QuizActivity"
             android:exported="false"
             android:label="@string/title_activity_quiz"
-            android:theme="@style/Theme.Mobile" />
+            android:theme="@style/Theme.Mobile"
+            android:windowSoftInputMode="adjustResize"
+            />
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
@@ -47,7 +49,9 @@
             android:exported="false" />
         <activity
             android:name=".LearningActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="adjustResize"
+            />
         <activity
             android:name=".AccentPracticeActivity"
             android:exported="false" />
@@ -93,16 +97,21 @@
         <activity
             android:name=".ChallengeWeekActivity"
             android:exported="false" />
+        <activity
+            android:name=".ShopActivity"
+            android:exported="false" />
         <activity android:name=".SpeakingLessonActivity" />
         <activity android:name=".TheoryLessonActivity" />
         <activity android:name=".VocabularyLessonActivity" />
         <activity android:name=".PlayTogetherActivity" />
-        <activity android:name=".ShopActivity" />
         <activity android:name=".SoloSkillActivity" />
         <activity android:name=".ReviewResultActivity" />
         <activity android:name=".SoloQuizActivity" />
         <activity android:name=".TopicLessonsActivity" />
-        <activity android:name=".TopicActivity" />
+        <activity android:name=".TopicActivity"
+            android:windowSoftInputMode="adjustResize"
+            />
+        <activity android:name=".CompletionActivity" />
 
     </application>
 

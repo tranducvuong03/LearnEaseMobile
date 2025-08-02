@@ -9,9 +9,9 @@
         android:icon="@drawable/ic_learn"
         android:title="@string/lesson" />
     <item
-        android:id="@+id/menu_rank"
+        android:id="@+id/menu_challenge"
         android:icon="@drawable/ic_mic"
-        android:title="@string/rank" />
+        android:title="@string/challenge" />
     <item
         android:id="@+id/menu_explore"
         android:icon="@drawable/ic_explore"

@@ -1,0 +1,6 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/ic_sound_wave">
+    <target
+        android:name="soundWave"
+        android:animation="@animator/sound_wave_animator" />
+</animated-vector>

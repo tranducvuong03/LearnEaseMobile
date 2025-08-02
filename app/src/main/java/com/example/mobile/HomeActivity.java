@@ -17,8 +17,11 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import retrofit2.Call;
 
@@ -28,7 +31,21 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_new);
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-        String userId = prefs.getString("user_id", null); // 👈 bạn cần lưu userId sau khi login hoặc fetch từ API /me
+        String userId = prefs.getString("user_id", null);
+        String username = prefs.getString("user_name", null);
+
+        // Greeting text
+        TextView greetingText = findViewById(R.id.greeting);
+        String greeting = "Great to see you, " + username + "!";
+        greetingText.setText(greeting);
+
+        // Button Continue Learning
+        Button btnContinue = findViewById(R.id.btnContinue);
+        btnContinue.setOnClickListener(v -> {
+            Intent intent = new Intent(HomeActivity.this, TopicActivity.class);
+            startActivity(intent);
+            finish();
+        });
 
         if (userId != null) {
             fetchStreak(userId);
@@ -41,7 +58,6 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -52,15 +68,18 @@ public class HomeActivity extends AppCompatActivity {
                     return true;
                 } else if (id == R.id.menu_lesson) {
                     startActivity(new Intent(HomeActivity.this, TopicActivity.class));
+                    finish();
                     return true;
-                } else if (id == R.id.menu_rank) {
-                    startActivity(new Intent(HomeActivity.this, RankingActivity.class));
+                } else if (id == R.id.menu_challenge) {
+                    startActivity(new Intent(HomeActivity.this, ShopActivity.class));
                     return true;
                 } else if (id == R.id.menu_explore) {
                     startActivity(new Intent(HomeActivity.this, ExploreActivity.class));
+                    finish();
                     return true;
                 } else if (id == R.id.menu_profile) {
                     startActivity(new Intent(HomeActivity.this, ProfileActivity.class));
+                    finish();
                     return true;
                 }
                 return false;
@@ -68,6 +87,7 @@ public class HomeActivity extends AppCompatActivity {
         });
         bottomNavigationView.setSelectedItemId(R.id.menu_home);
 
+        // Chat bubble
         FloatingActionButton chatBubble = findViewById(R.id.chatBubble);
         chatBubble.setOnTouchListener(new View.OnTouchListener() {
             float dX, dY;

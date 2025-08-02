@@ -3,8 +3,10 @@ package com.example.mobile;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -44,7 +46,33 @@ public class ExploreActivity extends AppCompatActivity {
 
         loadAccentList();
 
-
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                int id = item.getItemId();
+                if (id == R.id.menu_home) {
+                    startActivity(new Intent(ExploreActivity.this, HomeActivity.class));
+                    finish();
+                    return true;
+                } else if (id == R.id.menu_lesson) {
+                    startActivity(new Intent(ExploreActivity.this, TopicActivity.class));
+                    finish();
+                    return true;
+                } else if (id == R.id.menu_challenge) {
+                    startActivity(new Intent(ExploreActivity.this, RankingActivity.class));
+                    return true;
+                } else if (id == R.id.menu_explore) {
+                    return true;
+                } else if (id == R.id.menu_profile) {
+                    startActivity(new Intent(ExploreActivity.this, ProfileActivity.class));
+                    finish();
+                    return true;
+                }
+                return false;
+            }
+        });
+        bottomNavigationView.setSelectedItemId(R.id.menu_explore);
     }
 
     private void loadAccentList() {

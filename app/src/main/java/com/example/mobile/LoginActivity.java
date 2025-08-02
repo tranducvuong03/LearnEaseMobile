@@ -16,16 +16,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.auth0.android.jwt.JWT;
 import com.example.mobile.api.LoginAPI;
+import com.example.mobile.model.GoogleLoginRequest;
 import com.example.mobile.model.LoginRequest;
 import com.example.mobile.model.LoginResponse;
 import com.example.mobile.model.userData.UserResponse;
-import com.example.mobile.model.GoogleLoginRequest;
 import com.example.mobile.utils.RetrofitClient;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
-import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.textfield.TextInputEditText;
@@ -90,8 +89,6 @@ public class LoginActivity extends AppCompatActivity {
                     Intent signInIntent = mGoogleSignInClient.getSignInIntent();
                     startActivityForResult(signInIntent, RC_SIGN_IN);
                 });
-                Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-                startActivityForResult(signInIntent, RC_SIGN_IN);
             }, 1000);
         });
 
@@ -228,13 +225,22 @@ public class LoginActivity extends AppCompatActivity {
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
                 GoogleSignInAccount account = task.getResult(ApiException.class);
-                if (account != null) {
-                    sendGoogleTokenToBackend(account.getIdToken());
+
+                if (account == null || account.getIdToken() == null) {
+                    // Xử lý khi Google chưa sẵn sàng
+                    textGoogle.setVisibility(View.VISIBLE);
+                    loadingGoogle.setVisibility(View.GONE);
+                    Toast.makeText(this, "Vui lòng chọn lại tài khoản Google sau khi thêm.", Toast.LENGTH_LONG).show();
+                    return;
                 }
+
+                // Token đã sẵn sàng → gửi lên backend
+                sendGoogleTokenToBackend(account.getIdToken());
+
             } catch (ApiException e) {
                 textGoogle.setVisibility(View.VISIBLE);
                 loadingGoogle.setVisibility(View.GONE);
-                Toast.makeText(this, "Google Sign-In thất bại", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Google Sign-In thất bại: " + e.getStatusCode(), Toast.LENGTH_SHORT).show();
             }
         }
     }
