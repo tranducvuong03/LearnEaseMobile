@@ -168,6 +168,7 @@ public interface LoginAPI {
     @POST("speaking-ai/accent-score")
     Call<EvaluateAccentResponse> evaluateAccent(
             @Part MultipartBody.Part audioFile,
-            @Part("DialectId") RequestBody dialectId
+            @Part("DialectId") RequestBody dialectId,
+            @Part("TargetText") RequestBody targetText
     );
 }

@@ -135,9 +135,15 @@ public class AccentPracticeActivity extends AppCompatActivity {
         File file = new File(audioPath);
         RequestBody reqFile = RequestBody.create(MediaType.parse("audio/mp3"), file);
         MultipartBody.Part body = MultipartBody.Part.createFormData("AudioFile", file.getName(), reqFile);
+
         RequestBody dialectPart = RequestBody.create(MediaType.parse("text/plain"), dialectId);
 
-        ApiCaller.callWithLoading(this, api.evaluateAccent(body, dialectPart), new Callback<EvaluateAccentResponse>() {
+        // ✅ Lấy TargetText từ câu hiện tại
+        String prompt = drills.get(currentIndex).getPrompt();
+        RequestBody targetTextPart = RequestBody.create(MediaType.parse("text/plain"), prompt);
+
+        // ✅ Gọi API với 3 phần
+        ApiCaller.callWithLoading(this, api.evaluateAccent(body, dialectPart, targetTextPart), new Callback<EvaluateAccentResponse>() {
             @Override
             public void onResponse(Call<EvaluateAccentResponse> call, Response<EvaluateAccentResponse> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -155,4 +161,5 @@ public class AccentPracticeActivity extends AppCompatActivity {
             }
         });
     }
+
 }
