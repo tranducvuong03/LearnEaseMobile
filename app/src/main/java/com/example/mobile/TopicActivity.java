@@ -65,6 +65,7 @@ public class TopicActivity extends AppCompatActivity {
         HeartService.getCurrentHearts(this, userId, new HeartService.FullHeartCallback() {
             @Override
             public void onSuccess(int heartCount, boolean isPremium, int minutesUntilNextHeart) {
+                heart = heartCount;
                 if (isPremium) {
                     textHeartCount.setVisibility(View.GONE);
                     heartInfinity.setVisibility(View.VISIBLE);
@@ -120,7 +121,7 @@ public class TopicActivity extends AppCompatActivity {
                 } else if (id == R.id.menu_lesson) {
                     return true;
                 } else if (id == R.id.menu_challenge) {
-                    startActivity(new Intent(TopicActivity.this, ChallengeWeekActivity.class));
+                    startActivity(new Intent(TopicActivity.this, RankingActivity.class));
                     return true;
                 } else if (id == R.id.menu_explore) {
                     startActivity(new Intent(TopicActivity.this, ExploreActivity.class));
