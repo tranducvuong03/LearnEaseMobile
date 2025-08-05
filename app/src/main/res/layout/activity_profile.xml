@@ -21,12 +21,6 @@
             android:orientation="vertical">
 
             <View
-                android:id="@+id/status_bar_placeholder"
-                android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:background="@android:color/transparent" />
-
-            <View
                 android:id="@+id/background_wave"
                 android:layout_width="match_parent"
                 android:layout_height="265dp"
@@ -149,7 +143,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="120h"
+                                android:text="0h"
                                 android:textColor="@android:color/black"
                                 android:textStyle="bold" />
 
@@ -178,7 +172,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="15"
+                                android:text="20"
                                 android:textColor="@android:color/black"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />

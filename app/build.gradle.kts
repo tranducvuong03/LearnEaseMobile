@@ -17,6 +17,14 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+    signingConfigs {
+        create("release") {
+            storeFile = file("learnease-release-key.jks")
+            storePassword = "learnease123"
+            keyAlias = "learnease-key-alias"
+            keyPassword = "learnease123"
+        }
+    }
 
     buildTypes {
         release {
@@ -25,6 +33,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {

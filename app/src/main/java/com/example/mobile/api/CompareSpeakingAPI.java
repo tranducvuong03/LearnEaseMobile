@@ -1,19 +1,17 @@
 package com.example.mobile.api;
 
 import com.example.mobile.model.EvaluateSpeakingResponse;
-import com.example.mobile.model.SubmitProgressRequest;
-import com.example.mobile.model.SubmitProgressResponse;
+
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
-import retrofit2.http.Query;
 
 public interface CompareSpeakingAPI {
-    String BASE_URL = "https://10.0.2.2:7083/api/";
+//    String BASE_URL = "https://10.0.2.2:7083/api/";
+    String BASE_URL = "https://learnease.id.vn/api/";
 
     /**
      * Submit user's speaking result to update progress
