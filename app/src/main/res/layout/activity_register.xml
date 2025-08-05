@@ -97,7 +97,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="#E0E0E0"
-                android:hint="Email"
+                android:hint="Email (optional)"
                 android:inputType="textEmailAddress"
                 android:minHeight="48dp"
                 android:padding="12dp" />

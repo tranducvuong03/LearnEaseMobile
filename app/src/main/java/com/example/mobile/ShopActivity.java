@@ -129,6 +129,11 @@ public class ShopActivity extends AppCompatActivity {
                         regenHeartAlertWhenPremium.setVisibility(View.VISIBLE);
                         recyclerHearts.setVisibility(View.GONE);
                         heartPremium.setVisibility(View.VISIBLE);
+                    }else {
+                        regenHeartAlert.setVisibility(View.VISIBLE);
+                        regenHeartAlertWhenPremium.setVisibility(View.GONE);
+                        recyclerHearts.setVisibility(View.VISIBLE);
+                        heartPremium.setVisibility(View.GONE);
                     }
                 } else {
                     Log.e("HEART", "Lỗi khi lấy tim: " + response.code());

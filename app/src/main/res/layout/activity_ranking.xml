@@ -208,6 +208,7 @@
                                 android:layout_height="64dp"
                                 android:layout_gravity="center"
                                 android:padding="8dp"
+                                android:src="@drawable/user1"
                                  />
 
                             <!--                            &lt;!&ndash; Flag &ndash;&gt;-->
@@ -244,7 +245,7 @@
                             android:layout_marginTop="4dp"
                             android:background="@drawable/bg_ranking_score"
                             android:padding="8dp"
-
+                            android:text="0 point"
                             android:textColor="@color/white"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -285,6 +286,7 @@
                                 android:layout_height="64dp"
                                 android:layout_gravity="center"
                                 android:padding="8dp"
+                                android:src="@drawable/user1"
                                  />
 
                             <!--                            &lt;!&ndash; Flag &ndash;&gt;-->
@@ -318,7 +320,7 @@
                             android:layout_marginTop="4dp"
                             android:background="@drawable/bg_ranking_score"
                             android:padding="8dp"
-
+                            android:text="0 point"
                             android:textColor="@color/white"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -356,6 +358,7 @@
                                 android:layout_width="64dp"
                                 android:layout_height="64dp"
                                 android:layout_gravity="center"
+                                android:src="@drawable/user1"
                                 android:padding="8dp" />
 
                             <!--                            &lt;!&ndash; Country Flag Icon (góc dưới phải, tràn ra ngoài một chút) &ndash;&gt;-->
@@ -389,7 +392,7 @@
                             android:layout_marginTop="4dp"
                             android:background="@drawable/bg_ranking_score"
                             android:padding="8dp"
-
+                            android:text="0 point"
                             android:textColor="@color/white"
                             android:textSize="12sp"
                             android:textStyle="bold" />

@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import com.bumptech.glide.Glide;
+import com.example.mobile.adapter.ChatAdapter;
 import com.example.mobile.api.LoginAPI;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
@@ -179,6 +180,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         apiService = RetrofitClient.getApiService(this);
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        SharedPreferences prefsChatMessages = getSharedPreferences("chat_prefs", MODE_PRIVATE);
         String token = prefs.getString("auth_token", null);
         if (token != null) {
             ApiCaller.callWithLoading(this,
@@ -308,7 +310,7 @@ public class ProfileActivity extends AppCompatActivity {
                         .setPositiveButton("Đăng xuất", (dialog, which) -> {
                             // 1. Xóa token
                             prefs.edit().remove("auth_token").apply();
-
+                            prefsChatMessages.edit().remove("chat_history").apply();
                             // 2. Đăng xuất Google nếu dùng
                             GoogleSignIn.getClient(ProfileActivity.this,
                                     new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()

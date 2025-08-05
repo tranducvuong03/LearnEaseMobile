@@ -70,7 +70,7 @@ public class QuizActivity extends AppCompatActivity {
         heartInfinity = findViewById(R.id.heartInfinity);
 
         SharedPreferences sp = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
-        String userId = sp.getString("user_id", null);
+        userId = sp.getString("user_id", null);
 
         HeartService.getCurrentHearts(this, userId, new HeartService.FullHeartCallback() {
             @Override

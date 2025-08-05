@@ -52,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
             String password = editTextPassword.getText().toString().trim();
             String confirmPassword = editTextConfirmPassword.getText().toString().trim();
             // Kiểm tra các trường không được bỏ trống
-            if (username.isEmpty() || email.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            if (username.isEmpty() ||  password.isEmpty() || confirmPassword.isEmpty()) {
                 Toast.makeText(RegisterActivity.this, "Vui lòng nhập đầy đủ thông tin", Toast.LENGTH_SHORT).show();
                 return;
             }
