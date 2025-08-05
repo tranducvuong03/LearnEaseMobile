@@ -273,9 +273,9 @@ public class ProfileActivity extends AppCompatActivity {
         }
 
         // --- Other Navigation Items Setup (Dashboard Section) ---
-        View settingsItem = findViewById(R.id.item_settings);
+        View settingsItem = findViewById(R.id.item_shopping);
         if (settingsItem != null) {
-            settingsItem.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, SettingsActivity.class)));
+            settingsItem.setOnClickListener(v -> startActivity(new Intent(ProfileActivity.this, ShopActivity.class)));
         }
 
         View achievementsItem = findViewById(R.id.item_achievements);

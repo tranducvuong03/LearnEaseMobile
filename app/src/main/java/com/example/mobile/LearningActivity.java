@@ -3,6 +3,7 @@ package com.example.mobile;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -39,13 +40,22 @@ public class LearningActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learning);
         textHeartCount = findViewById(R.id.heartCount);
-        textHeartCount = findViewById(R.id.heartCount);
+        ImageView heartInfinity = findViewById(R.id.heartInfinity);
+
         SharedPreferences sp = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String userId = sp.getString("user_id", null);
-        HeartService.getCurrentHearts(this, userId, new HeartService.HeartCallback() {
+
+        HeartService.getCurrentHearts(this, userId, new HeartService.FullHeartCallback() {
             @Override
-            public void onSuccess(int heartCount) {
-                textHeartCount.setText(String.valueOf(heartCount));
+            public void onSuccess(int heartCount, boolean isPremium, int minutesUntilNextHeart) {
+                if (isPremium) {
+                    textHeartCount.setVisibility(View.GONE);
+                    heartInfinity.setVisibility(View.VISIBLE);
+                } else {
+                    textHeartCount.setVisibility(View.VISIBLE);
+                    heartInfinity.setVisibility(View.GONE);
+                    textHeartCount.setText(String.valueOf(heartCount));
+                }
             }
 
             @Override
@@ -53,6 +63,7 @@ public class LearningActivity extends AppCompatActivity {
                 Toast.makeText(LearningActivity.this, errorMessage, Toast.LENGTH_SHORT).show();
             }
         });
+
         // 1. Lấy dữ liệu từ Intent
         lessonId = getIntent().getStringExtra("lesson_id");
         topicId = getIntent().getStringExtra("topic_id");
