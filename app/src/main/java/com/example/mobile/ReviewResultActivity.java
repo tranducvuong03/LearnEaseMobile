@@ -135,8 +135,9 @@ public class ReviewResultActivity extends AppCompatActivity {
                 if (response.isSuccessful() && response.body() != null) {
                     ReviewResponse data = response.body();
                     textSkill.setText(data.getSkill());
-                    int scoreInt = (int) Math.floor(data.getScore());  // chỉ lấy phần nguyên (không làm tròn)
-                    textScore.setText(scoreInt);
+                    int scoreInt = (int) Math.floor(data.getScore());
+                    textScore.setText(String.valueOf(scoreInt));// chỉ lấy phần nguyên (không làm tròn)
+
                     textFeedback.setText(data.getFeedback());
 
                 }

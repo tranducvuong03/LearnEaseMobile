@@ -45,8 +45,8 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface LoginAPI {
- String BASE_URL = "https://10.0.2.2:7083/api/";
-     //  String BASE_URL = "https://learnease.id.vn/api/";
+// String BASE_URL = "https://10.0.2.2:7083/api/";
+       String BASE_URL = "https://learnease.id.vn/api/";
     @POST("auth/login")
     Call<LoginResponse> login(@Body LoginRequest request);
     @POST("auth/google-login")
