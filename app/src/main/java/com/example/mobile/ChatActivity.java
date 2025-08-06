@@ -8,6 +8,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -59,6 +60,36 @@ public class ChatActivity extends AppCompatActivity {
         adapter = new ChatAdapter(loadMessagesFromStorage());
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(adapter);
+        ImageButton btnScrollToBottom = findViewById(R.id.btnScrollToBottom);
+        recyclerView = findViewById(R.id.chatRecyclerView);
+
+        // Setup scroll tự động khi mở màn hình
+        recyclerView.post(() -> {
+            if (adapter.getItemCount() > 0) {
+                recyclerView.scrollToPosition(adapter.getItemCount() - 1);
+            }
+        });
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                LinearLayoutManager layoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                if (layoutManager == null) return;
+
+                int lastVisible = layoutManager.findLastVisibleItemPosition();
+                int total = adapter.getItemCount();
+
+                if (lastVisible < total - 2) {
+                    btnScrollToBottom.setVisibility(View.VISIBLE);
+                } else {
+                    btnScrollToBottom.setVisibility(View.GONE);
+                }
+            }
+        });
+        btnScrollToBottom.setOnClickListener(v -> {
+            if (adapter.getItemCount() > 0) {
+                recyclerView.smoothScrollToPosition(adapter.getItemCount() - 1);
+            }
+        });
 
         btnSend.setOnClickListener(new View.OnClickListener() {
             @Override
