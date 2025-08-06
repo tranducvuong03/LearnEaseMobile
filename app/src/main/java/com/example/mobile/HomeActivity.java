@@ -24,7 +24,6 @@ import com.example.mobile.utils.RetrofitClient;
 import com.example.mobile.utils.UsagePrefs;
 import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Locale;
 
@@ -93,7 +92,7 @@ public class HomeActivity extends AppCompatActivity {
         bottomNavigationView.setSelectedItemId(R.id.menu_home);
 
         // Chat bubble
-        FloatingActionButton chatBubble = findViewById(R.id.chatBubble);
+        LottieAnimationView chatBubble = findViewById(R.id.chatBotAnimation);
         chatBubble.setOnTouchListener(new View.OnTouchListener() {
             float dX, dY;
             int lastAction;
