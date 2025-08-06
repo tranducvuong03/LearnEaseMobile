@@ -141,9 +141,10 @@
                             android:orientation="vertical">
 
                             <TextView
+                                android:id="@+id/tv_total_learn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="0h"
+                                android:text="0 mins"
                                 android:textColor="@android:color/black"
                                 android:textStyle="bold" />
 

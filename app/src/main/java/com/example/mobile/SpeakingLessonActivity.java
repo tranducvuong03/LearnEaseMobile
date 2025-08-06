@@ -32,6 +32,7 @@ import com.example.mobile.model.LessonProgress;
 import com.example.mobile.model.SpeakingExercise;
 import com.example.mobile.model.SubmitProgressRequest;
 import com.example.mobile.utils.RetrofitClient;
+import com.example.mobile.utils.UsagePrefs;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -73,6 +74,8 @@ public class SpeakingLessonActivity extends AppCompatActivity {
 
     // offset passed from QuizActivity to continue progress dots
     private int dotOffset = 0;
+
+    private long startTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -347,5 +350,17 @@ public class SpeakingLessonActivity extends AppCompatActivity {
         super.onDestroy();
         if (recorder != null) recorder.release();
         stopExoPlayer();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis(); // bắt đầu tính
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        long sessionTime = System.currentTimeMillis() - startTime;
+        UsagePrefs.saveUsageTime(this, sessionTime); // lưu thời gian dùng
     }
 }

@@ -40,7 +40,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Great to see you, John!"
+                    android:text="Thật vui khi gặp bạn, John!"
                     android:textSize="32sp"
                     android:textStyle="bold"
                     android:lineSpacingExtra="4dp"
@@ -72,8 +72,8 @@
                     android:layout_width="100dp"
                     android:layout_height="100dp"
                     app:donut_finished_color="@color/gradientStart"
-                    app:donut_progress="60"
-                    app:donut_text="60%"
+                    app:donut_progress="0"
+                    app:donut_text="0%"
                     app:donut_text_color="@color/colorTextPrimary"
                     app:donut_text_size="24dp"
                     app:donut_unfinished_color="#E0E0E0" />
@@ -92,20 +92,22 @@
                         android:textSize="22sp"
                         android:textStyle="bold" />
 
+
                     <ProgressBar
                         android:id="@+id/progressBar"
                         style="@android:style/Widget.ProgressBar.Horizontal"
                         android:layout_width="match_parent"
                         android:layout_height="8dp"
                         android:layout_marginTop="4dp"
-                        android:progress="60"
+                        android:progress="0"
                         android:progressDrawable="@drawable/progress_gradient" />
 
                     <TextView
+                        android:id="@+id/textViewTime"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="15 / 25 mins"
+                        android:text="0 / 25 mins"
                         android:textSize="18sp" />
                 </LinearLayout>
             </LinearLayout>
@@ -128,6 +130,7 @@
 
                 <!-- Streak Card -->
                 <LinearLayout
+                    android:id="@+id/card_streak"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="8dp"
@@ -147,11 +150,31 @@
                         android:textSize="24sp"
                         android:textStyle="bold" />
 
-                    <ImageView
+                    <FrameLayout
                         android:layout_width="50dp"
                         android:layout_height="50dp"
-                        android:layout_marginTop="10dp"
-                        android:src="@drawable/fire" />
+                        android:layout_marginTop="10dp">
+
+                        <!-- Static Fire (mặc định hiện khi streak = 0) -->
+                        <ImageView
+                            android:id="@+id/staticFireIcon"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/fire"
+                            android:scaleType="fitCenter"
+                            android:visibility="visible" />
+
+                        <!-- Lottie Fire Animation (ẩn ban đầu) -->
+                        <com.airbnb.lottie.LottieAnimationView
+                            android:id="@+id/lottieFireStreak"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            app:lottie_fileName="fire_animation.json"
+                            app:lottie_autoPlay="true"
+                            app:lottie_loop="true"
+                            android:visibility="gone" />
+                    </FrameLayout>
+
 
                     <TextView
                         android:id="@+id/tv_streak_value"

@@ -3,25 +3,30 @@ package com.example.mobile;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
-import com.example.mobile.api.LoginAPI;
-import com.example.mobile.model.StreakResponse;
-import com.example.mobile.utils.RetrofitClient;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+
+import com.airbnb.lottie.LottieAnimationView;
+import com.example.mobile.api.LoginAPI;
+import com.example.mobile.model.StreakResponse;
+import com.example.mobile.utils.RetrofitClient;
+import com.example.mobile.utils.UsagePrefs;
+import com.github.lzyzsd.circleprogress.DonutProgress;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.Locale;
 
 import retrofit2.Call;
 
@@ -33,7 +38,7 @@ public class HomeActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String userId = prefs.getString("user_id", null);
         String username = prefs.getString("user_name", null);
-
+        updateDailyProgress();
         // Greeting text
         TextView greetingText = findViewById(R.id.greeting);
         String greeting = "Great to see you, " + username + "!";
@@ -137,7 +142,22 @@ public class HomeActivity extends AppCompatActivity {
                     int streak = response.body().getStreak();
                     runOnUiThread(() -> {
                         TextView tvStreak = findViewById(R.id.tv_streak_value);
-                        tvStreak.setText(streak + " days 🔥");
+                        tvStreak.setText(streak + " days");
+                        ImageView staticFire = findViewById(R.id.staticFireIcon);
+                        LottieAnimationView lottieFire = findViewById(R.id.lottieFireStreak);
+                        LinearLayout cardStreak = findViewById(R.id.card_streak);
+                        if (streak >= 1) {
+                            staticFire.setVisibility(View.GONE);
+                            lottieFire.setVisibility(View.VISIBLE);
+                            lottieFire.playAnimation();
+                            cardStreak.setBackgroundResource(R.drawable.bg_orange_card);
+                        } else {
+                            lottieFire.setVisibility(View.GONE);
+                            lottieFire.cancelAnimation();
+                            staticFire.setVisibility(View.VISIBLE);
+                            cardStreak.setBackgroundResource(R.drawable.bg_grey_card);
+                        }
+
                     });
                 } else {
                     Log.e("Streak", "Failed to load: " + response.code());
@@ -150,4 +170,35 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
     }
+    private void updateDailyProgress() {
+
+        // Mục tiêu: 25 phút mỗi ngày
+        int goalMillis = 25 * 60 * 1000;
+
+        // Lấy thời gian đã học hôm nay
+        long usedMillis = UsagePrefs.getTodayUsage(this);
+        float usedMinutes = usedMillis / 60000f;
+        int percent = (int) ((usedMillis * 100f) / goalMillis);
+        if (percent > 100) percent = 100;
+
+        // Tìm và cập nhật view
+        TextView timeText = findViewById(R.id.textViewTime);
+        ProgressBar progressBar = findViewById(R.id.progressBar);
+        DonutProgress donut = findViewById(R.id.progressCircle);
+        int usedMinutesInt = (int) (usedMillis / 60000);
+        timeText.setText(String.format(Locale.getDefault(), "%d / 25 mins", usedMinutesInt));
+        progressBar.setProgress(percent);
+        donut.setProgress(percent);
+        donut.setText(percent + "%");
+        if (percent >= 100) {
+            progressBar.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.progress_done_gradient));
+            donut.setFinishedStrokeColor(ContextCompat.getColor(this, R.color.green));
+        }
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateDailyProgress();
+    }
+
 }

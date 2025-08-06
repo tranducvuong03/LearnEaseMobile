@@ -9,17 +9,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.mobile.api.LessonAPI;
-import com.example.mobile.api.LoginAPI;
-import com.example.mobile.model.LearningResponse;
-import com.example.mobile.service.HeartService;
-import com.example.mobile.utils.RetrofitClient;
-import com.google.android.material.button.MaterialButton;
-import com.google.gson.Gson;
-
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.media3.common.util.UnstableApi;
+
+import com.example.mobile.api.LessonAPI;
+import com.example.mobile.model.LearningResponse;
+import com.example.mobile.service.HeartService;
+import com.example.mobile.utils.RetrofitClient;
+import com.example.mobile.utils.UsagePrefs;
+import com.google.android.material.button.MaterialButton;
+import com.google.gson.Gson;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -33,6 +33,7 @@ public class LearningActivity extends AppCompatActivity {
     private MaterialButton learnNowButton;
     private TextView textHeartCount;
     private LearningResponse lessonData;
+    private long startTime;
 
     @UnstableApi
     @Override
@@ -113,6 +114,7 @@ public class LearningActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadLessonInfo();
+        startTime = System.currentTimeMillis(); // bắt đầu tính
     }
 
     private void loadLessonInfo() {
@@ -166,5 +168,12 @@ public class LearningActivity extends AppCompatActivity {
                 Toast.makeText(LearningActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        long sessionTime = System.currentTimeMillis() - startTime;
+        UsagePrefs.saveUsageTime(this, sessionTime); // lưu thời gian dùng
     }
 }

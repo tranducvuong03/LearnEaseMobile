@@ -14,6 +14,7 @@ import com.example.mobile.adapter.LessonAdapter;
 import com.example.mobile.api.LessonAPI;
 import com.example.mobile.model.Lesson;
 import com.example.mobile.utils.RetrofitClient;
+import com.example.mobile.utils.UsagePrefs;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +30,7 @@ public class TopicLessonsActivity extends AppCompatActivity {
     private LessonAdapter lessonAdapter;
     private List<Lesson> lessonList = new ArrayList<>();
     private String topicId;
-
+private long startTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,5 +89,17 @@ public class TopicLessonsActivity extends AppCompatActivity {
                 Toast.makeText(TopicLessonsActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis(); // bắt đầu tính
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        long sessionTime = System.currentTimeMillis() - startTime;
+        UsagePrefs.saveUsageTime(this, sessionTime); // lưu thời gian dùng
     }
 }

@@ -1,6 +1,5 @@
 package com.example.mobile;
 
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,15 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.auth0.android.jwt.JWT;
 import com.example.mobile.adapter.TopicAdapter;
-import com.example.mobile.api.LoginAPI;
 import com.example.mobile.api.TopicAPI;
 import com.example.mobile.dialog.NoHeartDialogFragment;
-import com.example.mobile.model.HeartResponse;
 import com.example.mobile.model.Topic;
 import com.example.mobile.service.HeartService;
 import com.example.mobile.utils.RetrofitClient;
+import com.example.mobile.utils.UsagePrefs;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -44,7 +40,7 @@ public class TopicActivity extends AppCompatActivity {
     private boolean isPremiumToDialog;
     private int heart;
     private List<Topic> topicList;
-
+    private long startTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -191,5 +187,17 @@ public class TopicActivity extends AppCompatActivity {
         startActivity(new Intent(this, LoginActivity.class)
                 .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK));
         finish();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis(); // bắt đầu tính
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        long sessionTime = System.currentTimeMillis() - startTime;
+        UsagePrefs.saveUsageTime(this, sessionTime); // lưu thời gian dùng
     }
 }

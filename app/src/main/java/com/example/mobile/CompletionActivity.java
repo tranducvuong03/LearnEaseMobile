@@ -6,7 +6,10 @@ import android.widget.Button;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.mobile.utils.UsagePrefs;
+
 public class CompletionActivity extends AppCompatActivity {
+    private long startTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,5 +23,17 @@ public class CompletionActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis(); // bắt đầu tính
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        long sessionTime = System.currentTimeMillis() - startTime;
+        UsagePrefs.saveUsageTime(this, sessionTime); // lưu thời gian dùng
     }
 }

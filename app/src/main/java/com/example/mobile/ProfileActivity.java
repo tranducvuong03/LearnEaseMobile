@@ -15,16 +15,17 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.bumptech.glide.Glide;
-import com.example.mobile.adapter.ChatAdapter;
-import com.example.mobile.api.LoginAPI;
 import com.cloudinary.android.MediaManager;
 import com.cloudinary.android.callback.ErrorInfo;
 import com.cloudinary.android.callback.UploadCallback;
 import com.cloudinary.android.policy.TimeWindow;
+import com.example.mobile.api.LoginAPI;
 import com.example.mobile.model.userData.UpdateAvatarRequest;
 import com.example.mobile.model.userData.UpdateUsernameRequest;
 import com.example.mobile.model.userData.UserResponse;
@@ -32,10 +33,13 @@ import com.example.mobile.utils.ApiCaller;
 import com.example.mobile.utils.CloudinaryManager;
 import com.example.mobile.utils.LoadingManager;
 import com.example.mobile.utils.RetrofitClient;
+import com.example.mobile.utils.UsagePrefs;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+
 import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -235,6 +239,11 @@ public class ProfileActivity extends AppCompatActivity {
         // Bắt sự kiện click ảnh
         ivProfilePic.setOnClickListener(v -> selectImage());
 
+        // get thời gian học
+        long totalMillis = UsagePrefs.getAllTimeUsage(this);
+        long totalMinutes = totalMillis / 1000 / 60;
+        TextView tvTotalLearn = findViewById(R.id.tv_total_learn);
+        tvTotalLearn.setText(totalMinutes + " mins");
 
         // --- Bottom Navigation View Setup ---
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottom_navigation);
@@ -310,6 +319,7 @@ public class ProfileActivity extends AppCompatActivity {
                         .setPositiveButton("Đăng xuất", (dialog, which) -> {
                             // 1. Xóa token
                             prefs.edit().remove("auth_token").apply();
+                            prefs.edit().remove("user_id").apply();
                             prefsChatMessages.edit().remove("chat_history").apply();
                             // 2. Đăng xuất Google nếu dùng
                             GoogleSignIn.getClient(ProfileActivity.this,

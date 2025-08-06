@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.media.AudioAttributes;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +29,7 @@ import com.example.mobile.model.QuizChoice;
 import com.example.mobile.model.ScoreResponse;
 import com.example.mobile.model.TranscriptionResponse;
 import com.example.mobile.utils.RetrofitClient;
+import com.example.mobile.utils.UsagePrefs;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -60,7 +60,7 @@ public class SoloQuizActivity extends AppCompatActivity {
     private LessonPart part;
     private String skill;
     private Map<String, String> selectedAnswers = new HashMap<>();
-
+    private long startTime;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -438,7 +438,18 @@ public class SoloQuizActivity extends AppCompatActivity {
             });
         }
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis(); // bắt đầu tính
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        long sessionTime = System.currentTimeMillis() - startTime;
+        UsagePrefs.saveUsageTime(this, sessionTime); // lưu thời gian dùng
+    }
 
 }
 

@@ -21,6 +21,7 @@ import com.example.mobile.model.SubmitProgressRequest;
 import com.example.mobile.model.VocabularyItem;
 import com.example.mobile.service.HeartService;
 import com.example.mobile.utils.RetrofitClient;
+import com.example.mobile.utils.UsagePrefs;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -60,6 +61,7 @@ public class QuizActivity extends AppCompatActivity {
     private TextView textHeartCount;
     private ImageView heartInfinity;
     private boolean isPremiumToDialog;
+    private long startTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -273,5 +275,17 @@ public class QuizActivity extends AppCompatActivity {
         intent.putExtra("dotOffset", currentIndex);
         startActivity(intent);
         finish();
+    }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis(); // bắt đầu tính
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        long sessionTime = System.currentTimeMillis() - startTime;
+        UsagePrefs.saveUsageTime(this, sessionTime); // lưu thời gian dùng
     }
 }

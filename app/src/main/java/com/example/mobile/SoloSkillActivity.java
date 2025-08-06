@@ -13,6 +13,7 @@ import com.example.mobile.api.LoginAPI;
 import com.example.mobile.model.LessonResponse;
 import com.example.mobile.utils.ApiCaller;
 import com.example.mobile.utils.RetrofitClient;
+import com.example.mobile.utils.UsagePrefs;
 import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
 
@@ -27,6 +28,8 @@ public class SoloSkillActivity extends AppCompatActivity {
     private LessonResponse lesson;
 
     private LoginAPI apiService;
+
+    private long startTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +61,18 @@ public class SoloSkillActivity extends AppCompatActivity {
         LoginAPI api = RetrofitClient.getApiService(this);
         fetchInitialData();
     }
+    @Override
+    protected void onResume() {
+        super.onResume();
+        startTime = System.currentTimeMillis(); // bắt đầu tính
+    }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        long sessionTime = System.currentTimeMillis() - startTime;
+        UsagePrefs.saveUsageTime(this, sessionTime); // lưu thời gian dùng
+    }
     private void fetchInitialData() {
         // Ví dụ: lấy bài học tuần hoặc setting người dùng
         Call<LessonResponse> call = apiService.getTodayLesson();
