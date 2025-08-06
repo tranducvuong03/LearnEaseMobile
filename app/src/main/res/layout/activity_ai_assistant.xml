@@ -153,4 +153,15 @@
             android:contentDescription="Send" />
     </LinearLayout>
 
+    <ImageButton
+        android:id="@+id/btnScrollToBottom"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:src="@drawable/ic_arrowdropdown"
+        android:background="@drawable/back_button_background"
+        android:contentDescription="Scroll to Bottom"
+        android:layout_margin="12dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/inputLayout"
+        app:layout_constraintEnd_toEndOf="parent"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
