@@ -47,12 +47,13 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private View textGoogle;
     private View buttonLogin;
+    private ProgressBar loadingLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
+        loadingLogin = findViewById(R.id.loadingLogin);
         editTextUsername = findViewById(R.id.editTextUsername);
         editTextPassword = findViewById(R.id.editTextPassword);
         buttonLogin = findViewById(R.id.buttonLogin);
@@ -129,11 +130,15 @@ public class LoginActivity extends AppCompatActivity {
             Toast.makeText(this, "Vui lòng nhập tài khoản và mật khẩu", Toast.LENGTH_SHORT).show();
             return;
         }
+        loadingLogin.setVisibility(View.VISIBLE);
+        buttonLogin.setEnabled(false);
 
         LoginRequest loginRequest = new LoginRequest(username, password);
         apiService.login(loginRequest).enqueue(new Callback<LoginResponse>() {
             @Override
             public void onResponse(Call<LoginResponse> call, Response<LoginResponse> response) {
+                loadingLogin.setVisibility(View.GONE);
+                buttonLogin.setEnabled(true);
                 if (response.isSuccessful() && response.body() != null) {
                     String token = response.body().getToken();
                     if (token != null && !token.isEmpty()) {
@@ -166,6 +171,8 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<LoginResponse> call, Throwable t) {
+                loadingLogin.setVisibility(View.GONE);
+                buttonLogin.setEnabled(true);
                 Toast.makeText(LoginActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });

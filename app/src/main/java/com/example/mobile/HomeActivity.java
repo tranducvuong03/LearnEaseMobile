@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
         updateDailyProgress();
         // Greeting text
         TextView greetingText = findViewById(R.id.greeting);
-        String greeting = "Great to see you, " + username + "!";
+        String greeting = "Rất vui khi gặp bạn, " + username + " !";
         greetingText.setText(greeting);
 
         // Button Continue Learning

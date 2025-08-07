@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.mobile.adapter.AccentAdapter;
 import com.example.mobile.api.LoginAPI;
-import com.example.mobile.dialog.SampleDialogFragment;
 import com.example.mobile.model.Dialect;
 import com.example.mobile.model.SpeakingDialect;
 import com.example.mobile.utils.ApiCaller;
@@ -81,7 +80,7 @@ public class ExploreActivity extends AppCompatActivity {
             public void onResponse(Call<List<Dialect>> call, Response<List<Dialect>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     List<Dialect> all = response.body();
-                    List<Dialect> top5 = all.subList(0, Math.min(5, all.size())); // ✅ lấy 5 dialect đầu tiên
+                    List<Dialect> top5 = all.subList(0, Math.min(10, all.size())); // ✅ lấy 10 dialect đầu tiên
                     adapter.setData(top5);
                 } else {
                     Toast.makeText(ExploreActivity.this, "❌ Không tải được danh sách accent", Toast.LENGTH_SHORT).show();
