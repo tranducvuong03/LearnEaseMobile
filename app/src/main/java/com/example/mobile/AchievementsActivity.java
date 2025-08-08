@@ -2,11 +2,14 @@ package com.example.mobile; // Đảm bảo đúng package của bạn
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import com.airbnb.lottie.LottieAnimationView;
 
 public class AchievementsActivity extends AppCompatActivity {
 
@@ -19,7 +22,13 @@ public class AchievementsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         // Đặt layout cho Activity này
         setContentView(R.layout.activity_achievements); // Đảm bảo tên file layout của bạn là activity_achievements.xml
+        LottieAnimationView lottie = findViewById(R.id.lottieComingSoon);
+        TextView message = findViewById(R.id.comingSoonText);
+        lottie.setAlpha(0f);
+        message.setAlpha(0f);
 
+        lottie.animate().alpha(1f).setDuration(700).start();
+        message.animate().alpha(1f).setStartDelay(400).setDuration(600).start();
         // Ánh xạ các view từ layout
         ImageButton btnBack = findViewById(R.id.btn_back_achievements);
         ImageButton btnMenu = findViewById(R.id.btn_menu_achievements);
@@ -53,6 +62,10 @@ public class AchievementsActivity extends AppCompatActivity {
         // TODO: Bạn có thể thêm logic để tải dữ liệu thành tích từ database hoặc API
         // và cập nhật các thẻ thành tích một cách động nếu cần.
         // Hiện tại, các thẻ đang được hardcode trong XML.
+        Button btnBackComingSoon = findViewById(R.id.btnBackComingSoon);
+        btnBackComingSoon.setOnClickListener(v -> {
+            finish();
+        });
     }
 
     /**

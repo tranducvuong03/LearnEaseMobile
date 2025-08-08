@@ -34,16 +34,19 @@ public class AccentAdapter extends RecyclerView.Adapter<AccentAdapter.ViewHolder
     @NonNull
     @Override
     public AccentAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_dialect, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_accent, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull AccentAdapter.ViewHolder holder, int position) {
         Dialect dialect = dialectList.get(position);
-        holder.nameText.setText(dialect.getName() + " (" + dialect.getRegion() + ")");
 
-        // ✅ Đúng: truyền Dialect
+        String region = dialect.getRegion();
+        holder.accentTitle.setText("English (" + region + ")");
+        holder.accentRegion.setText(region);
+        holder.flag.setText(getFlagEmoji(region.toLowerCase()));
+
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onClick(dialect);
@@ -57,11 +60,30 @@ public class AccentAdapter extends RecyclerView.Adapter<AccentAdapter.ViewHolder
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView nameText;
+        TextView accentTitle, accentRegion, flag;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            nameText = itemView.findViewById(R.id.textDialectName);
+            accentTitle = itemView.findViewById(R.id.textAccentTitle);
+            accentRegion = itemView.findViewById(R.id.textAccentRegion);
+            flag = itemView.findViewById(R.id.textFlag);
+        }
+    }
+    private String getFlagEmoji(String region) {
+        switch (region) {
+            case "philippines": return "🇵🇭";
+            case "india": return "🇮🇳";
+            case "kenya": return "🇰🇪";
+            case "tanzania": return "🇹🇿";
+            case "south africa": return "🇿🇦";
+            case "singapore": return "🇸🇬";
+            case "hong kong": return "🇭🇰";
+            case "new zealand": return "🇳🇿";
+            case "uk": return "🇬🇧";
+            case "us":
+            case "usa":
+            case "united states": return "🇺🇸";
+            default: return "🌍";
         }
     }
 }

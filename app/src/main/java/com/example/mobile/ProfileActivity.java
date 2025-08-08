@@ -307,16 +307,16 @@ public class ProfileActivity extends AppCompatActivity {
         // --- My Account Section Items ---
         View switchAccountTv = findViewById(R.id.tv_switch_account);
         if (switchAccountTv != null) {
-            switchAccountTv.setOnClickListener(v -> Toast.makeText(ProfileActivity.this, "Switch Account clicked (Functionality not implemented)", Toast.LENGTH_SHORT).show());
+            switchAccountTv.setOnClickListener(v -> Toast.makeText(ProfileActivity.this, "Sorry, your version does not support this feature.", Toast.LENGTH_SHORT).show());
         }
 
         View logoutAccountTv = findViewById(R.id.tv_logout_account);
         if (logoutAccountTv != null) {
             logoutAccountTv.setOnClickListener(v -> {
                 new AlertDialog.Builder(ProfileActivity.this)
-                        .setTitle("Xác nhận đăng xuất")
-                        .setMessage("Bạn có chắc chắn muốn đăng xuất không?")
-                        .setPositiveButton("Đăng xuất", (dialog, which) -> {
+                        .setTitle("Confirm Logout")
+                        .setMessage("Are you sure you want to log out?")
+                        .setPositiveButton("Log Out", (dialog, which) -> {
                             // 1. Xóa token
                             prefs.edit().remove("auth_token").apply();
                             prefs.edit().remove("user_id").apply();
@@ -332,7 +332,7 @@ public class ProfileActivity extends AppCompatActivity {
                             startActivity(intent);
                             finish(); // đảm bảo thoát ProfileActivity
                         })
-                        .setNegativeButton("Hủy", null)
+                        .setNegativeButton("Cancel", null)
                         .show();
             });
 

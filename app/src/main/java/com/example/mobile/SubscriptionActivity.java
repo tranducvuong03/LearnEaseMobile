@@ -10,8 +10,6 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-
-import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.BounceInterpolator;
@@ -22,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.mobile.model.CheckoutResponse;
 import com.example.mobile.model.SubscriptionInfo;
 import com.example.mobile.utils.ApiCaller;
@@ -30,8 +29,10 @@ import com.example.mobile.utils.RetrofitClient;
 import com.google.android.flexbox.FlexboxLayout;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -52,28 +53,43 @@ public class SubscriptionActivity extends AppCompatActivity {
         ImageView btnBack = findViewById(R.id.btn_back_subscription);
         btnBack.setOnClickListener(v -> onBackPressed());
 
-        String titleText = "Nâng cấp để mở khóa trải nghiệm học tập tuyệt vời!";
+        String titleText = "Upgrade to unlock great learning experiences!";
         FlexboxLayout container = findViewById(R.id.titleContainer);
+        List<TextView> letterViews = new ArrayList<>();
+        // Tách theo từ để không bị xuống dòng sai
+        String[] words = titleText.split(" ");
+        for (String word : words) {
+            // Tạo LinearLayout chứa từng chữ cái của 1 từ
+            LinearLayout wordLayout = new LinearLayout(this);
+            wordLayout.setOrientation(LinearLayout.HORIZONTAL);
 
-        // Tạo từng chữ
-        TextView[] letterViews = new TextView[titleText.length()];
-        for (int i = 0; i < titleText.length(); i++) {
-            TextView letterView = new TextView(this);
-            letterView.setText(String.valueOf(titleText.charAt(i)));
-            letterView.setTextSize(24);
-            letterView.setTypeface(Typeface.DEFAULT_BOLD);
-            letterView.setAlpha(0f);
-            letterView.setIncludeFontPadding(false);
-            container.addView(letterView);
-            letterViews[i] = letterView;
+            for (int i = 0; i < word.length(); i++) {
+                TextView letterView = new TextView(this);
+                letterView.setText(String.valueOf(word.charAt(i)));
+                letterView.setTextSize(24);
+                letterView.setTypeface(Typeface.DEFAULT_BOLD);
+                letterView.setAlpha(0f);
+                letterView.setIncludeFontPadding(false);
+                wordLayout.addView(letterView);
+                letterViews.add(letterView);
+            }
+
+            // Thêm khoảng trắng sau mỗi từ
+            TextView space = new TextView(this);
+            space.setText(" ");
+            space.setTextSize(24);
+            wordLayout.addView(space);
+
+            // Thêm từ vào container
+            container.addView(wordLayout);
         }
 
-        // Animation sau khi layout xong
+        // Khi layout xong, chạy animation
         container.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
                 container.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                runLetterAnimation(letterViews);
+                runLetterAnimation(letterViews.toArray(new TextView[0]));
             }
         });
         Button btnMonthly = findViewById(R.id.btn_subscribe_monthly);
@@ -186,7 +202,7 @@ public class SubscriptionActivity extends AppCompatActivity {
 
         String formattedDate = formatDate(endDateRaw);
         TextView expireText = new TextView(this);
-        expireText.setText("Hết hạn: " + formattedDate);
+        expireText.setText("Expired: " + formattedDate);
         expireText.setTextColor(Color.parseColor("#E65100"));
         expireText.setTextSize(16f);
         expireText.setTypeface(Typeface.DEFAULT_BOLD);
@@ -194,13 +210,13 @@ public class SubscriptionActivity extends AppCompatActivity {
 
         if ("monthly".equalsIgnoreCase(planType)) {
             btnMonth.setEnabled(false);
-            btnMonth.setText("Đã đăng ký");
+            btnMonth.setText("Subscribed");
             btnMonth.setBackgroundResource(R.drawable.btn_disabled_gray);
             cardMonth.setBackgroundResource(R.drawable.bg_card_highlight_orange);
             ((ViewGroup) btnMonth.getParent()).addView(expireText);
         } else if ("yearly".equalsIgnoreCase(planType)) {
             btnYear.setEnabled(false);
-            btnYear.setText("Đã đăng ký");
+            btnYear.setText("Subscribed");
             btnYear.setBackgroundResource(R.drawable.btn_disabled_gray);
             cardYear.setBackgroundResource(R.drawable.bg_card_highlight_green);
             ((ViewGroup) btnYear.getParent()).addView(expireText);

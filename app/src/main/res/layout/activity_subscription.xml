@@ -72,7 +72,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Gói tháng"
+                android:text="Monthly Plan"
                 android:textStyle="bold"
                 android:textSize="18sp"
                 android:textColor="#FF7043"/>
@@ -80,7 +80,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="39.000 ₫ / tháng"
+                android:text="39.000 ₫ / month"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="#FF5722"
@@ -89,7 +89,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="• Bài học không giới hạn\n• Phản hồi phát âm AI\n• Lộ trình cá nhân\n• Học offline"
+                android:text="• Unlimited Lessons\n• AI Pronunciation Response\n• Personalized learning pathways\n• Unlimited Hearts"
                 android:textSize="14sp"
                 android:textColor="#333333"
                 android:lineSpacingExtra="4dp"/>
@@ -98,7 +98,7 @@
                 android:id="@+id/btn_subscribe_monthly"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🚀 Bắt đầu với 39.000 ₫"
+                android:text="🚀 Start with 39.000 ₫"
                 android:textAllCaps="false"
                 android:textStyle="bold"
                 android:textColor="@color/btn_orange_text_selector"
@@ -130,7 +130,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="Gói năm"
+                    android:text="Annual Plan"
                     android:textStyle="bold"
                     android:textSize="18sp"
                     android:textColor="#388E3C"/>
@@ -138,7 +138,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text=" Tiết kiệm 15%"
+                    android:text=" Sale off 15%"
                     android:padding="6dp"
                     android:background="@drawable/banner_gradient"
                     android:textColor="#FFFFFF"
@@ -148,7 +148,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="397.800 ₫ / năm"
+                android:text="397.800 ₫ / year"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:textColor="#388E3C"
@@ -157,7 +157,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="• Tất cả tính năng của gói tháng\n• Tiết kiệm hơn 70.000 ₫"
+                android:text="• All features of monthly plan\n• Save over 70.000 ₫"
                 android:textSize="14sp"
                 android:textColor="#333333"
                 android:lineSpacingExtra="4dp"/>
@@ -166,7 +166,7 @@
                 android:id="@+id/btn_subscribe_yearly"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="🎉 Tiết kiệm ngay – chọn gói năm"
+                android:text="🎉 Save now – choose a yearly plan"
                 android:textAllCaps="false"
                 android:textStyle="bold"
                 android:textColor="@color/btn_green_text_selector"
@@ -196,7 +196,7 @@
                     android:id="@+id/tv_active_plan"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Đã đăng ký: Gói tháng"
+                    android:text="Subscribed: Monthly Plan"
                     android:textColor="#E65100"
                     android:textStyle="bold"
                     android:textSize="18sp" />
@@ -205,7 +205,7 @@
                     android:id="@+id/tv_expire_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Hết hạn: 25/07/2025"
+                    android:text="Expired: 25/07/2025"
                     android:textColor="#333333"
                     android:textSize="14sp"
                     android:layout_marginTop="4dp"/>
@@ -214,7 +214,7 @@
                     android:id="@+id/btn_disabled"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Đã đăng ký"
+                    android:text="Subscribed"
                     android:enabled="false"
                     android:textColor="#888888"
                     android:background="@drawable/btn_disabled_gray"
@@ -226,7 +226,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="🔥 Hơn 5.000 học viên đã nâng cấp trong tháng này!"
+            android:text="🔥 Over 5,000 students upgraded this month!"
             android:textColor="#555555"
             android:textStyle="italic"
             android:gravity="center"

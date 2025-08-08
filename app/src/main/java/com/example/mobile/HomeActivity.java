@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -25,11 +26,14 @@ import com.example.mobile.utils.UsagePrefs;
 import com.github.lzyzsd.circleprogress.DonutProgress;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import retrofit2.Call;
 
 public class HomeActivity extends AppCompatActivity {
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,7 +44,7 @@ public class HomeActivity extends AppCompatActivity {
         updateDailyProgress();
         // Greeting text
         TextView greetingText = findViewById(R.id.greeting);
-        String greeting = "Rất vui khi gặp bạn, " + username + " !";
+        String greeting = "Nice to see you, " + username + " !";
         greetingText.setText(greeting);
 
         // Button Continue Learning
@@ -181,6 +185,7 @@ public class HomeActivity extends AppCompatActivity {
         if (percent > 100) percent = 100;
 
         // Tìm và cập nhật view
+        LottieAnimationView fireAnim = findViewById(R.id.fireProgressAnimation);
         TextView timeText = findViewById(R.id.textViewTime);
         ProgressBar progressBar = findViewById(R.id.progressBar);
         DonutProgress donut = findViewById(R.id.progressCircle);
@@ -192,12 +197,45 @@ public class HomeActivity extends AppCompatActivity {
         if (percent >= 100) {
             progressBar.setProgressDrawable(ContextCompat.getDrawable(this, R.drawable.progress_done_gradient));
             donut.setFinishedStrokeColor(ContextCompat.getColor(this, R.color.green));
+            fireAnim.setVisibility(View.VISIBLE);
+            fireAnim.playAnimation();
+            if (!hasShownToday()) {
+                showCongratsOverlay();  // Show overlay
+                markOverlayAsShown();
+            }
+        }else {
+            fireAnim.setVisibility(View.GONE);
+            fireAnim.cancelAnimation();
         }
     }
     @Override
     protected void onResume() {
         super.onResume();
         updateDailyProgress();
+    }
+    private void showCongratsOverlay() {
+        FrameLayout overlay = findViewById(R.id.congrats_overlay);
+        LottieAnimationView lottie = findViewById(R.id.lottieCongrats);
+        Button btnClose = findViewById(R.id.btnCloseCongrats);
+
+        overlay.setVisibility(View.VISIBLE);
+        lottie.playAnimation();
+
+        btnClose.setOnClickListener(v -> {
+            overlay.setVisibility(View.GONE);
+        });
+    }
+    private boolean hasShownToday() {
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String lastShownDate = prefs.getString("overlay_shown_date", "");
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        return today.equals(lastShownDate);
+    }
+
+    private void markOverlayAsShown() {
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
+        prefs.edit().putString("overlay_shown_date", today).apply();
     }
 
 }

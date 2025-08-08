@@ -11,7 +11,6 @@
         android:background="@android:color/white"
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/bottomNav"
         >
         <RelativeLayout
             android:layout_width="match_parent"
@@ -40,7 +39,7 @@
                     <TextView
                         android:id="@+id/tv_user_name_activities" android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="John"
+                        android:text=""
                         android:textColor="@color/white"
                         android:textSize="24sp"
                         android:textStyle="bold"/>
@@ -95,7 +94,7 @@
                 <TextView
                     android:id="@+id/tv_hearts_count" android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="4"
+                    android:text="0"
                     android:drawableEnd="@drawable/heart"
                     android:drawablePadding="4dp"
                     android:textSize="16sp"
@@ -109,7 +108,7 @@
                     android:id="@+id/tv_diamonds_count" android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="40"
+                    android:text="0"
                     android:drawableEnd="@drawable/diamond"
                     android:drawablePadding="4dp"
                     android:textSize="16sp"
@@ -151,57 +150,84 @@
                     android:textColor="@color/colorTextPrimary"
                     android:layout_marginBottom="16dp"/>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/card_word_game" android:layout_width="match_parent"
+                <FrameLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardCornerRadius="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:backgroundTint="#33B5E5"
-                    app:cardElevation="4dp">
-                    <LinearLayout
+                    android:layout_marginBottom="12dp">
+
+                    <!-- CardView: Word Game -->
+                    <androidx.cardview.widget.CardView
+                        android:id="@+id/card_word_game"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="5"
-                        android:orientation="horizontal"
-                        android:paddingHorizontal="12dp">
+                        android:backgroundTint="#33B5E5"
+                        app:cardCornerRadius="12dp"
+                        app:cardElevation="4dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:orientation="vertical"
-                            android:paddingVertical="8dp"
-                            >
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="4dp"
-                                android:text="Word Game"
-                                android:textColor="@color/white"
-                                android:textSize="14sp"
-                                android:textStyle="bold"/>
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="8dp">
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
 
-                                android:text="Test your vocabulary skills with a fun word game."
-                                android:textColor="@color/white"
-                                android:textSize="12sp"/>
-                        </LinearLayout>
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="4"
-                            android:gravity="center|center_vertical"
-                            >
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Word Game"
+                                    android:textColor="@color/white"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    android:layout_marginBottom="4dp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="Test your vocabulary skills with a fun word game."
+                                    android:textColor="@color/white"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+
                             <ImageView
                                 android:layout_width="70dp"
                                 android:layout_height="60dp"
-                                android:src="@drawable/activities_image_2"/>
+                                android:src="@drawable/activities_image_2"
+                                android:contentDescription="Word Game Image"
+                                android:layout_gravity="center_vertical" />
                         </LinearLayout>
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- COMING SOON OVERLAY -->
+                    <LinearLayout
+                        android:id="@+id/overlayComingSoon"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="@drawable/bg_coming_soon_badge"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:elevation="8dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Coming Soon"
+                            android:textColor="@android:color/white"
+                            android:textStyle="bold"
+                            android:textSize="14sp"
+                            android:paddingHorizontal="16dp"
+                            android:paddingVertical="8dp"
+                            android:background="@drawable/bg_coming_soon_badge"/>
                     </LinearLayout>
-                </androidx.cardview.widget.CardView>
+                </FrameLayout>
+
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/card_shop" android:layout_width="match_parent"

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/congrats_overlay"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#80000000"
+    android:clickable="true"
+    android:focusable="true"
+    android:visibility="gone"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@drawable/bg_congrats_dialog"
+        android:padding="24dp"
+        android:elevation="10dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:clipToPadding="false">
+
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/lottieCongrats"
+            android:layout_width="250dp"
+            android:layout_height="250dp"
+            app:lottie_fileName="congrats_animation.json"
+            app:lottie_loop="true"
+            app:lottie_autoPlay="true" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="You’ve reached your daily goal!"
+            android:textSize="22sp"
+            android:textColor="@android:color/black"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="12dp"/>
+
+        <Button
+            android:id="@+id/btnCloseCongrats"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Awesome!"
+            android:textStyle="bold"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/btn_gradient"
+            android:textColor="@android:color/white"
+            android:paddingLeft="32dp"
+            android:paddingRight="32dp" />
+    </LinearLayout>
+</FrameLayout>
