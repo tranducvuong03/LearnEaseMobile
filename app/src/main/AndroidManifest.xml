@@ -5,6 +5,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
 
     <application
         android:allowBackup="true"
@@ -44,6 +47,20 @@
         <activity
             android:name=".SubscriptionActivity"
             android:exported="false" />
+        <activity
+            android:name=".PaymentCallbackActivity"
+            android:exported="true"
+            android:theme="@style/Theme.Transparent">  <!-- để user không thấy -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="learnease" android:host="subscribe" android:path="/success" />
+                <data android:scheme="learnease" android:host="subscribe" android:path="/cancel" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".HomeActivity"
             android:exported="false" />
@@ -112,7 +129,18 @@
             android:windowSoftInputMode="adjustResize"
             />
         <activity android:name=".CompletionActivity" />
+        <receiver
+            android:name=".reminders.StreakReminderReceiver"
+            android:exported="false" />
 
+        <receiver
+            android:name=".reminders.BootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

@@ -13,6 +13,7 @@ import com.example.mobile.api.LoginAPI;
 import com.example.mobile.model.LessonResponse;
 import com.example.mobile.utils.ApiCaller;
 import com.example.mobile.utils.RetrofitClient;
+import com.example.mobile.utils.SkillPrefs;
 import com.example.mobile.utils.UsagePrefs;
 import com.google.android.material.card.MaterialCardView;
 import com.google.gson.Gson;
@@ -88,6 +89,7 @@ public class SoloSkillActivity extends AppCompatActivity {
 
                     lesson = response.body();
                     skillGrid.setVisibility(View.VISIBLE);
+                    applyLocalDoneFlags(lesson);
                     setupListeners(lesson);
                 } else {
                     try {
@@ -107,13 +109,33 @@ public class SoloSkillActivity extends AppCompatActivity {
             }
         });
     }
-
-    private void setupListeners(LessonResponse lesson) {
-        cardListening.setOnClickListener(v -> startSkillActivity("Listening", lesson));
-        cardSpeaking.setOnClickListener(v -> startSkillActivity("Speaking", lesson));
-        cardReading.setOnClickListener(v -> startSkillActivity("Reading", lesson));
-        cardWriting.setOnClickListener(v -> startSkillActivity("Writing", lesson));
+    private String getUserIdFromPrefs() {
+        return getSharedPreferences("MyAppPrefs", MODE_PRIVATE).getString("user_id", "");
     }
+    private void setupListeners(LessonResponse lesson) {
+        String lessonId = lesson.getLessonId().toString();
+        String userId = getUserIdFromPrefs();
+        if (!SkillPrefs.isDoneToday(this, userId, lessonId, "listening"))
+            cardListening.setOnClickListener(v -> startSkillActivity("Listening", lesson));
+        else
+            cardListening.setOnClickListener(null);
+
+        if (!SkillPrefs.isDoneToday(this, userId, lessonId, "speaking"))
+            cardSpeaking.setOnClickListener(v -> startSkillActivity("Speaking", lesson));
+        else
+            cardSpeaking.setOnClickListener(null);
+
+        if (!SkillPrefs.isDoneToday(this, userId, lessonId, "reading"))
+            cardReading.setOnClickListener(v -> startSkillActivity("Reading", lesson));
+        else
+            cardReading.setOnClickListener(null);
+
+        if (!SkillPrefs.isDoneToday(this, userId, lessonId, "writing"))
+            cardWriting.setOnClickListener(v -> startSkillActivity("Writing", lesson));
+        else
+            cardWriting.setOnClickListener(null);
+    }
+
     private void startSkillActivity(String skill, LessonResponse lesson) {
         Intent intent = new Intent(SoloSkillActivity.this, SoloQuizActivity.class);
         intent.putExtra("skill", skill);
@@ -122,4 +144,29 @@ public class SoloSkillActivity extends AppCompatActivity {
         Log.d("SOLO_DEBUG", "LessonId: " + lesson.getLessonId());// lesson là LessonResponse từ API
         startActivity(intent);
     }
+    private void applyLocalDoneFlags(LessonResponse lesson) {
+        String lessonId = lesson.getLessonId().toString();
+        String userId = getUserIdFromPrefs();
+        setCardState(cardListening,  R.id.status_listening,
+                SkillPrefs.isDoneToday(this, userId, lessonId, "listening"));
+        setCardState(cardSpeaking,   R.id.status_speaking,
+                SkillPrefs.isDoneToday(this, userId, lessonId, "speaking"));
+        setCardState(cardReading,    R.id.status_reading,
+                SkillPrefs.isDoneToday(this, userId, lessonId, "reading"));
+        setCardState(cardWriting,    R.id.status_writing,
+                SkillPrefs.isDoneToday(this, userId, lessonId, "writing"));
+    }
+
+    private void setCardState(com.google.android.material.card.MaterialCardView card, int chipId, boolean done) {
+        if (done) {
+            card.setEnabled(false);
+            card.setAlpha(0.5f);
+            findViewById(chipId).setVisibility(View.VISIBLE);
+        } else {
+            card.setEnabled(true);
+            card.setAlpha(1f);
+            findViewById(chipId).setVisibility(View.GONE);
+        }
+    }
+
 }

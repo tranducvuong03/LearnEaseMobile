@@ -29,6 +29,7 @@ import com.example.mobile.model.QuizChoice;
 import com.example.mobile.model.ScoreResponse;
 import com.example.mobile.model.TranscriptionResponse;
 import com.example.mobile.utils.RetrofitClient;
+import com.example.mobile.utils.SkillPrefs;
 import com.example.mobile.utils.UsagePrefs;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -363,6 +364,7 @@ public class SoloQuizActivity extends AppCompatActivity {
                     com.example.mobile.utils.LoadingManager.getInstance().dismiss();
 
                     if (response.isSuccessful() && response.body() != null) {
+                        markSkillDoneToday();
                         new android.os.Handler().postDelayed(() -> {
                             Intent intent = new Intent(SoloQuizActivity.this, ReviewResultActivity.class);
                             intent.putExtra("userId", userId.toString());
@@ -390,6 +392,7 @@ public class SoloQuizActivity extends AppCompatActivity {
                     com.example.mobile.utils.LoadingManager.getInstance().dismiss();
 
                     if (response.isSuccessful() && response.body() != null) {
+                        markSkillDoneToday();
                         new android.os.Handler().postDelayed(() -> {
                             Intent intent = new Intent(SoloQuizActivity.this, ReviewResultActivity.class);
                             intent.putExtra("userId", userId.toString());
@@ -417,6 +420,7 @@ public class SoloQuizActivity extends AppCompatActivity {
                     com.example.mobile.utils.LoadingManager.getInstance().dismiss();
 
                     if (response.isSuccessful() && response.body() != null) {
+                        markSkillDoneToday();
                         new android.os.Handler().postDelayed(() -> {
                             Intent intent = new Intent(SoloQuizActivity.this, ReviewResultActivity.class);
                             intent.putExtra("userId", userId.toString());
@@ -449,6 +453,11 @@ public class SoloQuizActivity extends AppCompatActivity {
         super.onPause();
         long sessionTime = System.currentTimeMillis() - startTime;
         UsagePrefs.saveUsageTime(this, sessionTime); // lưu thời gian dùng
+    }
+    private void markSkillDoneToday() {
+        String lessonId = getIntent().getStringExtra("lessonId");
+        String userId = getUserIdFromPrefs();
+        SkillPrefs.setDoneToday(this, userId, lessonId, skill);
     }
 
 }

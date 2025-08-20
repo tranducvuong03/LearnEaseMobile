@@ -1,8 +1,11 @@
 package com.example.mobile;
 
+import android.app.AlarmManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -37,14 +40,19 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Xin quyền thông báo (Android 13+)
+        com.example.mobile.utils.NotificationPermissionHelper.requestIfNeeded(this);
+        requestExactAlarmIfNeeded();
+        // Lập lịch nhắc mỗi ngày
+        com.example.mobile.reminders.StreakReminderScheduler.scheduleDaily(this);
         setContentView(R.layout.activity_home_new);
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String userId = prefs.getString("user_id", null);
-        String username = prefs.getString("user_name", null);
+        String username = prefs.getString("user_name", "");
         updateDailyProgress();
         // Greeting text
         TextView greetingText = findViewById(R.id.greeting);
-        String greeting = "Nice to see you, " + username + " !";
+        String greeting = "Nice to see you" + (username.isEmpty() ? "!" : ", " + username + " !");
         greetingText.setText(greeting);
 
         // Button Continue Learning
@@ -199,6 +207,7 @@ public class HomeActivity extends AppCompatActivity {
             donut.setFinishedStrokeColor(ContextCompat.getColor(this, R.color.green));
             fireAnim.setVisibility(View.VISIBLE);
             fireAnim.playAnimation();
+            creditStreakIfNeeded();
             if (!hasShownToday()) {
                 showCongratsOverlay();  // Show overlay
                 markOverlayAsShown();
@@ -208,6 +217,39 @@ public class HomeActivity extends AppCompatActivity {
             fireAnim.cancelAnimation();
         }
     }
+    private void creditStreakIfNeeded() {
+        SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        String userId = prefs.getString("user_id", null);
+        if (userId == null) return;
+
+        String today = new java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.getDefault())
+                .format(new java.util.Date());
+        String creditedDate = prefs.getString("streak_credited_date", "");
+
+        // Nếu hôm nay đã credit rồi -> HUỶ nhắc và thoát
+        if (today.equals(creditedDate)) {
+            com.example.mobile.reminders.StreakReminderScheduler.cancelAll(HomeActivity.this);
+            return;
+        }
+
+        RetrofitClient.getApiService(this)
+                .creditStreak(userId, "study")
+                .enqueue(new retrofit2.Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, retrofit2.Response<Void> response) {
+                        // Dù server có thực sự cộng hay no-op (đã cộng do challenge) -> đánh dấu local để không gọi lại trong ngày
+                        prefs.edit().putString("streak_credited_date", today).apply();
+                        // Giờ mới HUỶ nhắc còn lại trong ngày
+                        com.example.mobile.reminders.StreakReminderScheduler.cancelAll(HomeActivity.this);
+                        fetchStreak(userId); // refresh hiển thị streak trên Home
+                    }
+                    @Override public void onFailure(Call<Void> call, Throwable t) {
+                        // không set streak_credited_date -> sẽ tự retry lần sau người dùng mở Home
+                        // Không huỷ -> để alarm vẫn nhắc trong ngày
+                    }
+                });
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -236,6 +278,23 @@ public class HomeActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
         String today = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault()).format(new Date());
         prefs.edit().putString("overlay_shown_date", today).apply();
+    }
+    private void requestExactAlarmIfNeeded() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) { // Android 12+
+            AlarmManager alarmManager = getSystemService(AlarmManager.class);
+
+            if (alarmManager != null && !alarmManager.canScheduleExactAlarms()) {
+                // Chưa có quyền → mở Settings để user bật
+                Intent intent = new Intent(Settings.ACTION_REQUEST_SCHEDULE_EXACT_ALARM);
+                startActivity(intent);
+
+                // ⚠️ Đừng gọi scheduleDaily() ngay, vì chưa chắc user đã bật
+                return;
+            }
+        }
+
+        // Đến đây tức là có quyền → lập lịch
+        com.example.mobile.reminders.StreakReminderScheduler.scheduleDaily(this);
     }
 
 }

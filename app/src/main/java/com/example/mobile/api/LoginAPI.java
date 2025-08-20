@@ -67,6 +67,8 @@ public interface LoginAPI {
     //lay streak user
     @GET("users/{id}/streak")
     Call<StreakResponse> getUserStreak(@Path("id") String userId);
+    @POST("users/{userId}/streak/credit")
+    Call<Void> creditStreak(@Path("userId") String userId, @Query("source") String source);
 
     @PUT("users/{id}/avatar")
     Call<Void> updateAvatarById(@Path("id") String userId,

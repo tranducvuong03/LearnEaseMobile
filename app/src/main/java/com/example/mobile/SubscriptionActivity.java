@@ -10,7 +10,7 @@ import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.ViewGroup;
+import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.animation.BounceInterpolator;
 import android.widget.Button;
@@ -44,12 +44,17 @@ public class SubscriptionActivity extends AppCompatActivity {
     private final Handler handler = new Handler();
     private final int ANIMATION_DELAY = 8000;
     private final int CHAR_DELAY = 60;
-
+    private boolean isChecking = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_subscription);
-
+        // Nếu MỞ từ deep link -> handleDeepLink sẽ tự gọi API (không loader)
+        // Nếu KHÔNG có deep link -> gọi 1 lần có loader
+        boolean handled = handleDeepLink(getIntent()); // đổi handleDeepLink trả về boolean
+        if (!handled) {
+            checkSubscriptionStatus(true); // mở màn bình thường
+        }
         ImageView btnBack = findViewById(R.id.btn_back_subscription);
         btnBack.setOnClickListener(v -> onBackPressed());
 
@@ -164,30 +169,34 @@ public class SubscriptionActivity extends AppCompatActivity {
             }
         });
     }
-    @Override
-    protected void onResume() {
-        super.onResume();
-        checkSubscriptionStatus();
-    }
-    private void checkSubscriptionStatus() {
+
+    private void checkSubscriptionStatus() { checkSubscriptionStatus(true); }
+    private void checkSubscriptionStatus(boolean showLoading) {
+        if (isChecking) return;
+        isChecking = true;
+
         Call<SubscriptionInfo> call = RetrofitClient.getApiService(this).getMySubscription();
 
-        ApiCaller.callWithLoading(this, call, new Callback<SubscriptionInfo>() {
-            @Override
-            public void onResponse(Call<SubscriptionInfo> call, Response<SubscriptionInfo> response) {
-                LoadingManager.getInstance().dismiss();
-                SubscriptionInfo sub = response.body();
-                if (response.isSuccessful() && sub != null && sub.isActive()) {
+        Callback<SubscriptionInfo> cb = new Callback<SubscriptionInfo>() {
+            @Override public void onResponse(Call<SubscriptionInfo> c, Response<SubscriptionInfo> r) {
+                if (showLoading) LoadingManager.getInstance().dismiss();
+                isChecking = false;
+                SubscriptionInfo sub = r.body();
+                if (r.isSuccessful() && sub != null && sub.isActive()) {
                     updateSubscriptionUI(sub.getPlanType(), sub.getEndDate());
                 }
             }
-
-            @Override
-            public void onFailure(Call<SubscriptionInfo> call, Throwable t) {
-                LoadingManager.getInstance().dismiss();
-                // Có thể log hoặc hiển thị trạng thái mặc định
+            @Override public void onFailure(Call<SubscriptionInfo> c, Throwable t) {
+                if (showLoading) LoadingManager.getInstance().dismiss();
+                isChecking = false;
             }
-        });
+        };
+
+        if (showLoading) {
+            ApiCaller.callWithLoading(this, call, cb);
+        } else {
+            call.enqueue(cb);
+        }
     }
     private void updateSubscriptionUI(String planType, String endDateRaw) {
         if (planType == null || endDateRaw == null) {
@@ -195,33 +204,53 @@ public class SubscriptionActivity extends AppCompatActivity {
             return;
         }
 
-        Button btnMonth = findViewById(R.id.btn_subscribe_monthly);
-        Button btnYear = findViewById(R.id.btn_subscribe_yearly);
+        // View trong layout
         LinearLayout cardMonth = findViewById(R.id.card_monthly);
-        LinearLayout cardYear = findViewById(R.id.card_yearly);
+        LinearLayout cardYear  = findViewById(R.id.card_yearly);
+        Button btnMonth        = findViewById(R.id.btn_subscribe_monthly);
+        Button btnYear         = findViewById(R.id.btn_subscribe_yearly);
 
-        String formattedDate = formatDate(endDateRaw);
-        TextView expireText = new TextView(this);
-        expireText.setText("Expired: " + formattedDate);
-        expireText.setTextColor(Color.parseColor("#E65100"));
-        expireText.setTextSize(16f);
-        expireText.setTypeface(Typeface.DEFAULT_BOLD);
-        expireText.setPadding(0, 16, 0, 0);
+        View activeCard        = findViewById(R.id.card_active_subscription);
+        TextView tvActivePlan  = findViewById(R.id.tv_active_plan);
+        TextView tvExpireDate  = findViewById(R.id.tv_expire_date);
 
+        // 1) Reset về mặc định (chưa mua)
+        activeCard.setVisibility(View.GONE);
+
+        btnMonth.setEnabled(true);
+        btnMonth.setText("🚀 Start with 39.000 ₫");
+        btnMonth.setBackgroundResource(R.drawable.btn_orange_selector);
+        cardMonth.setBackgroundResource(R.drawable.rounded_card_default_monthly);
+
+        btnYear.setEnabled(true);
+        btnYear.setText("🎉 Save now – choose a yearly plan");
+        btnYear.setBackgroundResource(R.drawable.btn_green_selector);
+        cardYear.setBackgroundResource(R.drawable.rounded_card_default_yearly);
+
+        // 2) Áp dụng trạng thái đã đăng ký
+        String formattedDate = formatDate(endDateRaw);   // bạn đã có hàm này
+        String planLabel = "monthly".equalsIgnoreCase(planType) ? "Monthly Plan" : "Yearly Plan";
+
+        tvActivePlan.setText("Subscribed: " + planLabel);
+        tvExpireDate.setText("Expires: " + formattedDate);   // dùng "Expires" thay vì "Expired"
+
+        // Nổi bật card đang dùng + disable đúng nút
         if ("monthly".equalsIgnoreCase(planType)) {
             btnMonth.setEnabled(false);
             btnMonth.setText("Subscribed");
             btnMonth.setBackgroundResource(R.drawable.btn_disabled_gray);
             cardMonth.setBackgroundResource(R.drawable.bg_card_highlight_orange);
-            ((ViewGroup) btnMonth.getParent()).addView(expireText);
-        } else if ("yearly".equalsIgnoreCase(planType)) {
+        } else {
             btnYear.setEnabled(false);
             btnYear.setText("Subscribed");
             btnYear.setBackgroundResource(R.drawable.btn_disabled_gray);
             cardYear.setBackgroundResource(R.drawable.bg_card_highlight_green);
-            ((ViewGroup) btnYear.getParent()).addView(expireText);
         }
+
+        // 3) Hiện card tóm tắt (chỉ 1 nơi hiển thị ngày hết hạn)
+        activeCard.setVisibility(View.VISIBLE);
     }
+
 
 
     private String formatDate(String isoDateStr) {
@@ -233,6 +262,39 @@ public class SubscriptionActivity extends AppCompatActivity {
         } catch (Exception e) {
             return isoDateStr;
         }
+    }
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        handleDeepLink(intent); // sẽ gọi checkSubscriptionStatus(false)
+    }
+
+    private boolean handleDeepLink(Intent intent) {
+        Uri uri = intent != null ? intent.getData() : null;
+        if (uri == null) return false;
+
+        String path = uri.getPath(); // "/success" hoặc "/cancel"
+        if ("/success".equals(path)) {
+            Toast.makeText(this, "Thanh toán thành công!", Toast.LENGTH_SHORT).show();
+            checkSubscriptionStatus(false); // ⬅️ không loader
+            return true;
+        } else if ("/cancel".equals(path)) {
+            Toast.makeText(this, "Thanh toán đã bị huỷ", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        handler.removeCallbacksAndMessages(null);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        handler.removeCallbacksAndMessages(null);
     }
 
 

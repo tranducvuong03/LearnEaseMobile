@@ -184,6 +184,7 @@ public class ProfileActivity extends AppCompatActivity {
 
         apiService = RetrofitClient.getApiService(this);
         SharedPreferences prefs = getSharedPreferences("MyAppPrefs", MODE_PRIVATE);
+        SharedPreferences prefsStreak = getSharedPreferences("SkillDonePrefs", MODE_PRIVATE);
         SharedPreferences prefsChatMessages = getSharedPreferences("chat_prefs", MODE_PRIVATE);
         String token = prefs.getString("auth_token", null);
         if (token != null) {
@@ -321,6 +322,8 @@ public class ProfileActivity extends AppCompatActivity {
                             prefs.edit().remove("auth_token").apply();
                             prefs.edit().remove("user_id").apply();
                             prefsChatMessages.edit().remove("chat_history").apply();
+                            prefsStreak.edit().remove("streak").apply();
+
                             // 2. Đăng xuất Google nếu dùng
                             GoogleSignIn.getClient(ProfileActivity.this,
                                     new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN).build()
